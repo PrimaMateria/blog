@@ -19,25 +19,10 @@
             <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
               <ul>
                 {% set index = get_section(path="_index.md") %}
-                {% for s in index.subsections %}
-                    {% set subsection = get_section(path=s) %}
-                    <li class="nav">
-                        <a itemprop="url" href="{{ subsection.permalink | safe}}">
-                            <span itemprop="name">{{ subsection.title }}</span>
-                        </a>
-                    </li>
-                {% endfor %}
                 {% if config.extra.github %}
                 <li class="nav">
                     <a itemprop="url" href="https://github.com/{{ config.extra.github }}">
                         <img class="icon" src="{{ config.base_url }}/icons/github.svg" alt="Github">
-                    </a>
-                </li>
-                {% endif %}
-                {% if config.extra.twitter %}
-                <li class="nav">
-                    <a itemprop="url" href="https://twitter.com/{{ config.extra.twitter }}">
-                        <img class="icon" src="{{ config.base_url }}/icons/twitter.svg" alt="Twitter">
                     </a>
                 </li>
                 {% endif %}
