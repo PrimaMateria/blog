@@ -8,8 +8,12 @@
 {% block header %}
     <header>
         <div class="header-left">
-            <img src="{{ get_url(path="logo.png") }}" />
-            <a href="{{ config.base_url }}" class="logo">{{ config.title }}</a>
+            <a href="{{ config.base_url }}" class="logo">
+              <div>
+                <img src="{{ get_url(path="logo.png") }}" />
+                {{ config.title }}
+              </div>
+            </a>
         </div>
         <div class="header-right">
             <nav itemscope itemtype="http://schema.org/SiteNavigationElement">

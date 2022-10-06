@@ -9,14 +9,14 @@ ul {
 
 header {
   margin-bottom: 16px;
+}
 
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    img {
-      width: 150px;
-      border-radius: 50%;
-    }
+.logo div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  img {
+    width: 150px;
+    border-radius: 50%;
   }
 }
