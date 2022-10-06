@@ -9,6 +9,7 @@ build_search_index = false
 
 title = "PrimaMateria's blog"
 theme = "oceanic-zen"
+base_url = "primamateria.github.io/blog"
 
 [markdown]
 # Whether to do syntax highlighting
