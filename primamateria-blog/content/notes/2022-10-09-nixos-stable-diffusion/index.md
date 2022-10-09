@@ -4,29 +4,28 @@ date = 2022-10-08
 +++
 
 This is a blog, so I will be recording not only the solutions but also the path
-that lead to them.
+that lead me to them.
 
 ## AI generated images
 
-AI generated images become interesting for me when I start to think about
-creating this blog. I wanted to show an GitHub avatar on the top, but the
-original that I was using was recklessly copied from copyrighted site
-simple-desktops.
+AI generated images became interesting for me when I start to think about
+creating this blog. I wanted to show the GitHub avatar on the top, but the
+original that I was using was recklessly copied from a copyrighted site.
 
 I got an idea that if I would generate an image, then I could still keep using
-the alien octopus, just differently visualized. Actually I am still not fully
-sure how copyright for AI generated images work. I imagine that the AI is like
-a Photoshop. The images created in Photoshop do not belong to the software, but
-to the human "inventor".
+the "alien octopus" and avoid the copyright issue. Actually I am still not
+fully sure how the copyright for AI generated images work, but I imagine that
+the AI is a tool like Photoshop. The images created with tool do not belong to
+the software, but to the human "author".
 
 My path of discovery started with [Craiyon](https://www.craiyon.com/). The
-first image I chose was this one:
+first image I chose from the generated batch was this one:
 
 {{ resize_image(path="notes/2022-10-09-nixos-stable-diffusion/primamateria-craiyon.jpg", height=200) }}
 
-Just at the same day I have found [Dalle2
-subreddit](https://www.reddit.com/r/dalle2/) with fresh post that the DALL.E 2
-registration doesn't require anymore special invite from whishlist, and it goes
+At the same day I have found [DALL·E 2
+subreddit](https://www.reddit.com/r/dalle2/) with fresh post that the DALL·E 2
+registration doesn't require special invite from wishlist anymore, and it goes
 fully public. So I jumped in, and generated some new octopuses:
 
 {{ resize_image(path="notes/2022-10-09-nixos-stable-diffusion/primamateria-dalle-octopus1.png", height=200) }}
@@ -37,19 +36,19 @@ fully public. So I jumped in, and generated some new octopuses:
 How gorgeous! But bitter realization followed. Each run requires credits. Some
 free
 [credits](https://help.openai.com/en/articles/6399305-how-dall-e-credits-work)
-are given at the sign-up and few more each month. Do you want even more? Pay.
-Of course this model makes sense, like for some proffesional writers. But for a
-hobbyist who just want to play, it feels like a sword of Damocles  - not
-allowing freely to experiment with your imagination because I am going to run
-out of the credits any time soon.
+are given at the sign-up and few more each month. Extra credits are paid. Of
+course this model makes sense for some professional writers. But for a hobbyist
+who just want to play, it feels like a sword of Damocles - not allowing freely
+to experiment with your imagination because I am going to run out of the
+credits any time soon.
 
 So the journey continues. Xe recently wrote some posts about the **Stable
-Diffusion**. A competitor to Dalle, but open-sourced one 💕. And surprisingly
+Diffusion**. A competitor to DALL·E 2, but open-sourced one 💕. And surprisingly
 originating from Munich, which made me personally feel happy.
 
 The first experience with Stable Diffusion was via [Dream
 Studio](https://beta.dreamstudio.ai/dream). It also offered an option I didn't
-see in DALL.E before. It is possible to pass a reference image, provide a
+see in DALL·E 2 before. It is possible to pass a reference image, provide a
 prompt and new image will be generated with the same style. For example the
 image on the left I draw long time ago, and the image on the right is the one
 generated via Dream Studio.
@@ -58,18 +57,18 @@ generated via Dream Studio.
 {{ resize_image(path="notes/2022-10-09-nixos-stable-diffusion/castaneda-dreamstudio.png", height=350) }}
 
 And the credits again. Ah, no problem anymore, we can run it locally and forget
-the whole credit nightmare ~ if we have super duped GPU with like [10GB free
+the whole credit nightmare ~ if we have super duped GPU with [10 GB free
 VRAM](https://github.com/CompVis/stable-diffusion). Which we have, right? And
 if not, then there is [optimized
   version](https://github.com/basujindal/stable-diffusion) which will be
-  satisfied with 2.4GB VRAM. Oh, these are the miracles that start happening
-  when things go open source.
+  satisfied with 2.4 GB VRAM. These are the miracles that start happening when
+  things go open source.
 
 ## What worked
 
 I am enchanted by Nix. And if I will have a solution then this solution will be
-running in NixOs. And the best place for finding NixOs solutions is NixOS
-discource.
+running in NixOS. And the best place for finding NixOS solutions is NixOS
+Discource.
 
 [Stable Diffusion using nix
 flakes](https://discourse.nixos.org/t/stable-diffusion-using-nix-flakes/21610)
@@ -83,7 +82,7 @@ These steps led me to locally running Stable Diffusion:
 1. run `nix run --impure`
 1. update token and run
 
-First run resulted in lot of downloading, but subsequent runs spent time only
+First run resulted in a lot of downloading, but subsequent runs spent time only
 on image generation. Later I have updated the script to get 4 images at once
 and also to save them in PNG format. The final version before I decided to
 write this post looked like this:
@@ -138,28 +137,28 @@ geometry math":
 Just for a record, here is what a tried before and what didn't work for me.
 
 First I tried to follow [Xe's blog
-post](https://xeiaso.net/blog/stable-diffusion-nixos). But running 
+post](https://xeiaso.net/blog/stable-diffusion-nixos). 
 
 ``` bash
 nix shell nixpkgs#conda
 conda-shell
 ```
 
-resulted first in error messages `*** stack smashsng detected ***: terminated`
-and later failed creation of conda environment because of no working git.
-Running git in conda shell reported 
+But running this resulted first in error messages `*** stack smashsng detected ***: terminated`
+and later failed creation of Conda environment because of no working git.
+Running git in Conda shell reported 
 
 ```
 git: error while loading shared libraries: __vdso_gettimeofday: invalid mode for dlopen(): Invalid argument
 ```
 
-I have also tried to install conda in via old 
+I have also tried to install Conda in via old `nix-shell`.
 
 ```
 nix-shell -p conda
 ```
 
-but the git was still not working, now with slightly different message
+Git was still not working, now with slightly different message:
 
 ```
 git: /usr/lib/libc.so.6: version `GLIBC_2.34' not found (required by git)
@@ -170,10 +169,7 @@ but unfortunately it didn't help at all. When I searched on Discord the keyword
 Conda, I got NobbZ' recent message ["The most reliable way of using conda I
 have heard about was through a
 VM"](https://discordapp.com/channels/568306982717751326/747637173364457632/1027938976453120051),
-which ceased my further efforts involving conda.
+which ceased my further efforts involving Conda.
 
-And then I turned to Discourse and I found the working solution not involving
-conda described above.
-
-
-
+And then I turned to Discourse and I found the working solution without as
+described above.
