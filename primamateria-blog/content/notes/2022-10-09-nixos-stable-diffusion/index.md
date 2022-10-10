@@ -132,6 +132,8 @@ geometry math":
 {{ resize_image(path="notes/2022-10-09-nixos-stable-diffusion/octopus-sd3.png", height=200) }}
 {{ resize_image(path="notes/2022-10-09-nixos-stable-diffusion/octopus-sd4.png", height=200) }}
 
+Update: Created repo [github:PrimaMateria/stable-diffusion](https://github.com/PrimaMateria/stabble-diffusion).
+
 ## What didn't work
 
 Just for a record, here is what a tried before and what didn't work for me.
@@ -171,5 +173,5 @@ have heard about was through a
 VM"](https://discordapp.com/channels/568306982717751326/747637173364457632/1027938976453120051),
 which ceased my further efforts involving Conda.
 
-And then I turned to Discourse and I found the working solution without as
+And then I turned to Discourse and I found the working solution without Conda as
 described above.
