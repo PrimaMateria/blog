@@ -45,3 +45,12 @@ https://github.com/FeralInteractive/gamemode
 https://github.com/Leixb/nixos-dotfiles/blob/41ad19796c3917f49ec67eadcb559745c0e9ef5e/users/leix/gaming.nix
 - creates aliases for games
 - it looks like it also lists some IDs, but does it auto-install these games?
+
+https://github.com/Electrostasy/dots/blob/e792e2e6142186f2c6b2a7811e250718e9a77920/hosts/terra/gaming.nix
+- https://github.com/flightlessmango/MangoHud
+- also interesting approach to have dedicated mount for games
+
+https://github.com/juliosueiras-nix/nix-steam
+https://github.com/fufexan/nix-gaming
+
+Project zomboid running but saved game was not synced.
