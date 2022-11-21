@@ -54,3 +54,52 @@ https://github.com/juliosueiras-nix/nix-steam
 https://github.com/fufexan/nix-gaming
 
 Project zomboid running but saved game was not synced.
+
+Auto mount windows filesystem with:
+
+```nix
+  fileSystems."/mnt/c" =
+    { device = "/dev/disk/by-uuid/6C8A776F8A773524";
+      fsType = "ntfs";
+      options = [ "defaults" "user" "rw" "utf8" "umask=000" "nofail" ];
+    };
+
+```
+
+Then create a link to Zomboid Saves folder on Windows.
+Also backup the folder.
+Read only file system. Options have rw.
+Verified that `ntfs-3g` is present.
+Trying https://askubuntu.com/posts/1192233/revisions
+Worked after restart.
+Game works.
+Moved character upstairs, need oto check in windows if it loads.
+
+Trying steam run dmenu something
+https://nixos.wiki/wiki/Steam#steam-tui
+https://developer.valvesoftware.com/wiki/SteamCMD
+
+https://github.com/SFort/steam-dmenu
+
+```nix
+  steamRun = pkgs.writeShellApplication {
+    name = "steamRun";
+    text = ''
+      run="${dmenu}/bin/dmenu -nb black -nf white -sb yellow -sf black -l 20 -c"
+      path="$HOME/.local/share/Steam/steamapps"
+
+      for arg in "$path"/appmanifest_*.acf; do
+        line=$(cat "$arg");
+        nam="$(echo "$line"|tr '\n\t' ' '|sed 's/.*"name"[^"]*"\([^"]*\).*/\1/'|tr ' ' '_')"
+        set -- "$@" "$nam" "$(echo "$line"|tr '\n\t' ' '|sed 's/.*"appid"[^"]*"\([^"]*\).*/\1/')" 
+      done
+
+      run=$(printf "%s  :%s\n" "$@" | $run | sed 's/.*:\(.*\)/\1/')
+      test -n "$run" && xdg-open "steam://run/$run"
+    '';
+```
+
+
+```
+        "${mod}+s" = "exec --no-startup-id ${steamRun}/bin/steamRun";
+```
