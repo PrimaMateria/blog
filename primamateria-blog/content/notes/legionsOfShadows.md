@@ -61,6 +61,11 @@ idea was to do a remake of Legions of Shadow.
 
 # Planning phase
 
+# Mechanism
+
+Card collection / managerial game. Harvesting resources which would allow purchases of cards.
+Global good and bad events. Combat turn based.
+
 # Backstory
 
 Once upon a time, in a far-off kingdom ruled by a cruel and dread king, a great
