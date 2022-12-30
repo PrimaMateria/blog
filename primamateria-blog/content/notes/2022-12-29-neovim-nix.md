@@ -68,23 +68,21 @@ Now, as the first step we will simply pass neovim from the input to the output:
     };
     neovim = {
       url = "github:neovim/neovim?dir=contrib";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-
-  outputs = { nixpkgs, neovim }: {
-      packages.x86_64-linux.default = neovim;
-
+  outputs = { self, nixpkgs, neovim }: {
+      packages.x86_64-linux.default = neovim.packages.x86_64-linux.neovim;
       apps.x86_64-linux.default = {
         type = "app";
-        program = "${neovim}/bin/nvim";
+        program = "${neovim.packages.x86_64-linux.neovim}/bin/nvim";
       };
     };
 }
 ```
 
-Our flake provides a default package for the `x86_64-linux` system, and a
-default app for the same system.
+Our flake provides neovim as a default package for the `x86_64-linux` system,
+and a default app refers executes neovim's binary.
 
 Now, lets run the app!
 
@@ -92,10 +90,8 @@ Now, lets run the app!
 nix run
 ```
 
-TODO:
-
-- check `inputs@`
-- check if really following the nightly branch or just some staging
+If everything went well you should be greeted with neovim welcome message and
+the version should be the latest one from the master branch.
 
 ## Initialize secrets
 
