@@ -19,6 +19,19 @@ header {
     width: 150px;
     border-radius: 50%;
   }
+  .title {
+    margin-left: 16px;
+    color: #c0c5ce;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+}
+
+.nav {
+  a .icon {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 .why {

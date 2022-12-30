@@ -51,30 +51,23 @@ body {
   line-height: 1.3;
   background: $black;
   color: $white;
+  margin: 0;
 }
 
 body {
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-areas:
-    "header"
-    "main"
-    "footer";
+  height: 100vh;
 }
 
 header {
-  padding: $padding $padding 0 $padding;
-
-  grid-area: header;
-
+  padding-top: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 main {
+  flex-grow: 1;
   padding: $padding;
-  grid-area: main;
 }
 
 p {
@@ -123,34 +116,42 @@ a {
 }
 
 h1 {
+  color: $green;
   font-size: 24px;
   margin: 5px 0;
   font-weight: bold;
+  letter-spacing: 3px;
 }
 
 h2 {
+  color: $green;
   font-size: 22px;
   font-weight: bold;
+  letter-spacing: 3px;
 }
 
 h3 {
   font-size: 20px;
   font-weight: bold;
+  letter-spacing: 2px;
 }
 
 h4 {
   font-size: 18px;
   font-weight: bold;
+  letter-spacing: 2px;
 }
 
 h5 {
   font-size: 16px;
   font-weight: bold;
+  letter-spacing: 2px;
 }
 
 h6 {
   font-size: 14px;
   font-weight: bold;
+  letter-spacing: 2px;
 }
 
 pre {
@@ -196,8 +197,11 @@ p > code {
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
   margin: 0 auto;
   width: 1024px;
+  height: 100%;
 }
 
 @media (max-width: 1200px) {
