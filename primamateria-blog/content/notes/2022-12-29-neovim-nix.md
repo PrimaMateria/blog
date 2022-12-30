@@ -1,47 +1,48 @@
 +++
-title = "How to create your own neovim flake"
+title = "How to create your own Neovim flake"
 date = 2022-12-29
 +++
 
 ## Introduction
 
-This is step by step guide how to set up your own neovim as nix flake.
+This step-by-step guide will show you how to set up your own Neovim as a Nix
+Flake. I won't explain what Nix and Nix Flake are here, as there are already
+many other resources that do this perfectly.
 
-You will have your config files, list of plugins and required external
-dependencies tracked in git repository. With this setup and nix' magic, you
-should have a convenient way to keep synced across machines not only your editor
-configuration, but your whole development environment. You can also use this
+With this setup, you can use Git and Nix's magic to keep your configuration
+files, list of plugins, and required external dependencies synced across
+multiple machines. This will not only keep your editor configuration in sync,
+but also your entire development environment. Additionally, you can use this
 setup to keep your editor configuration in sync with your colleagues.
 
 ## Initialize the flake
 
-Flake will take provided inputs, and it will output a package, that can be
-installed with nix package manager; and an app, which can be directly run.
+Flake will take inputs, and it will generate an output which will be a package
+that can be installed using the nix package manager, as well as an app that can
+be executed directly.
 
 First we start with bare flake structure:
 
 ```nix
 # flake.nix
 {
-  description = "My own neovim flake";
+  description = "My own Neovim flake";
   inputs = { };
   outputs = { self }: { };
 }
 ```
 
-? Why is `self` a required argument of the `outputs` function? ! Not found
+Next, we will add 2 inputs:
 
-We will add 2 inputs:
+1. `nixpkgs` - a source of all nix packages we can later declare
+1. `neovim` - Neovim itself
 
-1. `nixpkgs` - a source of all nix packages we can later declare. We will use
-   the master branch as we prefer early access to the latest feature over the
-   stability.
-1. `neovim` flake - we will source neovim directly from the neovim repository
-   from the master branch to get access to rolling updates.
+oth inputs favor unstable branches for rolling updates so that we can get early
+access to all recently merged features.
 
 ```nix
 {
-  description = "My own neovim flake";
+  description = "My own Neovim flake";
   inputs = {
     nixpkgs = {
       url = "github:NixOS/nixpkgs";
@@ -55,13 +56,15 @@ We will add 2 inputs:
 }
 ```
 
-{{ why(question="Why we override neovim's flake nixpkgs input to follow unstable?", answer="This way we instruct neovim to be build using the same packages. Probably it would work even without it. And I kind of repeat it as a convention. But I can't see it as a recursive fix -meaning, if neovim depends on other flakes, their nixpkgs inputs won't follow the provided value.") }}
+{{ why(question="Why do we override Neovim's flake nixpkgs input to follow the unstable version? ", answer="This way we instruct Neovim to be build using the same packages. Probably it would work even without it. And I kind of repeat it as a convention. But I can't see it as a recursive fix -meaning, if Neovim depends on other flakes, their nixpkgs inputs won't follow the provided value.") }}
 
-Now, as the first step we will simply pass neovim from the input to the output:
+TODO: rewrite the answer
+
+As the initial step, we will pass Neovim from the input to the output.
 
 ```nix
 {
-  description = "My own neovim flake";
+  description = "My own Neovim flake";
   inputs = {
     nixpkgs = {
       url = "github:NixOS/nixpkgs";
@@ -81,8 +84,8 @@ Now, as the first step we will simply pass neovim from the input to the output:
 }
 ```
 
-Our flake provides neovim as a default package for the `x86_64-linux` system,
-and a default app refers executes neovim's binary.
+Our flake provides Neovim as a default package for the `x86_64-linux` system,
+and a default app executes Neovim's binary.
 
 Now, lets run the app!
 
@@ -90,10 +93,17 @@ Now, lets run the app!
 nix run
 ```
 
-If everything went well you should be greeted with neovim welcome message and
-the version should be the latest one from the master branch.
+If all goes well, you should be welcomed with the neovim welcome message and the
+version should be the most up-to-date one from the master branch.
 
 ## Initialize secrets
+
+Storing secrets in a git repository may not be necessary for you, but it is a
+useful skill to learn. In the context of Neovim, I have only used it to store an
+OpenAI API key which is needed for the ChatGPT.nvim plugin. You can use
+[git-crypt](https://github.com/AGWA/git-crypt) to encrypt the desired files when
+they are sent to the remote repository and decrypt them when they are returned
+to the local.
 
 ## Add plugins
 
