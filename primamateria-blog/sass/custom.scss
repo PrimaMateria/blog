@@ -20,3 +20,22 @@ header {
     border-radius: 50%;
   }
 }
+
+.why {
+  display: flex;
+  margin-top: 32px;
+  margin-bottom: 32px;
+  .icon {
+    font-size: 36px;
+    width: 60px;
+    filter: grayscale(80%);
+  }
+  .content {
+    flex-grow: 1;
+    .question {
+      font-style: italic;
+      margin-top: 16px;
+      margin-bottom: 24px;
+    }
+  }
+}
