@@ -159,6 +159,62 @@ Test with `nix run` if everything is allright.
 Lua, good, will migrate later. If you are already pure lua user, read later to
 see how to provide lua configs. Basic config with setters.
 
+Some of my Neovim configuration is still written in Vim sript. I know, it should
+possible to migrate it all to lua, but this will be a project for later.
+
+My vim scripts I organize in files in `config/vim`. For the example you will
+configure vim setters. Start from bottom up:
+
+```vim
+# config/vim/nvim-setters.nix
+# vim: ft=vim
+''
+  set tabstop=2 softtabstop=2
+  set shiftwidth=2
+  set expandtab
+  set smartindent
+  set number
+''
+```
+
+This is a nix file which when imported will resolve to multiline string. To
+enable vim formatting you can force filetype `vim` in the
+[modeline](https://neovim.io/doc/user/options.html#modeline) `vim: ft=vim`.
+
+Next, create `default.nix` in the `vim` directory. This is like an index file in
+the javascript. If you import in nix a path leading to directory, it will
+automatically look for `default.nix` file.
+
+```nix
+# config/vim/default.nix
+{ }:
+  import ./nvim-setters.nix
+  # + import ./nvim-fugitive.nix (later you can concat another imported strings with + operator
+```
+
+The same we will do for the directory `config`:
+
+```nix
+{ }:
+  import ./vim
+```
+
+And now, add the config to your custom Neovim package.
+
+```nix
+# packages/myNeovim.nix
+{ pkgs }:
+let
+  customRC = import ../config;
+in pkgs.wrapNeovim neovim.packages.x86_64-linux.neovim {
+      configure = {
+        inherit customRC;
+      };
+    }
+```
+
+Run with `nix run` and verify that side column with numbers is now visible.
+
 ## Add plugin from Nixpkgs
 
 Usually you will find the most popular plugins in nixpkgs. Plugins definition in
