@@ -9,11 +9,19 @@ This step-by-step guide will show you how to set up your own Neovim as a Nix
 Flake. I won't explain what Nix and Nix Flake are here, as there are already
 many other resources that do this perfectly.
 
+{% todo() %} Add links to nix docs {% end %}
+
 With this setup, you can use Git and Nix's magic to keep your configuration
 files, list of plugins, and required external dependencies synced across
 multiple machines. This will not only keep your editor configuration in sync,
 but also your entire development environment. Additionally, you can use this
 setup to keep your editor configuration in sync with your colleagues.
+
+Please, be aware that I am also learning nix and possibly I might have done
+something the wrong way. If you have more experience, and have a constructive
+feedback please drop a message.
+
+{% todo() %} Add contact page {% end %}
 
 ## Initialize the flake
 
@@ -41,6 +49,7 @@ oth inputs favor unstable branches for rolling updates so that we can get early
 access to all recently merged features.
 
 ```nix
+# flake.nix
 {
   description = "My own Neovim flake";
   inputs = {
@@ -63,6 +72,7 @@ access to all recently merged features.
 As the initial step, we will pass Neovim from the input to the output.
 
 ```nix
+# flake.nix
 {
   description = "My own Neovim flake";
   inputs = {
@@ -96,13 +106,59 @@ nix run
 If all goes well, you should be welcomed with the neovim welcome message and the
 version should be the most up-to-date one from the master branch.
 
+## Custom Neovim package
+
+You can look on your configured Neovim as a standalone installable package. Now
+you will create an overlay over the nixpkgs which provide definition of your
+Neovim package.
+
+```nix
+# flake.nix
+{
+  description = "My own Neovim flake";
+  inputs = {
+    nixpkgs = {
+      url = "github:NixOS/nixpkgs";
+    };
+    neovim = {
+      url = "github:neovim/neovim?dir=contrib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+  outputs = { self, nixpkgs, neovim }:
+    let
+      overlay = prev: final: {
+        myNeovim = import ./packages/myNeovim.nix;
+      };
+    in {
+      packages.x86_64-linux.default = pkgs.myNeovim;
+      apps.x86_64-linux.default = {
+        type = "app";
+        program = "${pkgs.myNeovim}/bin/nvim";
+      };
+    };
+}
+```
+
+```nix
+# packages/myNeovim.nix
+{ pkgs }:
+    pkgs.wrapNeovim neovim.packages.x86_64-linux.neovim {
+      configure = {
+         # here will come your custom configuration
+      };
+    }
+```
+
+{% todo() %} test and format the code {% end %}
+
+Test with `nix run` if everything is allright.
+
 ## Add plugins
 
 ### Plugins found in nixpkgs
 
 ### Plugins not found in nixpkgs
-
-## Add snippets
 
 ## Add config
 
@@ -115,6 +171,8 @@ version should be the most up-to-date one from the master branch.
 ## Add runtime dependency
 
 ## Updating
+
+## Add snippets
 
 ## Secrets
 
