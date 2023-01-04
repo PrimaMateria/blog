@@ -52,3 +52,14 @@ header {
     }
   }
 }
+
+.todo {
+  margin-top: 32px;
+  margin-bottom: 32px;
+  border: 2px solid red;
+  padding: 10px;
+  span {
+    color: red;
+    font-weight: bold;
+  }
+}
