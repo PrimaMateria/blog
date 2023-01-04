@@ -154,27 +154,76 @@ Neovim package.
 
 Test with `nix run` if everything is allright.
 
-## Add plugins
+## Add vim script config
 
-### Plugins found in nixpkgs
+Lua, good, will migrate later. If you are already pure lua user, read later to
+see how to provide lua configs. Basic config with setters.
 
-### Plugins not found in nixpkgs
+## Add plugin from Nixpkgs
 
-## Add config
+Usually you will find the most popular plugins in nixpkgs. Plugins definition in
+nixpkgs can also list their dependencies, so when the it depends on other
+plugins, these will be installed and included to Neovim as well.
 
-### Vim script
+For the example, we will add the telescope plugin. First we will create a
+separate nix file which will contain a list of the plugins:
 
-### Lua script
+```nix
+# plugins.nix
+pkgs:
+with pkgs.vimPlugins; [
+  telescope-nvim
+]
+```
 
-### Lua from nix
+Add now extend your Neovim package to include all plugins listed in
+`plugins.nix`:
+
+```nix
+# packages/myNeovim.nix
+{ pkgs }:
+let
+  plugins = import ../plugins.nix;
+in pkgs.wrapNeovim neovim.packages.x86_64-linux.neovim {
+      configure = {
+        packages.all.start = plugins pkgs;
+      };
+    }
+```
+
+{% todo() %} test and format the code {% end %}
+
+{{ why(question="Why we set `packages.all.start`?", answer="Word all doesn't matter and can be anything. And start signifies that the plugins will be loaded on start.") }}
+
+{% todo() %} rephrase and verify start {% end %}
+
+TIP: Searching nixpkgs for available plugins.
+
+INFO: How to verify which plugins were included (checking results).
+
+## Add lua script config
+
+Configure telescope.
+
+## Add plugin not found in Nixpkgs
+
+Add recent files.
 
 ## Add runtime dependency
 
-## Updating
+LSP server.
 
-## Add snippets
+## Generate lua config from nix
+
+LSP config with reference to LSP server package.
+
+## Package anything else
+
+Add snipets
 
 ## Secrets
+
+Rewrite to add ChatGPT.
 
 Storing secrets in a git repository may not be necessary for you, but it is a
 useful skill to learn. In the context of Neovim, I have only used it to store an
@@ -201,3 +250,10 @@ Locally the `git-crypt` automatically decrypts the files.
 
 {% todo() %} add instruction for ChatGPT.plugin setup and passing api key to
 neovim wrapper. {% end %}
+
+## Usage
+
+Alias for nix run. How about packages? Maybe won't work after adding secrets.
+Verify and possibly get rid of packages.
+
+## Updating
