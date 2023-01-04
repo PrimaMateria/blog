@@ -96,15 +96,6 @@ nix run
 If all goes well, you should be welcomed with the neovim welcome message and the
 version should be the most up-to-date one from the master branch.
 
-## Initialize secrets
-
-Storing secrets in a git repository may not be necessary for you, but it is a
-useful skill to learn. In the context of Neovim, I have only used it to store an
-OpenAI API key which is needed for the ChatGPT.nvim plugin. You can use
-[git-crypt](https://github.com/AGWA/git-crypt) to encrypt the desired files when
-they are sent to the remote repository and decrypt them when they are returned
-to the local.
-
 ## Add plugins
 
 ### Plugins found in nixpkgs
@@ -124,3 +115,31 @@ to the local.
 ## Add runtime dependency
 
 ## Updating
+
+## Secrets
+
+Storing secrets in a git repository may not be necessary for you, but it is a
+useful skill to learn. In the context of Neovim, I have only used it to store an
+OpenAI API key which is needed for the
+[ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim) plugin. You can use
+[git-crypt](https://github.com/AGWA/git-crypt) to encrypt the desired files when
+they are sent to the remote repository and decrypt them when they are returned
+to the local.
+
+I choose to declare `git` and `git-crypt` outside of the neovim flake. If you
+are using nix configuration just add it to the `environment.systemPackages`, or
+if you are using home manager add it to `home.packages`.
+
+```bash
+mkdir .secrets
+git-crypt init
+git-crypt export-key <PATH>
+echo ".secrets/** filter=git-crypt diff=git-crypt" > .gitattributes
+echo '{ openai-api-key = "<API_KEY>"; }' > .secrets/secrets.nix
+```
+
+All the files in the `.secrets` folder will have content tracked encrypted.
+Locally the `git-crypt` automatically decrypts the files.
+
+TODO: add instruction for ChatGPT.plugin setup and passing api key to neovim
+wrapper.
