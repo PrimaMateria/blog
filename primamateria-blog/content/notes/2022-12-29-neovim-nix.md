@@ -58,7 +58,7 @@ access to all recently merged features.
 
 {{ why(question="Why do we override Neovim's flake nixpkgs input to follow the unstable version? ", answer="This way we instruct Neovim to be build using the same packages. Probably it would work even without it. And I kind of repeat it as a convention. But I can't see it as a recursive fix -meaning, if Neovim depends on other flakes, their nixpkgs inputs won't follow the provided value.") }}
 
-TODO: rewrite the answer
+{% todo() %} rewrite the answer {% end %}
 
 As the initial step, we will pass Neovim from the input to the output.
 
@@ -141,5 +141,5 @@ echo '{ openai-api-key = "<API_KEY>"; }' > .secrets/secrets.nix
 All the files in the `.secrets` folder will have content tracked encrypted.
 Locally the `git-crypt` automatically decrypts the files.
 
-TODO: add instruction for ChatGPT.plugin setup and passing api key to neovim
-wrapper.
+{% todo() %} add instruction for ChatGPT.plugin setup and passing api key to
+neovim wrapper. {% end %}
