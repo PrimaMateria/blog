@@ -35,21 +35,18 @@ header {
 }
 
 .octopus {
-  display: flex;
+  display: grid;
+  grid-template-columns: 60px auto;
+  grid-gap: 10px;
+
   min-height: 60px;
   margin-top: 32px;
   margin-bottom: 32px;
-  .icon {
-    width: 60px;
-    padding-right: 10px;
-  }
-  .content {
-    flex-grow: 1;
+
+  .octopus-content {
     .octopus-talk {
       color: #ec5f67;
       font-style: italic;
-      margin-top: 8px;
-      margin-bottom: 24px;
     }
   }
 }

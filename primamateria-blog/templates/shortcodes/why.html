@@ -1,10 +1,10 @@
 <div class="why octopus">
-  <div class="icon">
+  <div class="octopus-icon">
     <img src="{{ get_url(path="octopus-why.png") }}" title="Octopus asking
     question"/>
   </div>
-  <div class="content">
-    <div class="octopus-talk">{{question}}</div>
-    <div class="answer">{{answer}}</div>
+  <div class="octopus-content">
+    <div class="octopus-talk">{{question | markdown | safe }}</div>
+    <div class="octopus-answer">{{ answer | markdown | safe }}</div>
   </div>
 </div>
