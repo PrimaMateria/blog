@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        
+
+        <title>PrimaMateria&#x27;s blog</title>
+
+        
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/themePrimaMateria.css">
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+
+        
+    </head>
+    <body>
+        <div class="content">
+        
+        
+    <header>
+        <div class="header-left">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog" class="logo">
+              <div>
+                <img src="https://primamateria.github.io/blog/logo.png" />
+                <div class="title">
+                  PrimaMateria&#x27;s blog
+                </div>
+              </div>
+            </a>
+        </div>
+        <div class="header-right">
+            <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
+              <ul>
+                
+                
+                <li class="nav">
+                    <a itemprop="url" href="https://github.com/PrimaMateria">
+                        <img class="icon" src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/icons/github.svg" alt="Github">
+                    </a>
+                </li>
+                
+              </ul>
+            </nav>
+        </div>
+    </header>
+
+        
+        <main>
+            
+<article itemscope itemtype="http://schema.org/BlogPosting">
+    <div itemprop="headline">
+        
+        
+
+        <h1>Running Steam and Project Zomboid on NixOS</h1>
+        <div class="border"></div>
+        <time datetime="2022-10-29" class="date" itemprop="datePublished">
+            29 Oct 2022
+        </time>
+        <div class="date">
+          Reading time: 5min
+        </div>
+    </div>
+
+    
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/notes/nixos-steam-project-zomboid/#declaring-steam">Declaring Steam</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/notes/nixos-steam-project-zomboid/#declaring-steam-games">Declaring Steam games</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/notes/nixos-steam-project-zomboid/#installing-project-zomboid">Installing Project Zomboid</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/notes/nixos-steam-project-zomboid/#mouse-support">Mouse support</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/notes/nixos-steam-project-zomboid/#steam-games-run-from-dmenu">Steam games run from dmenu</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/notes/nixos-steam-project-zomboid/#another-discovered-ideas-and-packages">Another discovered ideas and packages</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    <div itemprop="articleBody">
+        <p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;f23281631850103200.png" />
+
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;b5ef1961a7caaa7400.png" />
+
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;9c0b0b7da6516d1b00.png" />
+</p>
+<p>Over three years ago I made a decision to switch completely from Windows to
+Linux. Full disk format and single boot to KDE Manjaro (which quickly became
+i3wm Manjaro). The intention to game on Linux was clear from the beginning.
+During that time I learned about Proton, Glorious Eggrolls, Lutris and I started
+to hate Easy Anti-Cheat for the lack of support for the games that would
+otherwise run flawlessly on Wine.</p>
+<p>I learned a lot, but it ended with switch back to the dual-boot. Since then
+there was a clear-cut between the gaming and usage. And I still stand by this
+decision. Windows is still in my opinion superior gaming platform. But here I am
+again, going to setup Steam and run, as first, Project Zomboid on NixOS. What
+was the dealbreaker? The Valve's courage behind Steam Deck.</p>
+<h2 id="declaring-steam">Declaring Steam</h2>
+<p><a href="https://nixos.wiki/wiki/Steam">Wiki page</a> suggests enabling programs steam.
+This is Nixos system configuration not a home manager's <code>programs</code>. I have
+already allowed unfree packages, so I didn't need to extended
+<code>allowUnfreePredicate</code>.</p>
+<pre data-lang="nix" style="background-color:#2b303b;color:#c0c5ce;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#bf616a;">programs</span><span>.</span><span style="color:#bf616a;">steam </span><span style="background-color:#bf616a;color:#2b303b;">=</span><span> {
+</span><span>  </span><span style="color:#d08770;">enable </span><span>= </span><span style="color:#d08770;">true</span><span>;
+</span><span>  </span><span style="color:#d08770;">remotePlay</span><span>.</span><span style="color:#d08770;">openFirewall </span><span>= </span><span style="color:#d08770;">true</span><span>; </span><span style="color:#65737e;"># Open ports in the firewall for Steam Remote Play
+</span><span>  </span><span style="color:#d08770;">dedicatedServer</span><span>.</span><span style="color:#d08770;">openFirewall </span><span>= </span><span style="color:#d08770;">true</span><span>; </span><span style="color:#65737e;"># Open ports in the firewall for Source Dedicated Server
+</span><span>}</span><span style="background-color:#bf616a;color:#2b303b;">;</span><span>
+</span></code></pre>
+<p>I kept <code>remotePlay</code> and <code>dedicatedServer</code> set to <code>true</code>. After applying this
+changes I was able to run steam. First run update the Steam client, and after
+authentication I was able to see my library.</p>
+<h2 id="declaring-steam-games">Declaring Steam games</h2>
+<p>I was expecting there will be a way to declare which games to install the
+nix-way - declaring them in the nix configuration and automate steam
+installation. Closest to this concept I found to be
+<a href="https://github.com/juliosueiras-nix/nix-steam">https://github.com/juliosueiras-nix/nix-steam</a>.
+It has already some games predefined, and it also provides a guide how to add
+your own games. I will keep this option parked for the case I would start gaming
+big on Linux (I doubt that now).</p>
+<h2 id="installing-project-zomboid">Installing Project Zomboid</h2>
+<p>I have installed Project Zomboid the standard way through Steam client. It
+worked flawlessly. Project Zomboid doesn't sync save data to Steam cloud. The
+next task was to bring them from Windows. First I declared a mount point in the
+Nixos configuration:</p>
+<pre data-lang="nix" style="background-color:#2b303b;color:#c0c5ce;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#bf616a;">fileSystems</span><span>.&quot;</span><span style="color:#a3be8c;">/mnt/c</span><span>&quot; </span><span style="background-color:#bf616a;color:#2b303b;">=</span><span> {
+</span><span>  </span><span style="color:#d08770;">device </span><span>= &quot;</span><span style="color:#a3be8c;">/dev/disk/by-uuid/6C8A776F8A773524</span><span>&quot;;
+</span><span>  </span><span style="color:#d08770;">fsType </span><span>= &quot;</span><span style="color:#a3be8c;">ntfs</span><span>&quot;;
+</span><span>  </span><span style="color:#d08770;">options </span><span>= [ &quot;</span><span style="color:#a3be8c;">defaults</span><span>&quot; &quot;</span><span style="color:#a3be8c;">user</span><span>&quot; &quot;</span><span style="color:#a3be8c;">rw</span><span>&quot; &quot;</span><span style="color:#a3be8c;">utf8</span><span>&quot; &quot;</span><span style="color:#a3be8c;">umask=000</span><span>&quot; &quot;</span><span style="color:#a3be8c;">nofail</span><span>&quot; ];
+</span><span>}</span><span style="background-color:#bf616a;color:#2b303b;">;</span><span>
+</span></code></pre>
+<p>Then I created a link to Zomboid Saves folder on Windows. Just for safety I
+decided to back it up first. While doing this I realized that the mount point is
+read-only. The above options though contain the <code>rw</code> flag and I also verified
+that <code>ntfs-3g</code> is present on the path. After some googling I have found a
+solution in
+<a href="https://askubuntu.com/posts/1192233/revisions">https://askubuntu.com/posts/1192233/revisions</a>.
+Change the settings in the Windows and after booting back to Linux, the mount
+point was writable.</p>
+<p>I started the game and loaded my latest save. Everything worked correctly. Later
+I have verified in Windows that the saves produced on Linux are usable as well.</p>
+<h2 id="mouse-support">Mouse support</h2>
+<p>For Project Zomboid I am used to keys assigned on the mouse which toggle
+inventory and health windows. It helps with looking in distance for incoming
+zombies while being in the stalker mode. I own Logitech G502 mouse. The official
+client sadly is not supported on Linux. But fortunately there exists foss
+alternative in combo of <a href="https://github.com/libratbag/libratbag">ratbagd</a>
+service and its GUI <a href="https://github.com/libratbag/piper">piper</a>.</p>
+<p>I found existing
+<a href="https://github.com/libratbag/piper/issues/752">issue on GitHub</a> that suggests
+reconnecting the mouse. Doing this fixes the connection issue, but it is a bit
+annoying. Fortunately the mouse needs to be configured once and the last profile
+is remembered and applied on next restart.</p>
+<h2 id="steam-games-run-from-dmenu">Steam games run from dmenu</h2>
+<p>The last little enhancement was creating dmenu for running steam games. I found
+an existing script on
+<a href="https://github.com/SFort/steam-dmenu">https://github.com/SFort/steam-dmenu</a>,
+and I just wrapped it to nix configuration:</p>
+<pre data-lang="nix" style="background-color:#2b303b;color:#c0c5ce;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#bf616a;">steamRun </span><span style="background-color:#bf616a;color:#2b303b;">=</span><span> </span><span style="color:#bf616a;">pkgs</span><span>.</span><span style="color:#bf616a;">writeShellApplication </span><span>{
+</span><span>  </span><span style="color:#d08770;">name </span><span>= &quot;</span><span style="color:#a3be8c;">steamRun</span><span>&quot;;
+</span><span>  </span><span style="color:#d08770;">text </span><span>= &#39;&#39;
+</span><span style="color:#a3be8c;">    run=&quot;</span><span style="font-style:italic;color:#ab7967;">${</span><span style="font-style:italic;color:#bf616a;">dmenu</span><span style="font-style:italic;color:#ab7967;">}</span><span style="color:#a3be8c;">/bin/dmenu -nb black -nf white -sb yellow -sf black -l 20 -c&quot;
+</span><span style="color:#a3be8c;">    path=&quot;$HOME/.local/share/Steam/steamapps&quot;
+</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">    for arg in &quot;$path&quot;/appmanifest_*.acf; do
+</span><span style="color:#a3be8c;">      line=$(cat &quot;$arg&quot;);
+</span><span style="color:#a3be8c;">      nam=&quot;$(echo &quot;$line&quot;|tr &#39;\n\t&#39; &#39; &#39;|sed &#39;s/.*&quot;name&quot;[^&quot;]*&quot;\([^&quot;]*\).*/\1/&#39;|tr &#39; &#39; &#39;_&#39;)&quot;
+</span><span style="color:#a3be8c;">      set -- &quot;$@&quot; &quot;$nam&quot; &quot;$(echo &quot;$line&quot;|tr &#39;\n\t&#39; &#39; &#39;|sed &#39;s/.*&quot;appid&quot;[^&quot;]*&quot;\([^&quot;]*\).*/\1/&#39;)&quot;
+</span><span style="color:#a3be8c;">    done
+</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">    run=$(printf &quot;%s  :%s\n&quot; &quot;$@&quot; | $run | sed &#39;s/.*:\(.*\)/\1/&#39;)
+</span><span style="color:#a3be8c;">    test -n &quot;$run&quot; &amp;&amp; xdg-open &quot;steam://run/$run&quot;
+</span><span style="color:#a3be8c;">  </span><span>&#39;&#39;;
+</span></code></pre>
+<p>And added new i3 shortcut:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>&quot;${mod}+s&quot; = &quot;exec --no-startup-id ${steamRun}/bin/steamRun&quot;;
+</span></code></pre>
+<h2 id="another-discovered-ideas-and-packages">Another discovered ideas and packages</h2>
+<ul>
+<li><a href="https://developer.valvesoftware.com/wiki/SteamCMD">SteamCMD</a></li>
+<li><a href="https://github.com/dmadisetti/steam-tui">steam-tui</a></li>
+<li><a href="https://github.com/flightlessmango/MangoHud">MangoHud</a></li>
+</ul>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;36362cd8131e3a2c00.png" />
+
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;512e22f67618049700.png" />
+
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;cf84dece5f74ed7000.png" />
+</p>
+
+    </div>
+</article>
+
+        </main>
+        
+        <footer>
+            
+            <div class="border"></div>
+            <div class="footer">
+                <small class="footer-left">
+                    Copyright &copy; Matus Benko
+                </small>
+                <small class="footer-right">
+                    Powered by <a href="https://www.getzola.org">Zola</a> | Theme <a href="https://github.com/barlog-m/oceanic-zen">Oceanic Zen</a>
+                </small>
+            </div>
+        
+        </footer>
+    
+        </div>
+    </body>
+</html>

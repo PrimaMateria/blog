@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://primamateria.github.io/blog/</loc>
+    </url>
+    <url>
+        <loc>https://primamateria.github.io/blog/notes/</loc>
+    </url>
+    <url>
+        <loc>https://primamateria.github.io/blog/notes/nixos-stable-diffusion/</loc>
+        <lastmod>2022-10-08</lastmod>
+    </url>
+    <url>
+        <loc>https://primamateria.github.io/blog/notes/nixos-steam-project-zomboid/</loc>
+        <lastmod>2022-10-29</lastmod>
+    </url>
+    <url>
+        <loc>https://primamateria.github.io/blog/notes/time-tracking/</loc>
+        <lastmod>2021-12-11</lastmod>
+    </url>
+</urlset>
