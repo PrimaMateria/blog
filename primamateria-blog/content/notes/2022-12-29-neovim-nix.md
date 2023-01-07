@@ -1,6 +1,9 @@
 +++
 title = "How to create your own Neovim flake"
 date = 2022-12-29
+
+[extra]
+banner = "neovim-banner.png"
 +++
 
 ## Introduction
@@ -21,7 +24,9 @@ Please, be aware that I am also learning nix and possibly I might have done
 something the wrong way. If you have more experience, and have a constructive
 feedback please drop a message.
 
-{% todo() %} Add contact page {% end %}
+{% todo() %} `Add` contact page {% end %}
+
+{{ end() }}
 
 ## Initialize the flake
 
@@ -67,8 +72,6 @@ access to all recently merged features.
 
 {{ why(question="Why do we override Neovim's flake nixpkgs input to follow the unstable version? ", answer="This way we instruct Neovim to be build using the same packages. Probably it would work even without it. And I kind of repeat it as a convention. But I can't see it as a recursive fix -meaning, if Neovim depends on other flakes, their nixpkgs inputs won't follow the provided value.") }}
 
-{% todo() %} rewrite the answer {% end %}
-
 As the initial step, we will pass Neovim from the input to the output.
 
 ```nix
@@ -105,6 +108,8 @@ nix run
 
 If all goes well, you should be welcomed with the neovim welcome message and the
 version should be the most up-to-date one from the master branch.
+
+{{ end() }}
 
 ## Custom Neovim package
 
@@ -150,56 +155,56 @@ Neovim package.
     }
 ```
 
-{% todo() %} test and format the code {% end %}
-
 Test with `nix run` if everything is allright.
+
+{{ end() }}
 
 ## Add vim script config
 
-Lua, good, will migrate later. If you are already pure lua user, read later to
-see how to provide lua configs. Basic config with setters.
-
-Some of my Neovim configuration is still written in Vim sript. I know, it should
+Some of my Neovim configuration is still written in Vim sript. I know it should
 possible to migrate it all to lua, but this will be a project for later.
 
-My vim scripts I organize in files in `config/vim`. For the example you will
-configure vim setters. Start from bottom up:
+I organize my vim scripts into files in `config/vim`. At first, let's write it
+all down, and then I will explain it all.
 
 ```vim
-# config/vim/nvim-setters.nix
-# vim: ft=vim
-''
-  set tabstop=2 softtabstop=2
-  set shiftwidth=2
-  set expandtab
-  set smartindent
-  set number
-''
+" config/vim/nvim-0-init.vim
+let mapleader = " "
 ```
 
-This is a nix file which when imported will resolve to multiline string. To
-enable vim formatting you can force filetype `vim` in the
-[modeline](https://neovim.io/doc/user/options.html#modeline) `vim: ft=vim`.
-
-Next, create `default.nix` in the `vim` directory. This is like an index file in
-the javascript. If you import in nix a path leading to directory, it will
-automatically look for `default.nix` file.
+```vim
+" config/vim/nvim-setters.vim
+set tabstop=2 softtabstop=2
+set shiftwidth=2
+set expandtab
+set smartindent
+set number
+```
 
 ```nix
-# config/vim/default.nix
-{ }:
-  import ./nvim-setters.nix
-  # + import ./nvim-fugitive.nix (later you can concat another imported strings with + operator
+# config/default.nix
+{ pkgs }:
+let
+  scripts2ConfigFiles = dir:
+    let
+      configDir = pkgs.stdenv.mkDerivation {
+        name = "nvim-${dir}-configs";
+        src = ./${dir};
+        installPhase = ''
+          mkdir -p $out/
+          cp ./* $out/
+        '';
+      };
+    in builtins.map (file: "${configDir}/${file}")
+    (builtins.attrNames (builtins.readDir configDir));
+
+  sourceConfigFiles = files:
+    builtins.concatStringsSep "\n" (builtins.map (file:
+      "source ${file}") files);
+
+  vim = scripts2ConfigFiles "vim";
+in sourceConfigFiles vim
 ```
-
-The same we will do for the directory `config`:
-
-```nix
-{ }:
-  import ./vim
-```
-
-And now, add the config to your custom Neovim package.
 
 ```nix
 # packages/myNeovim.nix
@@ -213,15 +218,75 @@ in pkgs.wrapNeovim neovim.packages.x86_64-linux.neovim {
     }
 ```
 
-Run with `nix run` and verify that side column with numbers is now visible.
+### Understand Vim scripts
+
+At first we created to vim scripts: `nvim-setters.vim` and `nvim-0-init.vim`.
+The latter one has `0` in the name to ensure that it is the first file in the
+directory. For an example, this is important for the leader key. If we would
+call `nnoremap <leader>x foo<cr>` before updating `mapleader` to desired key, it
+would assume a default `\` leader key for these mappings.
+
+### Understand config's default nix script
+
+Then you created `default.nix`. Default file acts somehow as `index.js` in
+javascript. If you later import path leading to directory, nix will
+automatically look for it.
+
+`default.nix` resolves to a function which returns string which will be the
+content of our `vimrc`.
+
+The body of function is a call to `sourceConfigFiles` with argument `vim`. In
+the `let-in` block you can see both defined.
+
+### Understand transformation of Vim Script to Config files in nix store
+
+`vim` is a result `script2ConfigFiles` call with argument `"vim"`. The argument
+defines the sub-directory name from which we want to read the vim scripts.
+
+`script2ConfigFiles` function first in `let-in` block prepares `configDir` which
+is a nix derivation. This derivation is a directory which contains all vim
+files. The `installPhase` creates `$out` directory (this variable is
+automatically provided during the evaluation) in the `/nix/store` and copies
+everything from our source directory (`src = ./${dir}`) to it.
+
+The body of `script2ConfigFiles` evalautes as follows:
+
+- `builtins.readDir configDir` returns a set of all files in the path
+  `configDir`. If we pass a `configDir` which is a value with derivation type,
+  nix will automatically translate it to a path in `/nix/store` of this
+  derivation. Returned set consists of attributes being filenames and values
+  being filetypes.
+- `builtins.attrNames (builtins.readDir configDir)` selects attributes
+  (filenames) and collects them to a list of strings.
+- `builtins.map (file: "${configDir}/${file}") <list of filenames>` will execute
+  provided function on each item of the list of filenames. The function will
+  construct a string representing full path to the file in the derivation in the
+  `/nix/store`. The result is the a list of full paths poiting to your vim
+  scripts installed in `/nix/store`.
+
+So that is the `vim` variable - the list of strings which are full paths
+pointing to `/nix/store` derivation which holds copies of all your vim files in
+the `config/vim` directory.
+
+### Understand transformation of Config files paths to vim source commands
+
+Function `sourceConfigFiles` takes the list of installed script files, and each
+of it transforms to a list of strings `source <NIX_STORE_PATH_OF_VIM_SCRIPT>`.
+
+{{ why(question="Why do we need to do it such complicated way?", answer="At the beginning I used to have all configs in one big nix string. This became messy and hard to navigate, so first I extracted configuration for each plugin or common area to separate nix files, and combined them later together via import calls. I still didn't like that I write vim code in nix string, so then I decided to package all files to derivation and source them as vim files. It is also helpfull that now it is enough just to add a new file to the directory, and it will be automatically used, rather than importing it here or there manually.") }}
+
+Starting neovim now with `nix run` should show the numbers column.
+
+{{ end() }}
 
 ## Add plugin from Nixpkgs
 
 Usually you will find the most popular plugins in nixpkgs. Plugins definition in
 nixpkgs can also list their dependencies, so when the it depends on other
-plugins, these will be installed and included to Neovim as well.
+plugins, these will be installed and included to Neovim automatically without a
+need to explicitly listing them.
 
-For the example, we will add the telescope plugin. First we will create a
+For the example, we will add the Telescope plugin. First we will create a
 separate nix file which will contain a list of the plugins:
 
 ```nix
@@ -232,6 +297,8 @@ with pkgs.vimPlugins; [
 ]
 ```
 
+{{ tip(tip="`with-expression` allows you to avoid repeating the selects from `pkgs.vimPlugins` for each listed plugin name.") }}
+
 Add now extend your Neovim package to include all plugins listed in
 `plugins.nix`:
 
@@ -239,19 +306,17 @@ Add now extend your Neovim package to include all plugins listed in
 # packages/myNeovim.nix
 { pkgs }:
 let
+  customRC = import ../config;
   plugins = import ../plugins.nix;
 in pkgs.wrapNeovim neovim.packages.x86_64-linux.neovim {
       configure = {
+        inherit customRC;
         packages.all.start = plugins pkgs;
       };
     }
 ```
 
-{% todo() %} test and format the code {% end %}
-
-{{ why(question="Why we set `packages.all.start`?", answer="Word all doesn't matter and can be anything. And start signifies that the plugins will be loaded on start.") }}
-
-{% todo() %} rephrase and verify start {% end %}
+{{ why(question="Why we set `packages.all.start`?", answer="Word `all` doesn't matter and can be anything. And the `start` signifies that the plugins will be loaded on the Neovim's launch. The other options is `opt` which allows to load plugin only via command `:packadd $plugin-name`. I don't see yet a reason for using opt plugins. If I would need to craft a Neovim flavor specialized for one development (e.g. one for web development, another for arduino), I would probably construct different apps in the flake.") }}
 
 TIP: Searching nixpkgs for available plugins.
 
@@ -272,6 +337,10 @@ LSP server.
 ## Generate lua config from nix
 
 LSP config with reference to LSP server package.
+
+This is a nix file which when imported will resolve to multiline string. To
+enable vim formatting you can force filetype `vim` in the
+[modeline](https://neovim.io/doc/user/options.html#modeline) `vim: ft=vim`.
 
 ## Package anything else
 
