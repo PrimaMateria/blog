@@ -318,9 +318,29 @@ in pkgs.wrapNeovim neovim.packages.x86_64-linux.neovim {
 
 {{ why(question="Why we set `packages.all.start`?", answer="Word `all` doesn't matter and can be anything. And the `start` signifies that the plugins will be loaded on the Neovim's launch. The other options is `opt` which allows to load plugin only via command `:packadd $plugin-name`. I don't see yet a reason for using opt plugins. If I would need to craft a Neovim flavor specialized for one development (e.g. one for web development, another for arduino), I would probably construct different apps in the flake.") }}
 
-TIP: Searching nixpkgs for available plugins.
+You can search plugins in nixpkgs either through
+[website](https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=vimPlugins.telescope).
+Notice that the selected channel is unstable. This channel might have some
+additional plugins compared to stable channel, or newer version of them.
 
-INFO: How to verify which plugins were included (checking results).
+{{ why(question="How about searching from the terminal?", answer="Actually, it
+is harder than you would think. You can always do
+`nix search nixpkgs vimPlugins.telescope`, but this will search `nixpkgs`
+channel which corresponds with the stable channel. If you run
+`sudo nix-channel --list`, it will reveal to you which url is associated with
+the `nixpkgs` alias.
+
+The only way I have found was to add the unstable channel
+`sudo nix-channel --add https://nixos.org/channels/nixpkgs-unstable unstable`,
+update channels with `sudo nix-channel --update`, and then search with
+`nix-env -qaP 'vimplugin.telescope.*' | grep unstable`. The trick here is that
+in this case you don't query the package's attribute path, but the its symbolic
+name, which I find unclear.") }}
+
+Before you can verify that Telescope works, we still need to write a config for
+it. This is decribed in next chapter.
+
+{{ end() }}
 
 ## Add lua script config
 
@@ -382,3 +402,5 @@ Alias for nix run. How about packages? Maybe won't work after adding secrets.
 Verify and possibly get rid of packages.
 
 ## Updating
+
+## Support other systems
