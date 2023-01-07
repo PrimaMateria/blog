@@ -316,7 +316,7 @@ in pkgs.wrapNeovim neovim.packages.x86_64-linux.neovim {
     }
 ```
 
-{{ why(question="Why we set `packages.all.start`?", answer="Word `all` doesn't matter and can be anything. And the `start` signifies that the plugins will be loaded on the Neovim's launch. The other options is `opt` which allows to load plugin only via command `:packadd $plugin-name`. I don't see yet a reason for using opt plugins. If I would need to craft a Neovim flavor specialized for one development (e.g. one for web development, another for arduino), I would probably construct different apps in the flake.") }}
+{{ why(question="Why we set `packages.all.start`?", answer="Word `all` doesn't matter and can be anything. And the `start` signifies that the plugins will be loaded on the Neovim's launch. The other options is `opt` which allows to load plugin only via command `:packadd $plugin-name`. I don't see yet a reason for using opt plugins. If I would need to craft a specialized Neovim flavor (e.g. one for web development, another for arduino), I would probably construct different apps in the flake.") }}
 
 You can search plugins in nixpkgs either through
 [website](https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=vimPlugins.telescope).
@@ -344,7 +344,56 @@ it. This is decribed in next chapter.
 
 ## Add lua script config
 
-Configure telescope.
+You will add lua script to `config/lua` and extend `config/default.nix` to load
+it in simmilar manner as you loaded the vim script.
+
+```lua
+-- config/lua/nvim-telescope.lua
+local opt = { noremap = true }
+local telescope = require("telescope")
+telescope.setup({ })
+vim.api.nvim_set_keymap("n", "<leader><tab>", ":lua require('telescope.builtin').find_files()<CR>", opt)
+```
+
+```nix
+# config/default.nix
+{ pkgs }:
+let
+  scripts2ConfigFiles = dir:
+    let
+      configDir = pkgs.stdenv.mkDerivation {
+        name = "nvim-${dir}-configs";
+        src = ./${dir};
+        installPhase = ''
+          mkdir -p $out/
+          cp ./* $out/
+        '';
+      };
+    in builtins.map (file: "${configDir}/${file}")
+    (builtins.attrNames (builtins.readDir configDir));
+
+  sourceConfigFiles = files:
+    builtins.concatStringsSep "\n" (builtins.map (file:
+      (if pkgs.lib.strings.hasSuffix "lua" file then "luafile" else "source")
+      + " ${file}") files);
+
+  vim = scripts2ConfigFiles "vim";
+  lua = scripts2ConfigFiles "lua";
+
+in builtins.concatStringsSep "\n"
+(builtins.map (configs: sourceConfigFiles configs) [ vim lua ])
+```
+
+First extend `sourceConfigFiles` to use `source` or `luafile` based on the
+file's extension. Then prepare `lua` variable by calling `scripts2ConfigFiles`
+and pointing it to `lua` sub-directory. At last, the body of module function to
+execute `sourceConfigFiles` on list of variables and concatenate the returned
+strings with new-line character into one single string.
+
+Now, if you execute `nix run` and hit space-tab, it should show telescope window
+to find files.
+
+{{ end() }}
 
 ## Add plugin not found in Nixpkgs
 
