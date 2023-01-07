@@ -34,23 +34,29 @@ header {
   }
 }
 
-.why {
+.octopus {
   display: flex;
+  min-height: 60px;
   margin-top: 32px;
   margin-bottom: 32px;
   .icon {
-    font-size: 36px;
     width: 60px;
-    filter: grayscale(80%);
+    padding-right: 10px;
   }
   .content {
     flex-grow: 1;
-    .question {
+    .octopus-talk {
+      color: #ec5f67;
       font-style: italic;
-      margin-top: 16px;
+      margin-top: 8px;
       margin-bottom: 24px;
     }
   }
+}
+
+.end {
+  color: #99c794;
+  margin-top: -8px;
 }
 
 .todo {
