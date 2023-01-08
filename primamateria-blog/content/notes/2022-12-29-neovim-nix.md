@@ -132,9 +132,21 @@ Neovim package.
   };
   outputs = { self, nixpkgs, neovim }:
     let
-      overlay = prev: final: {
-        myNeovim = import ./packages/myNeovim.nix;
+      overlayFlakeInputs = prev: final: {
+        neovim = neovim.packages.x86_64-linux.neovim;
       };
+
+      overlayMyNeovim = prev: final: {
+        myNeovim = import ./packages/myNeovim.nix {
+          pkgs = final;
+        };
+      };
+
+      pkgs = import nixpkgs {
+        system = "x86_64-linux";
+        overlays = [ overlayFlakeInputs overlayMyNeovim ];
+      };
+
     in {
       packages.x86_64-linux.default = pkgs.myNeovim;
       apps.x86_64-linux.default = {
@@ -145,15 +157,33 @@ Neovim package.
 }
 ```
 
+Here you introduced overlays. An overlay allows you to add or override some
+attributes of already present package from nixpkgs. Overlay is a function with 2
+arguments: `prev` and `final`. `prev` is the original "untouched" `nixpkgs` and
+`final` is then the modified `nixpkgs`.
+
+The overlays are set to `nixpkgs` together with the `system`. Based on the
+`system` nix will know which package it needs to use in the build process.
+
+In the first overlay `overlayFlakeInputs` you override `neovim` with the Neovim
+package that comes from the flake inputs. In the second overlay you introduce
+new attribute `myNeovim` which calls a function defined in separate file:
+
 ```nix
 # packages/myNeovim.nix
 { pkgs }:
-    pkgs.wrapNeovim neovim.packages.x86_64-linux.neovim {
+    pkgs.wrapNeovim pkgs.neovim {
       configure = {
          # here will come your custom configuration
       };
     }
 ```
+
+The function takes an input `pkgs` which is set to overlay's `final` argument.
+Therefore the `pkgs.neovim` now refers to the `neovim` declared in
+`overlayFlakeInputs`. If you would pass in the flake `prev` argument, then the
+`neovim` would actually refer to package defined in original nixpkgs on unstable
+channel.
 
 Test with `nix run` if everything is allright.
 
@@ -211,7 +241,7 @@ in sourceConfigFiles vim
 { pkgs }:
 let
   customRC = import ../config;
-in pkgs.wrapNeovim neovim.packages.x86_64-linux.neovim {
+in pkgs.wrapNeovim pkgs.neovim {
       configure = {
         inherit customRC;
       };
@@ -308,7 +338,7 @@ Add now extend your Neovim package to include all plugins listed in
 let
   customRC = import ../config;
   plugins = import ../plugins.nix;
-in pkgs.wrapNeovim neovim.packages.x86_64-linux.neovim {
+in pkgs.wrapNeovim pkgs.neovim {
       configure = {
         inherit customRC;
         packages.all.start = plugins pkgs;
@@ -386,12 +416,12 @@ in builtins.concatStringsSep "\n"
 
 First extend `sourceConfigFiles` to use `source` or `luafile` based on the
 file's extension. Then prepare `lua` variable by calling `scripts2ConfigFiles`
-and pointing it to `lua` sub-directory. At last, the body of module function to
-execute `sourceConfigFiles` on list of variables and concatenate the returned
-strings with new-line character into one single string.
+and pointing it to `lua` sub-directory. At last, modify the body of module
+function to execute `sourceConfigFiles` on list of variables and concatenate the
+returned strings with new-line character into one single string.
 
-Now, if you execute `nix run` and hit space-tab, it should show telescope window
-to find files.
+Now, if you execute `nix run` and hit space-tab, it should show telescope
+window.
 
 {{ end() }}
 
