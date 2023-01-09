@@ -24,7 +24,12 @@ Please, be aware that I am also learning nix and possibly I might have done
 something the wrong way. If you have more experience, and have a constructive
 feedback please drop a message.
 
-{% todo() %} `Add` contact page {% end %}
+{% todo() %} Add contact page {% end %} {% todo() %} Create repo and add git
+checkout commands to each chapter. {% end %}
+
+TODO: Disclaimer that this is not full-blown neovim configuration. Guide is
+meant to demosntrate different concepts of nix configuration. Once done, you
+should be able to fill the gaps with your plugins and configs.
 
 {{ end() }}
 
@@ -321,7 +326,7 @@ separate nix file which will contain a list of the plugins:
 
 ```nix
 # plugins.nix
-pkgs:
+{ pkgs }:
 with pkgs.vimPlugins; [
   telescope-nvim
 ]
@@ -337,11 +342,11 @@ Add now extend your Neovim package to include all plugins listed in
 { pkgs }:
 let
   customRC = import ../config;
-  plugins = import ../plugins.nix;
+  plugins = import ../plugins.nix { inherit pkgs; };
 in pkgs.wrapNeovim pkgs.neovim {
       configure = {
         inherit customRC;
-        packages.all.start = plugins pkgs;
+        packages.all.start = plugins;
       };
     }
 ```
@@ -491,7 +496,7 @@ pkgs.vimUtils.buildVimPlugin {
 
 ```nix
 # plugins.nix
-pkgs:
+{ pkgs }:
 with pkgs.vimPlugins; [
   telescope-nvim
   telescope-recent-files
@@ -510,7 +515,58 @@ vim.api.nvim_set_keymap("n", "<leader><leader>", ":lua require('telescope').exte
 
 ## Add runtime dependency
 
-LSP server.
+LSP server and lazygit to show the issue with simlink.
+
+```nix
+# runtimeDeps.nix
+{ pkgs }:
+{
+  deps1 = with pkgs; [
+    nodePackages.typescript
+    nodePackages.typescript-language-server
+  ];
+  deps2 = with pkgs; [ lazygit ];
+}
+```
+
+TODO: verify that the symlink issue is still there
+
+WHY: 2 lists
+
+```nix
+# packages/myNeovim.nix
+{ pkgs }:
+let
+  customRC = import ../config;
+  plugins = import ../plugins.nix { inherit pkgs; };
+  runtimeDeps = import ../runtimeDeps.nix { inherit pkgs; };
+  neovimRuntimeDependencies = pkgs.symlinkJoin {
+    name = "neovimRuntimeDependencies";
+    paths = runtimeDeps.deps1;
+  };
+  neovimRuntimeDependencies2 = pkgs.symlinkJoin {
+    name = "neovimRuntimeDependencies2";
+    paths = runtimeDeps.deps2;
+  };
+  myNeovimUnwrapped = pkgs.wrapNeovim pkgs.neovim {
+    configure = {
+      inherit customRC;
+      packages.all.start = plugins;
+    };
+  };
+in pkgs.writeShellApplication {
+  name = "myNeovim";
+  runtimeInputs = [ neovimRuntimeDependencies2 neovimRuntimeDependencies ];
+  text = ''
+    ${myNeovimUnwrapped}/bin/nvim "$@"
+  '';
+}
+```
+
+Describe wrapper pattern.
+
+Test by running and verifying that in terminal we can call tsserver, but when we
+quit Neovim then not.
 
 ## Generate lua config from nix
 
@@ -520,13 +576,153 @@ This is a nix file which when imported will resolve to multiline string. To
 enable vim formatting you can force filetype `vim` in the
 [modeline](https://neovim.io/doc/user/options.html#modeline) `vim: ft=vim`.
 
+```nix
+# config/luanix/nvim-lspconfig.lua.nix
+# vim: ft=lua
+{ pkgs }:
+''
+local nvim_lsp = require("lspconfig")
+nvim_lsp.tsserver.setup({
+  init_options = {
+    tsserver = {
+      path = "${pkgs.nodePackages.typescript}/lib/node_modules/typescript/lib",
+    },
+  },
+})
+''
+```
+
+```nix
+# config/default.nix
+{ pkgs }:
+let
+  nixFiles2ConfigFiles = dir:
+    builtins.map (file:
+      pkgs.writeTextFile {
+        name = pkgs.lib.strings.removeSuffix ".nix" file;
+        text = import ./${dir}/${file} { inherit pkgs; };
+      }) (builtins.attrNames (builtins.readDir ./${dir}));
+
+  scripts2ConfigFiles = dir:
+    let
+      configDir = pkgs.stdenv.mkDerivation {
+        name = "nvim-${dir}-configs";
+        src = ./${dir};
+        installPhase = ''
+          mkdir -p $out/
+          cp ./* $out/
+        '';
+      };
+    in builtins.map (file: "${configDir}/${file}")
+    (builtins.attrNames (builtins.readDir configDir));
+
+  sourceConfigFiles = files:
+    builtins.concatStringsSep "\n" (builtins.map (file:
+      (if pkgs.lib.strings.hasSuffix "lua" file then "luafile" else "source")
+      + " ${file}") files);
+
+  vim = scripts2ConfigFiles "vim";
+  lua = scripts2ConfigFiles "lua";
+  luanix = nixFiles2ConfigFiles "luanix";
+
+in builtins.concatStringsSep "\n"
+(builtins.map (configs: sourceConfigFiles configs) [ vim lua luanix])
+```
+
 ## Package anything else
 
-Add snipets
+Add snippets
+
+```nix
+# packages/ultisnipsSnippets.nix
+{ pkgs }:
+pkgs.stdenv.mkDerivation {
+  name = "ultisnipsSnippets";
+  src = ../ultisnips;
+  installPhase = ''
+    mkdir -p $out/
+    cp ./*.snippets $out/
+  '';
+}
+```
+
+```nix
+# plugins.nix
+{ pkgs }:
+with pkgs.vimPlugins; [
+  telescope-nvim
+  telescope-recent-files
+  ultisnips
+]
+```
+
+## Generate vim config from nix
+
+Use snippets
+
+```nix
+# config/vimnix/nvim-ultisnips.vim.nix
+# vim: ft=vim
+{ pkgs } : let
+  ultisnipsSnippets = import ../../packages/ultisnipsSnippets.nix { inherit pkgs; };
+in ''
+  let g:UltiSnipsSnippetDirectories=["${ultisnipsSnippets}"]
+''
+```
+
+```nix
+# config/default.nix
+{ pkgs }:
+let
+  nixFiles2ConfigFiles = dir:
+    builtins.map (file:
+      pkgs.writeTextFile {
+        name = pkgs.lib.strings.removeSuffix ".nix" file;
+        text = import ./${dir}/${file} { inherit pkgs; };
+      }) (builtins.attrNames (builtins.readDir ./${dir}));
+
+  scripts2ConfigFiles = dir:
+    let
+      configDir = pkgs.stdenv.mkDerivation {
+        name = "nvim-${dir}-configs";
+        src = ./${dir};
+        installPhase = ''
+          mkdir -p $out/
+          cp ./* $out/
+        '';
+      };
+    in builtins.map (file: "${configDir}/${file}")
+    (builtins.attrNames (builtins.readDir configDir));
+
+  sourceConfigFiles = files:
+    builtins.concatStringsSep "\n" (builtins.map (file:
+      (if pkgs.lib.strings.hasSuffix "lua" file then "luafile" else "source")
+      + " ${file}") files);
+
+  vim = scripts2ConfigFiles "vim";
+  vimnix = nixFiles2ConfigFiles "luanix";
+  lua = scripts2ConfigFiles "lua";
+  luanix = nixFiles2ConfigFiles "luanix";
+
+in builtins.concatStringsSep "\n"
+(builtins.map (configs: sourceConfigFiles configs) [ vim vimnix lua luanix])
+```
+
+Would need to configure also completion plugin, to make proper use of it. For
+demonstration purposes enough.
+
+Run and try via command.
+
+## Use your Neovim
+
+Alias for nix run or add to package. Packages needs nix update.
+
+## Updating
 
 ## Secrets
 
-Rewrite to add ChatGPT.
+Rewrite to add ChatGPT. Warn about not able to run directly from github. Also
+package must point to local path.
 
 Storing secrets in a git repository may not be necessary for you, but it is a
 useful skill to learn. In the context of Neovim, I have only used it to store an
@@ -551,14 +747,6 @@ echo '{ openai-api-key = "<API_KEY>"; }' > .secrets/secrets.nix
 All the files in the `.secrets` folder will have content tracked encrypted.
 Locally the `git-crypt` automatically decrypts the files.
 
-{% todo() %} add instruction for ChatGPT.plugin setup and passing api key to
-neovim wrapper. {% end %}
-
-## Usage
-
-Alias for nix run. How about packages? Maybe won't work after adding secrets.
-Verify and possibly get rid of packages.
-
-## Updating
-
 ## Support other systems
+
+Maybe just mention, and keep for later investigation.
