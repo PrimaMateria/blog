@@ -34,21 +34,35 @@ header {
   }
 }
 
-.why {
-  display: flex;
+.octopus {
+  display: grid;
+  grid-template-columns: 60px auto;
+  grid-gap: 10px;
+
+  min-height: 60px;
   margin-top: 32px;
   margin-bottom: 32px;
-  .icon {
-    font-size: 36px;
-    width: 60px;
-    filter: grayscale(80%);
-  }
-  .content {
-    flex-grow: 1;
-    .question {
+
+  .octopus-content {
+    .octopus-talk {
+      color: #ec5f67;
       font-style: italic;
-      margin-top: 16px;
-      margin-bottom: 24px;
     }
+  }
+}
+
+.end {
+  color: #99c794;
+  margin-top: -8px;
+}
+
+.todo {
+  margin-top: 32px;
+  margin-bottom: 32px;
+  border: 2px solid red;
+  padding: 10px;
+  span {
+    color: red;
+    font-weight: bold;
   }
 }
