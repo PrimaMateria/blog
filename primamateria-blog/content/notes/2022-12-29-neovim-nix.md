@@ -31,6 +31,11 @@ TODO: Disclaimer that this is not full-blown neovim configuration. Guide is
 meant to demosntrate different concepts of nix configuration. Once done, you
 should be able to fill the gaps with your plugins and configs.
 
+This post come out quite long. I don't think Nix is so hard. It's more the fact
+that I try not forget anything I have learned, and I might go into some details
+that could be skipped. But if they would be skipped then the knowledge would be
+not shared and lost.
+
 {{ end() }}
 
 ## Initialize the flake
@@ -552,7 +557,7 @@ popular. Managing external runtime dependencies, like language servers, was
 pain. I have looked briefly on it, and seems that they manage list of
 dependencies they support. It is honorable effort, but the community feeding and
 maintaing Nixpkgs compared to the mason's community is much larger. This is why
-think Nix will give you more freedom in declaration and configuration of your
+I think Nix will give you more freedom in declaration and configuration of your
 reusable development environment.
 
 In this chapter we will add two dependencies to demonstrate a mysterious bug I
@@ -571,7 +576,7 @@ fron Nixpkgs, but in our case we will create a set containing two lists.
 }
 ```
 
-In the your neovim package you will make more changes. Let's first write it all
+In your neovim package you will make more changes. Let's first write it all
 down.
 
 ```nix
@@ -606,17 +611,21 @@ in pkgs.writeShellApplication {
 
 First thing that you changed was that you moved a package that was previous
 returned from the module function to the `let-in` block, and assigned it to the
-variable `myNeovimUnwrapped`. And instead of it, the module function returns now
-new package - a simple shell application.
+variable `myNeovimUnwrapped`. Instead of it now the module function returns new
+package - a simple shell application.
 
-You defined `runtimeInputs` and passed list containing two packages that
-correspond to the deps you specified in the previous file. The packages are
-build using `symlinkJoin` call. `symlinkJoin` takes the provided `paths` and
-creates symlinks pointing to them all bundled together in one package.
+In the shell application you defined `runtimeInputs` and passed to it a list
+containing two packages that correspond to the dependency lists specified in the
+previous file. These packages are build using `symlinkJoin`. It takes the
+provided `paths` and creates symlinks pointing to them. All symlinksa are
+bundled together into one package.
 
 {{ tip(tip="And here occures the mysterious bug mentioned earlier. For some
-reason, `symlinkJoin` fails to create properly all links if both dependencies
-are defined together. Some links will be missing in the resulted package.
+reason, `symlinkJoin` fails to create properly all symlinks if both
+dependencies - typescript server and lazygit - are defined together. Some links
+will be missing in the resulted package.
+
+{% todo() %} Which one, check when testing {% end %}
 
 What is the rule for the mixture of the dependencies that manifests this bug I
 have failed until now to discover. That's also why I have not yet opened a bug
