@@ -556,8 +556,8 @@ have noticed it just recently, and it makes completely sense that it is getting
 popular. Managing external runtime dependencies, like language servers, was
 pain. I have looked briefly on it, and seems that they manage list of
 dependencies they support. It is honorable effort, but the community feeding and
-maintaing Nixpkgs compared to the mason's community is much larger. This is why
-I think Nix will give you more freedom in declaration and configuration of your
+maintaing Nixpkgs compared to the mason's community is much larger. his is why I
+think Nix will give you more freedom in declaration and configuration of your
 reusable development environment.
 
 In this chapter we will add two dependencies to demonstrate a mysterious bug I
@@ -632,20 +632,30 @@ have failed until now to discover. That's also why I have not yet opened a bug
 for it. The naive and rough guess is that `nodePackages.*` can't be mixed with
 other 'root' packages.") }}
 
-Back to our shell application. Describe wrapper pattern.
+Back to our shell application. It is called a
+[wrapper](https://nixos.wiki/wiki/Nix_Cookbook#Wrapping_packages), and it allows
+us to enrich the original unwrapped application. In our case packages in the
+`runtimePaths` paths will be added to `PATH` environment vairable, and therefore
+will be avaible for the Neovim process.
 
-why `"$@"`.
+{{ why(question='Why do we pass `"$@"` to unwrapped Neovim?', answer="This is shell variable which has value of all parameters passed to the script. For example, if you want to edit a specific file `nvim foo.txt`, then the parameter `foo.txt` must forwarded to the original unwrapped `nvim`.") }}
 
-Test by running and verifying that in terminal we can call tsserver, but when we
-quit Neovim then not.
+You can test now that in terminal running `typescript-language-server --version`
+will tell you that the command is not recognized. But running the command inside
+Neovim's terminal (`:term`) will work.
+
+{{ end() }}
 
 ## Generate lua config from nix
 
-LSP config with reference to LSP server package.
+All nix packages are in `/nix/store` in a directory which is prefixed with hash
+generated from the content of the package. If we want to reference some package
+from the configuration scripts, we must resolve the path of the package on build
+time. The traditional lua script configuration files that you have already set
+up lack this ability.
 
-This is a nix file which when imported will resolve to multiline string. To
-enable vim formatting you can force filetype `vim` in the
-[modeline](https://neovim.io/doc/user/options.html#modeline) `vim: ft=vim`.
+In this chapter you will add Typescript runtime dependency, and use it in the
+LSP configuration for `typescript-language-server`. Extend runtime dependencies.
 
 ```nix
 # runtimeDeps.nix
@@ -658,6 +668,8 @@ enable vim formatting you can force filetype `vim` in the
   deps2 = with pkgs; [ lazygit ];
 }
 ```
+
+Next create new `nvim-lspconfig.lua.nix` in new directory `config/luanix`.
 
 ```nix
 # config/luanix/nvim-lspconfig.lua.nix
@@ -674,6 +686,13 @@ nvim_lsp.tsserver.setup({
 })
 ''
 ```
+
+The interesting part is the tsserver's `path` set to `init_options` of the LSP.
+The value contains a nix variable `${pkgs.nodePackages.typescript}`.
+
+{{ why(question="What is `vim: ft=vim` at top of the file?", answer="We haves a nix function which returns  multiline string. Since most of this nix file will be the lua code in the string, you might want to instruct vim to use lua formatting with this [modeline](https://neovim.io/doc/user/options.html#modeline).") }}
+
+Next, extend the `config/default.nix` to process and source new configuration.
 
 ```nix
 # config/default.nix
@@ -711,6 +730,43 @@ let
 in builtins.concatStringsSep "\n"
 (builtins.map (configs: sourceConfigFiles configs) [ vim lua luanix])
 ```
+
+The new function `nixFiles2ConfigFiles` takes a `dir` argument, and returns
+(similar like for `scripts2ConfigFiles`) a list of full paths to config file
+located in the nix store.
+
+The implementation maps every file found in the provided directory to a separate
+package - a text file. The name of the package is obtained by removing the
+`.nix` suffix, so the `nvim-lspconfig.lua.nix` will become `nvim-lspconfig.lua`.
+And the content of the text file package is the string returned by the function
+in the luanix configuration.
+
+While this content is written, nix variables are resolved, and therefore
+`${pkgs.nodePackages.typescript}` will become a full nix store path of the
+typescript package.
+
+Lastly `luanix` will be processed by `sourceCOnfigFiles`, and since the text
+packages end correctly with `.lua`, in the vimrc they will be sourced with
+`luafile` call.
+
+Now to test it, we can create typescript type error, and see if the tsserver
+will catch it.
+
+```json
+# tmp/test/tsconfig.json
+{
+  "include": ["test.ts"]
+}
+```
+
+```typescript
+// tmp/test/test.ts
+const foo: number = "bar";
+```
+
+You should see an error `Type 'string' is not assignable to type 'number'.`
+
+{{ end() }}
 
 ## Package anything else
 
