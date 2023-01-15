@@ -332,7 +332,7 @@ with pkgs.vimPlugins; [
 ]
 ```
 
-{{ tip(tip="`with-expression` allows you to avoid repeating the selects from `pkgs.vimPlugins` for each listed plugin name.") }}
+{{ tip(tip="`with-expression` allows you to avoid repeating the selects from `pkgs.vimPlugins` for each listed plugin.") }}
 
 Add now extend your Neovim package to include all plugins listed in
 `plugins.nix`:
@@ -509,12 +509,12 @@ defined as well. As the source you pass the github repo from the flake inputs.
 {{ tip(tip="I noticed that some plugins have defined a Makefile. They follow the
 [mini.nvim](https://github.com/echasnovski/mini.nvim) template. The make command
 doesn't need to be executed for the plugin to work. What is in the repo is
-already full plugin that can be loaded to Neovim.
+already fully defined plugin that can be loaded to the Neovim.
 
-When Nix makes derivation with standard call `mkDerivation`, and it finds the
+When Nix makes derivation with standard `mkDerivation` call, and it finds the
 Makefile, it automatically tries to build it. This might fail, and it's not
-necessary for plugin to work. To skip this automatic build include argument
-`skipBuild = true` into the set passed to `buildVimPlugin`.") }}
+necessary for the plugin to work. To skip this automatic build include
+`skipBuild = true` into the set passed to `buildVimPlugin` function.") }}
 
 Next, you can add the plugin to the plugin list as usual.
 
@@ -539,25 +539,40 @@ vim.api.nvim_set_keymap("n", "<leader><tab>", ":lua require('telescope.builtin')
 vim.api.nvim_set_keymap("n", "<leader><leader>", ":lua require('telescope').extensions.recent_files.pick()<CR>", opt)
 ```
 
+In this state, your Neovim should be runnable, and you can test the new
+`telescope-recent-files` plugin by pressing space-space.
+
+{{ end() }}
+
 ## Add runtime dependency
 
-LSP server and lazygit to show the issue with simlink.
+Have you heard about [mason.nvim](https://github.com/williamboman/mason.nvim)? I
+have noticed it just recently, and it makes completely sense that it is getting
+popular. Managing external runtime dependencies, like language servers, was
+pain. I have looked briefly on it, and seems that they manage list of
+dependencies they support. It is honorable effort, but the community feeding and
+maintaing Nixpkgs compared to the mason's community is much larger. This is why
+think Nix will give you more freedom in declaration and configuration of your
+reusable development environment.
+
+In this chapter we will add two dependencies to demonstrate a mysterious bug I
+have found, and how to overcome it. First thing, to keep it tidy, define your
+dependencies in separate file. Ideally it would be one list of listing packages
+fron Nixpkgs, but in our case we will create a set containing two lists.
 
 ```nix
 # runtimeDeps.nix
 { pkgs }:
 {
   deps1 = with pkgs; [
-    nodePackages.typescript
     nodePackages.typescript-language-server
   ];
   deps2 = with pkgs; [ lazygit ];
 }
 ```
 
-TODO: verify that the symlink issue is still there
-
-WHY: 2 lists
+In the your neovim package you will make more changes. Let's first write it all
+down.
 
 ```nix
 # packages/myNeovim.nix
@@ -581,7 +596,7 @@ let
     };
   };
 in pkgs.writeShellApplication {
-  name = "myNeovim";
+  name = "nvim";
   runtimeInputs = [ neovimRuntimeDependencies2 neovimRuntimeDependencies ];
   text = ''
     ${myNeovimUnwrapped}/bin/nvim "$@"
@@ -589,7 +604,28 @@ in pkgs.writeShellApplication {
 }
 ```
 
-Describe wrapper pattern.
+First thing that you changed was that you moved a package that was previous
+returned from the module function to the `let-in` block, and assigned it to the
+variable `myNeovimUnwrapped`. And instead of it, the module function returns now
+new package - a simple shell application.
+
+You defined `runtimeInputs` and passed list containing two packages that
+correspond to the deps you specified in the previous file. The packages are
+build using `symlinkJoin` call. `symlinkJoin` takes the provided `paths` and
+creates symlinks pointing to them all bundled together in one package.
+
+{{ tip(tip="And here occures the mysterious bug mentioned earlier. For some
+reason, `symlinkJoin` fails to create properly all links if both dependencies
+are defined together. Some links will be missing in the resulted package.
+
+What is the rule for the mixture of the dependencies that manifests this bug I
+have failed until now to discover. That's also why I have not yet opened a bug
+for it. The naive and rough guess is that `nodePackages.*` can't be mixed with
+other 'root' packages.") }}
+
+Back to our shell application. Describe wrapper pattern.
+
+why `"$@"`.
 
 Test by running and verifying that in terminal we can call tsserver, but when we
 quit Neovim then not.
@@ -601,6 +637,18 @@ LSP config with reference to LSP server package.
 This is a nix file which when imported will resolve to multiline string. To
 enable vim formatting you can force filetype `vim` in the
 [modeline](https://neovim.io/doc/user/options.html#modeline) `vim: ft=vim`.
+
+```nix
+# runtimeDeps.nix
+{ pkgs }:
+{
+  deps1 = with pkgs; [
+    nodePackages.typescript
+    nodePackages.typescript-language-server
+  ];
+  deps2 = with pkgs; [ lazygit ];
+}
+```
 
 ```nix
 # config/luanix/nvim-lspconfig.lua.nix
