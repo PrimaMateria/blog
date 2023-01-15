@@ -642,7 +642,7 @@ will be avaible for the Neovim process.
 
 You can test now that in terminal running `typescript-language-server --version`
 will tell you that the command is not recognized. But running the command inside
-Neovim's terminal (`:term`) will work.
+Neovim's terminal (`:term`) will work. The same should apply for `lazygit`.
 
 {{ end() }}
 
@@ -745,7 +745,7 @@ While this content is written, nix variables are resolved, and therefore
 `${pkgs.nodePackages.typescript}` will become a full nix store path of the
 typescript package.
 
-Lastly `luanix` will be processed by `sourceCOnfigFiles`, and since the text
+Lastly, `luanix` will be processed by `sourceCOnfigFiles`, and since the text
 packages end correctly with `.lua`, in the vimrc they will be sourced with
 `luafile` call.
 
@@ -770,7 +770,22 @@ You should see an error `Type 'string' is not assignable to type 'number'.`
 
 ## Package anything else
 
-Add snippets
+In this chapter you won't do anything new. You will use already introduced
+mechanics to package addtional files. Hopefully, this will highlight the pattern
+used for enriching your development environment. To be more specific, you will
+add a snippet file for the typescript.
+
+```snippets
+# ultisnips/typescript.snippets
+snippet af "arrow function"
+($1) => {
+    $2
+}
+endsnippet
+```
+
+Similar as before, we we will take everything from `ultisnips` directory, and
+package it together.
 
 ```nix
 # packages/ultisnipsSnippets.nix
@@ -785,6 +800,19 @@ pkgs.stdenv.mkDerivation {
 }
 ```
 
+The package with snippets you have prepared, and you will use in the next
+chapter.
+
+{{ end() }}
+
+## Generate vim config from nix
+
+To finish the whole circle, you will introduce `vimnix` script. It will be
+configuration for the ultisnips plugin where you will set the path pointing to
+nix store's snippets package.
+
+First, let's add the plugin.
+
 ```nix
 # plugins.nix
 { pkgs }:
@@ -795,9 +823,7 @@ with pkgs.vimPlugins; [
 ]
 ```
 
-## Generate vim config from nix
-
-Use snippets
+Then in new directory `vimnix` create configuration for ultisnipps.
 
 ```nix
 # config/vimnix/nvim-ultisnips.vim.nix
@@ -808,6 +834,15 @@ in ''
   let g:UltiSnipsSnippetDirectories=["${ultisnipsSnippets}"]
 ''
 ```
+
+Again, this is a nix function returning multiline string containing vim script.
+And we use nix variable `${ultisnipsSnippets}` which is defined in `let-in`
+block and references the package created in the previous chapter.
+
+{{ why(question="Why we didn't put the `ultisnipsSinppets` package to the overlay, similar as `neovim` or `telescope-recent-files` packages?", answer="You totally could do that. Let's call this decision a personal preference. The reasoning behind is that I feel like the cohesion is better with ultisnips fingerprinting in less modules. But feel free to do it anyway you find the best.") }}
+
+In the `config/default.nix` we have everything prepared. Just load `vimnix`, and
+add it tot the list of configs that will be sourced.
 
 ```nix
 # config/default.nix
@@ -839,7 +874,7 @@ let
       + " ${file}") files);
 
   vim = scripts2ConfigFiles "vim";
-  vimnix = nixFiles2ConfigFiles "luanix";
+  vimnix = nixFiles2ConfigFiles "vimnix";
   lua = scripts2ConfigFiles "lua";
   luanix = nixFiles2ConfigFiles "luanix";
 
@@ -847,10 +882,14 @@ in builtins.concatStringsSep "\n"
 (builtins.map (configs: sourceConfigFiles configs) [ vim vimnix lua luanix])
 ```
 
-Would need to configure also completion plugin, to make proper use of it. For
-demonstration purposes enough.
+You would need to configure also completion plugin to make proper use of the
+snippets. For the demonstration purposes this is enough. To test, since we don't
+have completion set up, we can just open our `test.ts` and run `:UltisnipsEdit`.
+It should open the snippet file in the nix store (`<c-g>` to see current file
+path). Originally, you could edit the file here, but, of course, files from nix
+store are read-only.
 
-Run and try via command.
+{{ end() }}
 
 ## Use your Neovim
 
