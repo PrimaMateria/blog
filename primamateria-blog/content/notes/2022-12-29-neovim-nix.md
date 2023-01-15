@@ -432,7 +432,12 @@ window.
 
 ## Add plugin not found in Nixpkgs
 
-Add recent files.
+To demenostrate how to add a plugin which is not found in Nixpkgs, you will add
+a Telescope extension which provides a picker for recent files.
+
+Add
+[smartpde/telescope-recent-files](https://github.com/smartpde/telescope-recent-files)
+to your flake inputs.
 
 ```nix
 # flake.nix
@@ -451,14 +456,14 @@ Add recent files.
       flake = false;
     };
   };
-  outputs = { self, nixpkgs, neovim }:
+  outputs = { self, nixpkgs, neovim, telescope-recent-files-src }:
     let
       overlayFlakeInputs = prev: final: {
         neovim = neovim.packages.x86_64-linux.neovim;
 
         vimPlugins = final.vimPlugins // {
           telescope-recent-files = import ./packages/vimPlugins/telescopeRecentFiles.nix {
-            src = inputs.telescope-recent-files-src;
+            src = telescope-recent-files-src;
             pkgs = prev;
           };
         };
@@ -485,6 +490,9 @@ Add recent files.
 }
 ```
 
+In the `overlayFlakeInputs` we extend existing list of `vimPlugins` with a new
+package.
+
 ```nix
 # packages/vimPlugins/telescopeRecentFiles.nix
 { pkgs, src }:
@@ -494,6 +502,22 @@ pkgs.vimUtils.buildVimPlugin {
 }
 ```
 
+To create a package you take advantage of existing utility function
+`buildVimPlugin`. Actually this is how all plugins already added to Nixpkgs are
+defined as well. As the source you pass the github repo from the flake inputs.
+
+{{ tip(tip="I noticed that some plugins have defined a Makefile. They follow the
+[mini.nvim](https://github.com/echasnovski/mini.nvim) template. The make command
+doesn't need to be executed for the plugin to work. What is in the repo is
+already full plugin that can be loaded to Neovim.
+
+When Nix makes derivation with standard call `mkDerivation`, and it finds the
+Makefile, it automatically tries to build it. This might fail, and it's not
+necessary for plugin to work. To skip this automatic build include argument
+`skipBuild = true` into the set passed to `buildVimPlugin`.") }}
+
+Next, you can add the plugin to the plugin list as usual.
+
 ```nix
 # plugins.nix
 { pkgs }:
@@ -502,6 +526,8 @@ with pkgs.vimPlugins; [
   telescope-recent-files
 ]
 ```
+
+To make it work, extend the existing lua script for the Telescope.
 
 ```lua
 -- config/lua/nvim-telescope.lua
