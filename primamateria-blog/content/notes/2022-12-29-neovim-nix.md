@@ -31,6 +31,11 @@ TODO: Disclaimer that this is not full-blown neovim configuration. Guide is
 meant to demosntrate different concepts of nix configuration. Once done, you
 should be able to fill the gaps with your plugins and configs.
 
+This post come out quite long. I don't think Nix is so hard. It's more the fact
+that I try not forget anything I have learned, and I might go into some details
+that could be skipped. But if they would be skipped then the knowledge would be
+not shared and lost.
+
 {{ end() }}
 
 ## Initialize the flake
@@ -332,7 +337,7 @@ with pkgs.vimPlugins; [
 ]
 ```
 
-{{ tip(tip="`with-expression` allows you to avoid repeating the selects from `pkgs.vimPlugins` for each listed plugin name.") }}
+{{ tip(tip="`with-expression` allows you to avoid repeating the selects from `pkgs.vimPlugins` for each listed plugin.") }}
 
 Add now extend your Neovim package to include all plugins listed in
 `plugins.nix`:
@@ -432,7 +437,12 @@ window.
 
 ## Add plugin not found in Nixpkgs
 
-Add recent files.
+To demenostrate how to add a plugin which is not found in Nixpkgs, you will add
+a Telescope extension which provides a picker for recent files.
+
+Add
+[smartpde/telescope-recent-files](https://github.com/smartpde/telescope-recent-files)
+to your flake inputs.
 
 ```nix
 # flake.nix
@@ -451,14 +461,14 @@ Add recent files.
       flake = false;
     };
   };
-  outputs = { self, nixpkgs, neovim }:
+  outputs = { self, nixpkgs, neovim, telescope-recent-files-src }:
     let
       overlayFlakeInputs = prev: final: {
         neovim = neovim.packages.x86_64-linux.neovim;
 
         vimPlugins = final.vimPlugins // {
           telescope-recent-files = import ./packages/vimPlugins/telescopeRecentFiles.nix {
-            src = inputs.telescope-recent-files-src;
+            src = telescope-recent-files-src;
             pkgs = prev;
           };
         };
@@ -485,6 +495,9 @@ Add recent files.
 }
 ```
 
+In the `overlayFlakeInputs` we extend existing list of `vimPlugins` with a new
+package.
+
 ```nix
 # packages/vimPlugins/telescopeRecentFiles.nix
 { pkgs, src }:
@@ -494,6 +507,22 @@ pkgs.vimUtils.buildVimPlugin {
 }
 ```
 
+To create a package you take advantage of existing utility function
+`buildVimPlugin`. Actually this is how all plugins already added to Nixpkgs are
+defined as well. As the source you pass the github repo from the flake inputs.
+
+{{ tip(tip="I noticed that some plugins have defined a Makefile. They follow the
+[mini.nvim](https://github.com/echasnovski/mini.nvim) template. The make command
+doesn't need to be executed for the plugin to work. What is in the repo is
+already fully defined plugin that can be loaded to the Neovim.
+
+When Nix makes derivation with standard `mkDerivation` call, and it finds the
+Makefile, it automatically tries to build it. This might fail, and it's not
+necessary for the plugin to work. To skip this automatic build include
+`skipBuild = true` into the set passed to `buildVimPlugin` function.") }}
+
+Next, you can add the plugin to the plugin list as usual.
+
 ```nix
 # plugins.nix
 { pkgs }:
@@ -502,6 +531,8 @@ with pkgs.vimPlugins; [
   telescope-recent-files
 ]
 ```
+
+To make it work, extend the existing lua script for the Telescope.
 
 ```lua
 -- config/lua/nvim-telescope.lua
@@ -513,25 +544,40 @@ vim.api.nvim_set_keymap("n", "<leader><tab>", ":lua require('telescope.builtin')
 vim.api.nvim_set_keymap("n", "<leader><leader>", ":lua require('telescope').extensions.recent_files.pick()<CR>", opt)
 ```
 
+In this state, your Neovim should be runnable, and you can test the new
+`telescope-recent-files` plugin by pressing space-space.
+
+{{ end() }}
+
 ## Add runtime dependency
 
-LSP server and lazygit to show the issue with simlink.
+Have you heard about [mason.nvim](https://github.com/williamboman/mason.nvim)? I
+have noticed it just recently, and it makes completely sense that it is getting
+popular. Managing external runtime dependencies, like language servers, was
+pain. I have looked briefly on it, and seems that they manage list of
+dependencies they support. It is honorable effort, but the community feeding and
+maintaing Nixpkgs compared to the mason's community is much larger. his is why I
+think Nix will give you more freedom in declaration and configuration of your
+reusable development environment.
+
+In this chapter we will add two dependencies to demonstrate a mysterious bug I
+have found, and how to overcome it. First thing, to keep it tidy, define your
+dependencies in separate file. Ideally it would be one list of listing packages
+fron Nixpkgs, but in our case we will create a set containing two lists.
 
 ```nix
 # runtimeDeps.nix
 { pkgs }:
 {
   deps1 = with pkgs; [
-    nodePackages.typescript
     nodePackages.typescript-language-server
   ];
   deps2 = with pkgs; [ lazygit ];
 }
 ```
 
-TODO: verify that the symlink issue is still there
-
-WHY: 2 lists
+In your neovim package you will make more changes. Let's first write it all
+down.
 
 ```nix
 # packages/myNeovim.nix
@@ -555,7 +601,7 @@ let
     };
   };
 in pkgs.writeShellApplication {
-  name = "myNeovim";
+  name = "nvim";
   runtimeInputs = [ neovimRuntimeDependencies2 neovimRuntimeDependencies ];
   text = ''
     ${myNeovimUnwrapped}/bin/nvim "$@"
@@ -563,18 +609,67 @@ in pkgs.writeShellApplication {
 }
 ```
 
-Describe wrapper pattern.
+First thing that you changed was that you moved a package that was previous
+returned from the module function to the `let-in` block, and assigned it to the
+variable `myNeovimUnwrapped`. Instead of it now the module function returns new
+package - a simple shell application.
 
-Test by running and verifying that in terminal we can call tsserver, but when we
-quit Neovim then not.
+In the shell application you defined `runtimeInputs` and passed to it a list
+containing two packages that correspond to the dependency lists specified in the
+previous file. These packages are build using `symlinkJoin`. It takes the
+provided `paths` and creates symlinks pointing to them. All symlinksa are
+bundled together into one package.
+
+{{ tip(tip="And here occures the mysterious bug mentioned earlier. For some
+reason, `symlinkJoin` fails to create properly all symlinks if both
+dependencies - typescript server and lazygit - are defined together. Some links
+will be missing in the resulted package.
+
+{% todo() %} Which one, check when testing {% end %}
+
+What is the rule for the mixture of the dependencies that manifests this bug I
+have failed until now to discover. That's also why I have not yet opened a bug
+for it. The naive and rough guess is that `nodePackages.*` can't be mixed with
+other 'root' packages.") }}
+
+Back to our shell application. It is called a
+[wrapper](https://nixos.wiki/wiki/Nix_Cookbook#Wrapping_packages), and it allows
+us to enrich the original unwrapped application. In our case packages in the
+`runtimePaths` paths will be added to `PATH` environment vairable, and therefore
+will be avaible for the Neovim process.
+
+{{ why(question='Why do we pass `"$@"` to unwrapped Neovim?', answer="This is shell variable which has value of all parameters passed to the script. For example, if you want to edit a specific file `nvim foo.txt`, then the parameter `foo.txt` must forwarded to the original unwrapped `nvim`.") }}
+
+You can test now that in terminal running `typescript-language-server --version`
+will tell you that the command is not recognized. But running the command inside
+Neovim's terminal (`:term`) will work. The same should apply for `lazygit`.
+
+{{ end() }}
 
 ## Generate lua config from nix
 
-LSP config with reference to LSP server package.
+All nix packages are in `/nix/store` in a directory which is prefixed with hash
+generated from the content of the package. If we want to reference some package
+from the configuration scripts, we must resolve the path of the package on build
+time. The traditional lua script configuration files that you have already set
+up lack this ability.
 
-This is a nix file which when imported will resolve to multiline string. To
-enable vim formatting you can force filetype `vim` in the
-[modeline](https://neovim.io/doc/user/options.html#modeline) `vim: ft=vim`.
+In this chapter you will add Typescript runtime dependency, and use it in the
+LSP configuration for `typescript-language-server`. Extend runtime dependencies.
+
+```nix
+# runtimeDeps.nix
+{ pkgs }:
+{
+  deps1 = with pkgs; [
+    nodePackages.typescript
+    nodePackages.typescript-language-server
+  ];
+  deps2 = with pkgs; [ lazygit ];
+}
+```
+
+Next create new `nvim-lspconfig.lua.nix` in new directory `config/luanix`.
 
 ```nix
 # config/luanix/nvim-lspconfig.lua.nix
@@ -591,6 +686,13 @@ nvim_lsp.tsserver.setup({
 })
 ''
 ```
+
+The interesting part is the tsserver's `path` set to `init_options` of the LSP.
+The value contains a nix variable `${pkgs.nodePackages.typescript}`.
+
+{{ why(question="What is `vim: ft=vim` at top of the file?", answer="We haves a nix function which returns  multiline string. Since most of this nix file will be the lua code in the string, you might want to instruct vim to use lua formatting with this [modeline](https://neovim.io/doc/user/options.html#modeline).") }}
+
+Next, extend the `config/default.nix` to process and source new configuration.
 
 ```nix
 # config/default.nix
@@ -629,9 +731,61 @@ in builtins.concatStringsSep "\n"
 (builtins.map (configs: sourceConfigFiles configs) [ vim lua luanix])
 ```
 
+The new function `nixFiles2ConfigFiles` takes a `dir` argument, and returns
+(similar like for `scripts2ConfigFiles`) a list of full paths to config file
+located in the nix store.
+
+The implementation maps every file found in the provided directory to a separate
+package - a text file. The name of the package is obtained by removing the
+`.nix` suffix, so the `nvim-lspconfig.lua.nix` will become `nvim-lspconfig.lua`.
+And the content of the text file package is the string returned by the function
+in the luanix configuration.
+
+While this content is written, nix variables are resolved, and therefore
+`${pkgs.nodePackages.typescript}` will become a full nix store path of the
+typescript package.
+
+Lastly, `luanix` will be processed by `sourceCOnfigFiles`, and since the text
+packages end correctly with `.lua`, in the vimrc they will be sourced with
+`luafile` call.
+
+Now to test it, we can create typescript type error, and see if the tsserver
+will catch it.
+
+```json
+# tmp/test/tsconfig.json
+{
+  "include": ["test.ts"]
+}
+```
+
+```typescript
+// tmp/test/test.ts
+const foo: number = "bar";
+```
+
+You should see an error `Type 'string' is not assignable to type 'number'.`
+
+{{ end() }}
+
 ## Package anything else
 
-Add snippets
+In this chapter you won't do anything new. You will use already introduced
+mechanics to package addtional files. Hopefully, this will highlight the pattern
+used for enriching your development environment. To be more specific, you will
+add a snippet file for the typescript.
+
+```snippets
+# ultisnips/typescript.snippets
+snippet af "arrow function"
+($1) => {
+    $2
+}
+endsnippet
+```
+
+Similar as before, we we will take everything from `ultisnips` directory, and
+package it together.
 
 ```nix
 # packages/ultisnipsSnippets.nix
@@ -646,6 +800,19 @@ pkgs.stdenv.mkDerivation {
 }
 ```
 
+The package with snippets you have prepared, and you will use in the next
+chapter.
+
+{{ end() }}
+
+## Generate vim config from nix
+
+To finish the whole circle, you will introduce `vimnix` script. It will be
+configuration for the ultisnips plugin where you will set the path pointing to
+nix store's snippets package.
+
+First, let's add the plugin.
+
 ```nix
 # plugins.nix
 { pkgs }:
@@ -656,9 +823,7 @@ with pkgs.vimPlugins; [
 ]
 ```
 
-## Generate vim config from nix
-
-Use snippets
+Then in new directory `vimnix` create configuration for ultisnipps.
 
 ```nix
 # config/vimnix/nvim-ultisnips.vim.nix
@@ -669,6 +834,15 @@ in ''
   let g:UltiSnipsSnippetDirectories=["${ultisnipsSnippets}"]
 ''
 ```
+
+Again, this is a nix function returning multiline string containing vim script.
+And we use nix variable `${ultisnipsSnippets}` which is defined in `let-in`
+block and references the package created in the previous chapter.
+
+{{ why(question="Why we didn't put the `ultisnipsSinppets` package to the overlay, similar as `neovim` or `telescope-recent-files` packages?", answer="You totally could do that. Let's call this decision a personal preference. The reasoning behind is that I feel like the cohesion is better with ultisnips fingerprinting in less modules. But feel free to do it anyway you find the best.") }}
+
+In the `config/default.nix` we have everything prepared. Just load `vimnix`, and
+add it tot the list of configs that will be sourced.
 
 ```nix
 # config/default.nix
@@ -700,7 +874,7 @@ let
       + " ${file}") files);
 
   vim = scripts2ConfigFiles "vim";
-  vimnix = nixFiles2ConfigFiles "luanix";
+  vimnix = nixFiles2ConfigFiles "vimnix";
   lua = scripts2ConfigFiles "lua";
   luanix = nixFiles2ConfigFiles "luanix";
 
@@ -708,29 +882,58 @@ in builtins.concatStringsSep "\n"
 (builtins.map (configs: sourceConfigFiles configs) [ vim vimnix lua luanix])
 ```
 
-Would need to configure also completion plugin, to make proper use of it. For
-demonstration purposes enough.
+You would need to configure also completion plugin to make proper use of the
+snippets. For the demonstration purposes this is enough. To test, since we don't
+have completion set up, we can just open our `test.ts` and run `:UltisnipsEdit`.
+It should open the snippet file in the nix store (`<c-g>` to see the current
+file path). Originally, you could edit the file here, but, of course, files from
+nix store are read-only.
 
-Run and try via command.
+{{ end() }}
 
 ## Use your Neovim
 
-Alias for nix run or add to package. Packages needs nix update.
+Alias for nix run or add to package. Packages needs nix update. As mentioned,
+this flake can be installed as package, or run as an application. I preffer to
+create an alias.
+
+```bash
+nvim = "nix run ~/dev/neovim-nix --";
+```
+
+{{ why(question="What are the `--` at the end?", answer="A `--` signals the end of options and disables further option processing. Any arguments after the -- are treated as filenames and arguments. Basically, stuff after the double-dash will apply to `nvim` command and not to `nix run`.") }}
+
+I like to provide local path to the flake, so when I want to apply new changes I
+don't need always push to remote. It's good for testing. But you can also run
+the app directly from remote address.
+
+```bash
+nvim = "nix run github:PrimaMateria/neovim-nix --";
+```
+
+{{ end() }}
 
 ## Updating
 
+Nix flakes create `flake.lock` where the inputs are frozen to specific versions.
+Updating is as simple as `nix flake update`.
+
+{{ tip(tip="The best thing is that if something
+goes wrong, and you don't have time to investigate, just revert the changes
+in `flake.lock`, and you are back in your previous working version.") }}
+
+{{ end() }}
+
 ## Secrets
 
-Rewrite to add ChatGPT. Warn about not able to run directly from github. Also
-package must point to local path.
+This is a bonus chapter. Storing secrets in a git repository may not be
+necessary for you, but it is a useful skill to learn. In the context of Neovim,
+I have only used it to store an OpenAI API key which is needed for the
+[ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim) plugin.
 
-Storing secrets in a git repository may not be necessary for you, but it is a
-useful skill to learn. In the context of Neovim, I have only used it to store an
-OpenAI API key which is needed for the
-[ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim) plugin. You can use
-[git-crypt](https://github.com/AGWA/git-crypt) to encrypt the desired files when
-they are sent to the remote repository and decrypt them when they are returned
-to the local.
+You can use [git-crypt](https://github.com/AGWA/git-crypt) to encrypt the
+desired files when they are sent to the remote repository and decrypt them when
+they are returned to the local.
 
 I choose to declare `git` and `git-crypt` outside of the neovim flake. If you
 are using nix configuration just add it to the `environment.systemPackages`, or
@@ -744,9 +947,86 @@ echo ".secrets/** filter=git-crypt diff=git-crypt" > .gitattributes
 echo '{ openai-api-key = "<API_KEY>"; }' > .secrets/secrets.nix
 ```
 
-All the files in the `.secrets` folder will have content tracked encrypted.
+All the files in the `.secrets` directory will have content tracked encrypted.
 Locally the `git-crypt` automatically decrypts the files.
+
+{{ tip(tip="Be aware that adding encrypted secrets to remote repo will make running app from the remote flake not availabe anymore. Also installing it as package will require the local flake.") }}
+
+Now, let's add the plugin, and its configuration.
+
+```nix
+# plugins.nix
+{ pkgs }:
+with pkgs.vimPlugins; [
+  telescope-nvim
+  telescope-recent-files
+  ultisnips
+  ChatGPT-nvim
+]
+```
+
+{{ tip(tip="Interesting point here is that if you look into the [ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim) README, you can notice that it requires bunch of other plugins to work. Nixpkgs offers a place to declare these dependencies for the plugins. When the `packages.all.start` are processed, these dependencies are indetified and installed together with the main plugin.") }}
+
+```lua
+-- config/lua/nvim-chatgpt.lua
+require("chatgpt").setup({ })
+vim.api.nvim_set_keymap("n", "<leader>aa", "<cmd>ChatGPT<cr>", { noremap = true })
+```
+
+The last piece is to make our secret API key avaialable. For that just extend
+the wrapper shell application.
+
+```nix
+# packages/myNeovim.nix
+{ pkgs }:
+let
+  customRC = import ../config;
+  secrets = import ../.secrets/secrets.nix;
+  plugins = import ../plugins.nix { inherit pkgs; };
+  runtimeDeps = import ../runtimeDeps.nix { inherit pkgs; };
+  neovimRuntimeDependencies = pkgs.symlinkJoin {
+    name = "neovimRuntimeDependencies";
+    paths = runtimeDeps.deps1;
+  };
+  neovimRuntimeDependencies2 = pkgs.symlinkJoin {
+    name = "neovimRuntimeDependencies2";
+    paths = runtimeDeps.deps2;
+  };
+  myNeovimUnwrapped = pkgs.wrapNeovim pkgs.neovim {
+    configure = {
+      inherit customRC;
+      packages.all.start = plugins;
+    };
+  };
+in pkgs.writeShellApplication {
+  name = "nvim";
+  runtimeInputs = [ neovimRuntimeDependencies2 neovimRuntimeDependencies ];
+  text = ''
+    OPENAI_API_KEY=${secrets.openai-api-key} ${myNeovimUnwrapped}/bin/nvim "$@"
+  '';
+}
+```
+
+Import `secrets` in the `let-in` block, and the use it to set environment
+variable `OPENAI_API_KEY` in the shell application's text.
+
+Now space-a-a should open window with openai prompt.
+
+{{ end() }}
 
 ## Support other systems
 
-Maybe just mention, and keep for later investigation.
+Maybe you are already aware about
+[numtide/flake-utlis](https://github.com/numtide/flake-utils), and the popular
+helper function that allows you to prepare package for mutliple.
+architectures/systems. For now your config has everywhere hardcoded
+`x86_64-linux`.
+
+I was already experimenting with it and I was trying to install in
+[Nix-on-Droid](https://f-droid.org/en/packages/com.termux.nix/), but I got some
+errors. If I will find working solutions later, I will write a blog post about
+it. It would be pretty useful to have your lightweight development environment
+on the phone. Maybe just grab some small keyboard, and anywhere you could stay
+crafty. If not real programming, then just developing your ideas.
+
+{{ end() }}
