@@ -116,6 +116,10 @@ Now, lets run the app!
 nix run
 ```
 
+{{ tip(tip="If you got error that `flake.nix` cannot be found, then it is because all files belonging to the flake must be tracked in git repository.") }}
+
+{{ tip(tip="Sometimes it can happen that neovim's master branch is too fresh, and nix fails to build it. In this case you can temporaly point neovim input to the `stable` tag. Change the url to `github:neovim/neovim/stable?dir=contrib`.") }}
+
 If all goes well, you should be welcomed with the neovim welcome message and the
 version should be the most up-to-date one from the master branch.
 
