@@ -1,5 +1,5 @@
 +++
-title = "Solar I3 Workspaces"
+title = "Solar i3 Workspaces"
 date = 2023-03-07
 
 [extra]
