@@ -131,6 +131,29 @@ call I added the `setWallpaper` call with matching workspace index.
 }
 ```
 
+At the start i3 executes command to switch to workspace 1. I had to call
+`setWallpaper` there as well otherwise the wallpaper won't be set until I switch
+to some workspace manually.
+
+```nix
+# xsession.windowManager.i3.config.startup
+[
+  { command = "${setWallpaper (wswall 1)}; i3-msg workspace '${ws 1}'"; notification = false; }
+]
+```
+
+{{ end() }}
+
+## Possible enhancements
+
+The action of changing wallpaper is now bound to keybinding, but there are other
+ways to switch workspaces. For example command `workspace back_and_forth` is not
+covered. Also, controlling i3 via IPC messages won't trigger wallpaper change.
+
+For future, probably the IPC protocol is the one that needs to be utilized. Run
+a daemon process and listen to messages and react on change of focused
+workspace.
+
 {{ end() }}
 
 ## Wallpapers
