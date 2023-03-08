@@ -51,7 +51,8 @@ This started my crusade to minimalism. I got to removing most of the noisy parts
 of the interfaces and try to follow CLI feel and look. The same was applied to
 my smartphone - black background and
 [white icons](https://play.google.com/store/apps/details?id=com.whicons.iconpack&gl=US&pli=1)
-(I use this look until this day).
+(I use this look until this day, and eliminating the eye-candy trap also helps
+to reduce the time watching the phone's screen).
 
 For some time I even experimented with monochrome editor themes. No syntax
 highlights, just read the text. But this was already too cruel, and I
@@ -60,7 +61,8 @@ backtracked to Gruvbox as my champion theme.
 I always tried to utilize maximum space for the program in use. Just recently
 after I started to use GlazeWM in work I tried gaps. And I must admit even I
 don't exactly know how, but it works. Maxed-up windows carry with them some kind
-of tension, gaps on the other hand glow with an illusion of levitation.
+of tension, gaps on the other hand make it look like the windows levitate,
+evoking a feeling of airy freedom.
 
 I am returning to image wallpapers, but with prudence. Each workspace will show
 the celestial object that it is named after. The Sun and planets cover 9
