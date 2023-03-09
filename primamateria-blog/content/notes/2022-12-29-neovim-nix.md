@@ -60,8 +60,7 @@ Next, we will add 2 inputs:
 1. `nixpkgs` - a source of all nix packages we can later declare
 1. `neovim` - Neovim itself
 
-oth inputs favor unstable branches for rolling updates so that we can get early
-access to all recently merged features.
+{{ tip(tip="If you want to use unstable neovim, simply change the url to `github:neovim/neovim/stable?dir=contrib`. This will be default use the main branch. But be aware that sometimes it can happen that Neovim's master branch is too fresh, and nix can fail to build it.") }}
 
 ```nix
 # flake.nix
@@ -72,7 +71,7 @@ access to all recently merged features.
       url = "github:NixOS/nixpkgs";
     };
     neovim = {
-      url = "github:neovim/neovim?dir=contrib";
+      url = "github:neovim/neovim/stable?dir=contrib";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
   };
@@ -93,7 +92,7 @@ As the initial step, we will pass Neovim from the input to the output.
       url = "github:NixOS/nixpkgs";
     };
     neovim = {
-      url = "github:neovim/neovim?dir=contrib";
+      url = "github:neovim/neovim/stable?dir=contrib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -118,8 +117,6 @@ nix run
 
 {{ tip(tip="If you got error that `flake.nix` cannot be found, then it is because all files belonging to the flake must be tracked in git repository.") }}
 
-{{ tip(tip="Sometimes it can happen that neovim's master branch is too fresh, and nix fails to build it. In this case you can temporaly point neovim input to the `stable` tag. Change the url to `github:neovim/neovim/stable?dir=contrib`.") }}
-
 If all goes well, you should be welcomed with the neovim welcome message and the
 version should be the most up-to-date one from the master branch.
 
@@ -127,8 +124,21 @@ version should be the most up-to-date one from the master branch.
 
 ## Custom Neovim package
 
-You can look on your configured Neovim as a standalone installable package. Now
-you will create an overlay over the nixpkgs which provide definition of your
+What you have done so far, is just grab Neovim and provided it on the output of
+your flake. Let's prepare it for the customization. First extract neovim to
+separate package.
+
+```nix
+# packages/myNeovim.nix
+{ pkgs }:
+    pkgs.wrapNeovim pkgs.neovim {
+      configure = {
+         # here will come your custom configuration
+      };
+    }
+```
+
+Next create an overlay over the nixpkgs which will extend nixpkgs with the your
 Neovim package.
 
 ```nix
@@ -140,7 +150,7 @@ Neovim package.
       url = "github:NixOS/nixpkgs";
     };
     neovim = {
-      url = "github:neovim/neovim?dir=contrib";
+      url = "github:neovim/neovim/stable?dir=contrib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -171,7 +181,7 @@ Neovim package.
 }
 ```
 
-Here you introduced overlays. An overlay allows you to add or override some
+Here we introduced overlays. An overlay allows you to add or override some
 attributes of already present package from nixpkgs. Overlay is a function with 2
 arguments: `prev` and `final`. `prev` is the original "untouched" `nixpkgs` and
 `final` is then the modified `nixpkgs`.
@@ -183,33 +193,23 @@ In the first overlay `overlayFlakeInputs` you override `neovim` with the Neovim
 package that comes from the flake inputs. In the second overlay you introduce
 new attribute `myNeovim` which calls a function defined in separate file:
 
-```nix
-# packages/myNeovim.nix
-{ pkgs }:
-    pkgs.wrapNeovim pkgs.neovim {
-      configure = {
-         # here will come your custom configuration
-      };
-    }
-```
-
 The function takes an input `pkgs` which is set to overlay's `final` argument.
 Therefore the `pkgs.neovim` now refers to the `neovim` declared in
 `overlayFlakeInputs`. If you would pass in the flake `prev` argument, then the
 `neovim` would actually refer to package defined in original nixpkgs on unstable
 channel.
 
-Test with `nix run` if everything is allright.
+Test with `nix run` if everything is allright. And don't forget to add new file
+to the git repository so the flake can see it.
 
 {{ end() }}
 
 ## Add vim script config
 
-Some of my Neovim configuration is still written in Vim sript. I know it should
-possible to migrate it all to lua, but this will be a project for later.
+{{ tip(tip="Some of my Neovim configuration is still written in Vim sript. I know it should possible to migrate it all to lua, but this will be a project for later.") }}
 
-I organize my vim scripts into files in `config/vim`. At first, let's write it
-all down, and then I will explain it all.
+We will organize vim scripts in separate files in `config/vim/`. At first, write
+it all the nix code down, and then we will explain it.
 
 ```vim
 " config/vim/nvim-0-init.vim
@@ -254,7 +254,7 @@ in sourceConfigFiles vim
 # packages/myNeovim.nix
 { pkgs }:
 let
-  customRC = import ../config;
+  customRC = import ../config { inherit pkgs; };
 in pkgs.wrapNeovim pkgs.neovim {
       configure = {
         inherit customRC;
@@ -350,7 +350,7 @@ Add now extend your Neovim package to include all plugins listed in
 # packages/myNeovim.nix
 { pkgs }:
 let
-  customRC = import ../config;
+  customRC = import ../config { inherit pkgs; };
   plugins = import ../plugins.nix { inherit pkgs; };
 in pkgs.wrapNeovim pkgs.neovim {
       configure = {
@@ -381,8 +381,9 @@ update channels with `sudo nix-channel --update`, and then search with
 in this case you don't query the package's attribute path, but the its symbolic
 name, which I find unclear.") }}
 
-Before you can verify that Telescope works, we still need to write a config for
-it. This is decribed in next chapter.
+At this step Neovim should be still runnable, but before you can verify that
+Telescope works, we still need to write a config for it. This is decribed in
+next chapter.
 
 {{ end() }}
 
@@ -395,7 +396,7 @@ it in simmilar manner as you loaded the vim script.
 -- config/lua/nvim-telescope.lua
 local opt = { noremap = true }
 local telescope = require("telescope")
-telescope.setup({ })
+telescope.setup({})
 vim.api.nvim_set_keymap("n", "<leader><tab>", ":lua require('telescope.builtin').find_files()<CR>", opt)
 ```
 
@@ -457,7 +458,7 @@ to your flake inputs.
       url = "github:NixOS/nixpkgs";
     };
     neovim = {
-      url = "github:neovim/neovim?dir=contrib";
+      url = "github:neovim/neovim/stable?dir=contrib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     telescope-recent-files-src = {
@@ -542,7 +543,7 @@ To make it work, extend the existing lua script for the Telescope.
 -- config/lua/nvim-telescope.lua
 local opt = { noremap = true }
 local telescope = require("telescope")
-telescope.setup({ })
+telescope.setup({})
 telescope.load_extension("recent_files")
 vim.api.nvim_set_keymap("n", "<leader><tab>", ":lua require('telescope.builtin').find_files()<CR>", opt)
 vim.api.nvim_set_keymap("n", "<leader><leader>", ":lua require('telescope').extensions.recent_files.pick()<CR>", opt)
