@@ -33,3 +33,29 @@
         </div>
     </header>
 {% endblock header %}
+
+        {% block content %}
+        <main>
+            {% block main %}
+                {% set index = get_section(path="_index.md") %}
+                {% for s in index.subsections %}
+                    {% set subsection = get_section(path=s) %}
+                    <h1>{{ subsection.title }}</h1>
+                    {% if subsection.pages %}
+                      <div class="post-list">
+                        {% for page in subsection.pages %}
+                        <div>
+                          <a href="{{ page.permalink | safe}}">
+                             {{ page.title }}
+                          </a>
+                        </div>
+                        <div>
+                          {{ page.date | date(format="%A %d. %B %Y")}}
+                        </div>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                {% endfor %}
+            {% endblock main %}
+        </main>
+        {% endblock content %}

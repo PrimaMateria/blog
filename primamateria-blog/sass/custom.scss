@@ -66,3 +66,11 @@ header {
     font-weight: bold;
   }
 }
+
+.post-list {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: auto fit-content(400px);
+  grid-column-gap: 24px;
+  grid-row-gap: 4px;
+}
