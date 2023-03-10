@@ -317,6 +317,11 @@ the `config/vim` directory.
 Function `sourceConfigFiles` takes the list of installed script files, and each
 of it transforms to a list of strings `source <NIX_STORE_PATH_OF_VIM_SCRIPT>`.
 
+```vim
+source /nix/store/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/nvim-0-init.vim
+source /nix/store/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/nvim-setters.vim
+```
+
 {{ why(question="Why do we need to do it such complicated way?", answer="At the beginning I used to have all configs in one big nix string. This became messy and hard to navigate, so first I extracted configuration for each plugin or common area to separate nix files, and combined them later together via import calls. I still didn't like that I write vim code in nix string, so then I decided to package all files to derivation and source them as vim files. It is also helpfull that now it is enough just to add a new file to the directory, and it will be automatically used, rather than importing it here or there manually.") }}
 
 Starting neovim now with `nix run` should show the numbers column.
@@ -434,6 +439,12 @@ file's extension. Then prepare `lua` variable by calling `scripts2ConfigFiles`
 and pointing it to `lua` sub-directory. At last, modify the body of module
 function to execute `sourceConfigFiles` on list of variables and concatenate the
 returned strings with new-line character into one single string.
+
+```vim
+source /nix/store/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/nvim-0-init.vim
+source /nix/store/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/nvim-setters.vim
+luafile /nix/store/z1p9n8cdi4wqhskazxsb2vy1gj2h83mx-nvim-lua-configs/nvim-telescope.lua
+```
 
 Now, if you execute `nix run` and hit space-tab, it should show telescope
 window.
@@ -559,14 +570,14 @@ In this state, your Neovim should be runnable, and you can test the new
 Have you heard about [mason.nvim](https://github.com/williamboman/mason.nvim)? I
 have noticed it just recently, and it makes completely sense that it is getting
 popular. Managing external runtime dependencies, like language servers, was
-pain. I have looked briefly on it, and seems that they manage list of
+pain. I have looked briefly at it, and it seems that they manage limited list of
 dependencies they support. It is honorable effort, but the community feeding and
-maintaing Nixpkgs compared to the mason's community is much larger. his is why I
-think Nix will give you more freedom in declaration and configuration of your
-reusable development environment.
+maintaing Nixpkgs compared to the mason's community is much larger. This is why
+I think Nix will give you more freedom to declare and configure your reusable
+development environment.
 
-In this chapter we will add two dependencies to demonstrate a mysterious bug I
-have found, and how to overcome it. First thing, to keep it tidy, define your
+In this chapter we will add two dependencies to demonstrate a bug I have
+discovered, and how to overcome it. First thing, to keep it tidy, define your
 dependencies in separate file. Ideally it would be one list of listing packages
 fron Nixpkgs, but in our case we will create a set containing two lists.
 
@@ -581,14 +592,13 @@ fron Nixpkgs, but in our case we will create a set containing two lists.
 }
 ```
 
-In your neovim package you will make more changes. Let's first write it all
-down.
+Modify your Neovim package as follows:
 
 ```nix
 # packages/myNeovim.nix
 { pkgs }:
 let
-  customRC = import ../config;
+  customRC = import ../config { inherit pkgs; };
   plugins = import ../plugins.nix { inherit pkgs; };
   runtimeDeps = import ../runtimeDeps.nix { inherit pkgs; };
   neovimRuntimeDependencies = pkgs.symlinkJoin {
@@ -614,30 +624,27 @@ in pkgs.writeShellApplication {
 }
 ```
 
-First thing that you changed was that you moved a package that was previous
+First thing that was changed is that we moved a package that was previous
 returned from the module function to the `let-in` block, and assigned it to the
 variable `myNeovimUnwrapped`. Instead of it now the module function returns new
 package - a simple shell application.
 
-In the shell application you defined `runtimeInputs` and passed to it a list
+In the shell application we have defined `runtimeInputs` and passed to it a list
 containing two packages that correspond to the dependency lists specified in the
 previous file. These packages are build using `symlinkJoin`. It takes the
-provided `paths` and creates symlinks pointing to them. All symlinksa are
-bundled together into one package.
+provided `paths` and creates symlinks pointing to them, all together in one
+package. So it's one package that aggregates other packages through symlinks.
 
-{{ tip(tip="And here occures the mysterious bug mentioned earlier. For some
-reason, `symlinkJoin` fails to create properly all symlinks if both
-dependencies - typescript server and lazygit - are defined together. Some links
-will be missing in the resulted package.
+{{ tip(tip="Here occures the bug mentioned earlier. For some reason,
+`symlinkJoin` fails to create properly all symlinks if both dependencies -
+typescript server and lazygit - are defined together. Some links will be missing
+in the resulted package.
 
-{% todo() %} Which one, check when testing {% end %}
+I don't know what is the reason that some packages are incompatible. That's also
+why I have not yet opened a github issue for it. The naive and rough guess is
+that `nodePackages.*` can't be mixed with other 'root' packages.") }}
 
-What is the rule for the mixture of the dependencies that manifests this bug I
-have failed until now to discover. That's also why I have not yet opened a bug
-for it. The naive and rough guess is that `nodePackages.*` can't be mixed with
-other 'root' packages.") }}
-
-Back to our shell application. It is called a
+The shell application we have defined is called a
 [wrapper](https://nixos.wiki/wiki/Nix_Cookbook#Wrapping_packages), and it allows
 us to enrich the original unwrapped application. In our case packages in the
 `runtimePaths` paths will be added to `PATH` environment vairable, and therefore
@@ -653,14 +660,15 @@ Neovim's terminal (`:term`) will work. The same should apply for `lazygit`.
 
 ## Generate lua config from nix
 
-All nix packages are in `/nix/store` in a directory which is prefixed with hash
-generated from the content of the package. If we want to reference some package
-from the configuration scripts, we must resolve the path of the package on build
-time. The traditional lua script configuration files that you have already set
-up lack this ability.
+All nix packages are in `/nix/store` in a directory which is prefixed with a
+hash generated from the content of the package. If we want to reference some
+package from the configuration scripts, we must resolve the path of the package
+on build time. The traditional lua script configuration files that you have
+already set up lack this ability.
 
-In this chapter you will add Typescript runtime dependency, and use it in the
-LSP configuration for `typescript-language-server`. Extend runtime dependencies.
+In this chapter you will add Typescript runtime dependency, and instruct
+`typescript-language-server` to use this custom typescript instance. Extend
+runtime dependencies.
 
 ```nix
 # runtimeDeps.nix
@@ -674,7 +682,7 @@ LSP configuration for `typescript-language-server`. Extend runtime dependencies.
 }
 ```
 
-Next create new `nvim-lspconfig.lua.nix` in new directory `config/luanix`.
+Next, create new `nvim-lspconfig.lua.nix` in new directory `config/luanix`.
 
 ```nix
 # config/luanix/nvim-lspconfig.lua.nix
@@ -693,7 +701,8 @@ nvim_lsp.tsserver.setup({
 ```
 
 The interesting part is the tsserver's `path` set to `init_options` of the LSP.
-The value contains a nix variable `${pkgs.nodePackages.typescript}`.
+The value contains a nix variable `${pkgs.nodePackages.typescript}` which will
+be resolved to the absolute path of the typescript in the nix store.
 
 {{ why(question="What is `vim: ft=vim` at top of the file?", answer="We haves a nix function which returns  multiline string. Since most of this nix file will be the lua code in the string, you might want to instruct vim to use lua formatting with this [modeline](https://neovim.io/doc/user/options.html#modeline).") }}
 
@@ -737,14 +746,14 @@ in builtins.concatStringsSep "\n"
 ```
 
 The new function `nixFiles2ConfigFiles` takes a `dir` argument, and returns
-(similar like for `scripts2ConfigFiles`) a list of full paths to config file
+(similar like for `scripts2ConfigFiles`) a list of full paths to config files
 located in the nix store.
 
 The implementation maps every file found in the provided directory to a separate
-package - a text file. The name of the package is obtained by removing the
-`.nix` suffix, so the `nvim-lspconfig.lua.nix` will become `nvim-lspconfig.lua`.
-And the content of the text file package is the string returned by the function
-in the luanix configuration.
+package - one single text file. The name of the package is obtained by removing
+the `.nix` suffix, so the `nvim-lspconfig.lua.nix` will become
+`nvim-lspconfig.lua`. And the content of the text file package is the string
+returned by the function in the luanix configuration.
 
 While this content is written, nix variables are resolved, and therefore
 `${pkgs.nodePackages.typescript}` will become a full nix store path of the
@@ -752,7 +761,26 @@ typescript package.
 
 Lastly, `luanix` will be processed by `sourceCOnfigFiles`, and since the text
 packages end correctly with `.lua`, in the vimrc they will be sourced with
-`luafile` call.
+`luafile` call. So the result in the generated config file will look like this:
+
+```vim
+source /nix/store/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/nvim-0-init.vim
+source /nix/store/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/nvim-setters.vim
+luafile /nix/store/z1p9n8cdi4wqhskazxsb2vy1gj2h83mx-nvim-lua-configs/nvim-telescope.lua
+luafile /nix/store/s8ar23b2x81m746w0gvn2mkdlcs4p8qb-nvim-lspconfig.lua
+```
+
+At last add `nvim-lspconfig` plugin:
+
+```nix
+# plugins.nix
+{ pkgs }:
+with pkgs.vimPlugins; [
+  telescope-nvim
+  telescope-recent-files
+  nvim-lspconfig
+]
+```
 
 Now to test it, we can create typescript type error, and see if the tsserver
 will catch it.
@@ -805,8 +833,7 @@ pkgs.stdenv.mkDerivation {
 }
 ```
 
-The package with snippets you have prepared, and you will use in the next
-chapter.
+The package with snippets is prepared, and we will use in the next chapter.
 
 {{ end() }}
 
@@ -824,6 +851,7 @@ First, let's add the plugin.
 with pkgs.vimPlugins; [
   telescope-nvim
   telescope-recent-files
+  nvim-lspconfig
   ultisnips
 ]
 ```
@@ -929,7 +957,7 @@ in `flake.lock`, and you are back in your previous working version.") }}
 
 {{ end() }}
 
-## Secrets
+## Bonus: Secrets
 
 This is a bonus chapter. Storing secrets in a git repository may not be
 necessary for you, but it is a useful skill to learn. In the context of Neovim,
