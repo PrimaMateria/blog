@@ -25,3 +25,8 @@ highlight_theme = "Tomorrow"
 # Put all your custom variables here
 author = "Matus Benko"
 github = "PrimaMateria"
+anpu_date_format="%A %d %B %Y"
+anpu_menu_links = [
+  { url = "$BASE_URL/about/", name = "About" },
+  { url = "https://github.com/PrimaMateria", name = "GitHub" },
+]

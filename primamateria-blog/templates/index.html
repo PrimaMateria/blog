@@ -49,7 +49,13 @@
                 {% endfor %}
                 {% endif %}
             {% endblock content %}
+
+
         </main>
+
+        {% block comments %}
+        {% endblock comments %}
+
         <footer>
             <p>
                 © {{ config.extra.author }} {{ now() | date(format="%Y") }}<br>
