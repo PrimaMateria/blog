@@ -68,7 +68,7 @@ Next, we will add 2 inputs:
 1. `nixpkgs` - a source of all nix packages we can later declare
 1. `neovim` - Neovim itself
 
-{{ tip(tip="If you want to use unstable neovim, simply change the url to `github:neovim/neovim/stable?dir=contrib`. This will be default use the main branch. But be aware that sometimes it can happen that Neovim's master branch is too fresh, and nix can fail to build it.") }}
+{{ tip(tip="If you want to use unstable neovim, simply change the url to `github:neovim/neovim?dir=contrib`. This will be default use the main branch. But be aware that sometimes it can happen that Neovim's master branch is too fresh, and nix can fail to build it.") }}
 
 ```nix
 # flake.nix
