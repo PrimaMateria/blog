@@ -4,7 +4,21 @@ date = 2022-12-29
 
 [extra]
 banner = "neovim-banner.png"
+
+[taxonomies]
+tags = ["nixos","neovim"]
 +++
+
+In this blog post, I will guide you through the process of setting up Neovim as
+a Nix Flake, allowing you to keep your editor configuration in sync across
+multiple machines. We'll start by initializing the flake. We'll add vim script
+configuration, organizing vim scripts in separate files and transforming them
+into config files in the nix store. I will guide you through adding plugins, lua
+scripts, and runtime dependencies to Neovim using Nix. By the end of this blog
+post, you will be able to configure your own development environment in a more
+manageable way.
+
+<!-- more -->
 
 ## Introduction
 

@@ -1,10 +1,21 @@
 +++
 title = "Time tracking with Watson and Jira"
 date = 2021-12-11
+
+[taxonomies]
+tags = ["workflow"]
 +++
 
-In this article, I would like to present to you how I track my work and how I
-sync the logs to Jira.
+In this blog post, I share my experience of how I track my work using Watson and
+synchronize the logs with Jira. I prefer to keep most of my workflow inside the
+terminal and Watson has proven to be the most fitting tool for me. I track my
+work retrospectively in 5-minute intervals and use significant tags to instruct
+the synchronization tool with which Jira tickets to upload the logs. I also
+provide details about my environment setup, including the use of entr to watch
+Watson's frames and automatically rerun a script, and aliases for issuing Watson
+commands.
+
+<!-- more -->
 
 ## Watson
 

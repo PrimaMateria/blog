@@ -1,3 +1,6 @@
 [submodule "primamateria-blog/themes/oceanic-zen"]
 	path = primamateria-blog/themes/oceanic-zen
 	url = https://github.com/barlog-m/oceanic-zen.git
+[submodule "primamateria-blog/themes/anpu-zola-theme"]
+	path = primamateria-blog/themes/anpu-zola-theme
+	url = https://github.com/zbrox/anpu-zola-theme

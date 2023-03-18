@@ -1,24 +1,26 @@
-{% import "macros/page.html" as page_macros %}
 {% extends "index.html" %}
 
-{% block title %}{{ page.title }}{% endblock %}
+{% block main %}
+<article itemscope itemtype="http://schema.org/BlogPosting">
+    <div itemprop="headline">
+        
+        {% if page.extra.banner %}
+          <div class="banner">
+           <img src="{{ get_url(path=page.extra.banner) }}" />
+          </div>
+        {% endif %}
 
-{% block content %}
-
-<article class="post">
-
-    <header>
         <h1>{{ page.title }}</h1>
-    </header>
+        <div class="border"></div>
+        <time datetime="{{ page.date | date(format="%Y-%m-%d") }}" class="date" itemprop="datePublished">
+            {{ page.date | date(format="%d %b %Y") }}
+        </time>
+        <div class="date">
+          Reading time: {{ page.reading_time }}min
+        </div>
+    </div>
 
-    {{ page_macros::page_info(page=page) }}
-
-    {% if page.extra.banner %}
-      <div class="banner">
-       <img src="{{ get_url(path=page.extra.banner) }}" />
-      </div>
-    {% endif %}
-
+    
     {% if page.toc %}
     <div>
         <ul>
@@ -40,10 +42,9 @@
     </div>
     {% endif %}
 
-
-    <div class="content">
+    <div itemprop="articleBody">
         {{ page.content | safe }}
     </div>
 </article>
+{% endblock main %}
 
-{% endblock content %}

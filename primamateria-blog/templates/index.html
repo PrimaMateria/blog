@@ -1,61 +1,65 @@
-{% extends "oceanic-zen/templates/index.html" %}
+{% import "macros/page.html" as page_macros %}
+<!DOCTYPE html>
+<html lang="{% if lang %}{{ lang }}{% else %}en{% endif %}">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
 
-{% block css %}
-    <link rel="stylesheet" href="{{ get_url(path="themePrimaMateria.css", trailing_slash=false) | safe }}">
+    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+    <meta name="description" content="{{ config.description }}">
+
+    <link rel="stylesheet" href="{{ get_url(path="main.css", trailing_slash=false) }}">
     <link rel="stylesheet" href="{{ get_url(path="custom.css", trailing_slash=false) | safe }}">
-{% endblock css %}
 
-{% block header %}
-    <header>
-        <div class="header-left">
-            <a href="{{ config.base_url }}" class="logo">
-              <div>
-                <img src="{{ get_url(path="logo.png") }}" />
-                <div class="title">
-                  {{ config.title }}
-                </div>
-              </div>
-            </a>
-        </div>
-        <div class="header-right">
-            <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
-              <ul>
-                {% set index = get_section(path="_index.md") %}
-                {% if config.extra.github %}
-                <li class="nav">
-                    <a itemprop="url" href="https://github.com/{{ config.extra.github }}">
-                        <img class="icon" src="{{ config.base_url }}/icons/github.svg" alt="Github">
-                    </a>
-                </li>
-                {% endif %}
-              </ul>
-            </nav>
-        </div>
-    </header>
-{% endblock header %}
+    {% if config.generate_feed %}
+        <link rel="alternate" type={% if config.feed_filename == "atom.xml" %}"application/atom+xml"{% else %}"application/rss+xml"{% endif %} title="RSS" href="{{ get_url(path=config.feed_filename) | safe }}">
+    {% endif %}
 
-        {% block content %}
-        <main>
-            {% block main %}
-                {% set index = get_section(path="_index.md") %}
-                {% for s in index.subsections %}
-                    {% set subsection = get_section(path=s) %}
-                    <h1>{{ subsection.title }}</h1>
-                    {% if subsection.pages %}
-                      <div class="post-list">
-                        {% for page in subsection.pages %}
-                        <div>
-                          <a href="{{ page.permalink | safe}}">
-                             {{ page.title }}
-                          </a>
-                        </div>
-                        <div>
-                          {{ page.date | date(format="%A %d. %B %Y")}}
-                        </div>
-                        {% endfor %}
-                      </div>
-                    {% endif %}
+    {% block extra_head %}
+    {% endblock extra_head %}
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="{{ config.base_url }}">{{ config.title }}</a>
+            </h1>
+            <nav>
+                {% block sidebar_nav %}
+                {% for menu_link in config.extra.anpu_menu_links %}
+                {% set link_url = menu_link.url | replace(from="$BASE_URL", to=config.base_url) %}
+                <a {% if current_url and current_url == link_url %}class="active"{% endif %} href="{{ link_url }}">{{menu_link.name}}</a>
                 {% endfor %}
-            {% endblock main %}
+                {% endblock sidebar_nav %}
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            {% block content %}
+                {% if paginator.pages %}
+                {% for page in paginator.pages %}
+                    {{ page_macros::page_listing(page=page) }}
+                {% endfor %}
+                {{ page_macros::page_pagination(paginator=paginator) }}
+                {% else %}
+                {% for page in section.pages %}
+                    {{ page_macros::page_listing(page=page) }}
+                {% endfor %}
+                {% endif %}
+            {% endblock content %}
         </main>
-        {% endblock content %}
+        <footer>
+            <p>
+                © {{ config.extra.author }} {{ now() | date(format="%Y") }}<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                {% block footer %}
+                {% endblock footer %}
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

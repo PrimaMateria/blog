@@ -1,11 +1,23 @@
 +++
 title = "Running Steam and Project Zomboid on NixOS"
 date = 2022-10-29
+
+[taxonomies]
+tags = ["nixos","games"]
 +++
 
-{{ resize_image(path="notes/2022-10-29-nixos-steam-project-zomboid/tux-zombie-000.png", height=250) }}
-{{ resize_image(path="notes/2022-10-29-nixos-steam-project-zomboid/tux-zombie-001.png", height=250) }}
-{{ resize_image(path="notes/2022-10-29-nixos-steam-project-zomboid/tux-zombie-002.png", height=250) }}
+In recent years, Linux gaming has come a long way. Thanks to projects like
+Proton and the work of the Linux gaming community, more and more games are now
+available to play on Linux. In this blog post, I'll walk you through my
+experience of setting up Steam on NixOS and playing the game Project Zomboid.
+I'll cover how to install Steam, how to install games, and how to get mouse
+support and run Steam games from dmenu. While I still believe that Windows is a
+superior gaming platform, the recent announcement of Valve's Steam Deck has made
+me excited to try gaming on Linux once again.
+
+<!-- more -->
+
+{{ resize_image(path="nixos-steam-project-zomboid/tux-zombie-000.png", height=250) }}
 
 Over three years ago I made a decision to switch completely from Windows to
 Linux. Full disk format and single boot to KDE Manjaro (which quickly became
@@ -19,6 +31,8 @@ there was a clear-cut between the gaming and usage. And I still stand by this
 decision. Windows is still in my opinion superior gaming platform. But here I am
 again, going to setup Steam and run, as first, Project Zomboid on NixOS. What
 was the dealbreaker? The Valve's courage behind Steam Deck.
+
+{{ resize_image(path="nixos-steam-project-zomboid/tux-zombie-001.png", height=250) }}
 
 ## Declaring Steam
 
@@ -39,6 +53,8 @@ I kept `remotePlay` and `dedicatedServer` set to `true`. After applying this
 changes I was able to run steam. First run update the Steam client, and after
 authentication I was able to see my library.
 
+{{ resize_image(path="nixos-steam-project-zomboid/tux-zombie-002.png", height=250) }}
+
 ## Declaring Steam games
 
 I was expecting there will be a way to declare which games to install the
@@ -48,6 +64,8 @@ installation. Closest to this concept I found to be
 It has already some games predefined, and it also provides a guide how to add
 your own games. I will keep this option parked for the case I would start gaming
 big on Linux (I doubt that now).
+
+{{ resize_image(path="nixos-steam-project-zomboid/tux-zombie-003.png", height=250) }}
 
 ## Installing Project Zomboid
 
@@ -75,6 +93,8 @@ point was writable.
 
 I started the game and loaded my latest save. Everything worked correctly. Later
 I have verified in Windows that the saves produced on Linux are usable as well.
+
+{{ resize_image(path="nixos-steam-project-zomboid/tux-zombie-004.png", height=250) }}
 
 ## Mouse support
 
@@ -122,12 +142,10 @@ And added new i3 shortcut:
 "${mod}+s" = "exec --no-startup-id ${steamRun}/bin/steamRun";
 ```
 
+{{ resize_image(path="nixos-steam-project-zomboid/tux-zombie-005.png", height=250) }}
+
 ## Another discovered ideas and packages
 
 - [SteamCMD](https://developer.valvesoftware.com/wiki/SteamCMD)
 - [steam-tui](https://github.com/dmadisetti/steam-tui)
 - [MangoHud](https://github.com/flightlessmango/MangoHud)
-
-{{ resize_image(path="notes/2022-10-29-nixos-steam-project-zomboid/tux-zombie-003.png", height=250) }}
-{{ resize_image(path="notes/2022-10-29-nixos-steam-project-zomboid/tux-zombie-004.png", height=250) }}
-{{ resize_image(path="notes/2022-10-29-nixos-steam-project-zomboid/tux-zombie-005.png", height=250) }}
