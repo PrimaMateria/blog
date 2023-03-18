@@ -1,6 +1,6 @@
 +++
 title = "How to create your own Neovim flake"
-date = 2022-12-29
+date = 2023-03-18
 
 [extra]
 banner = "neovim-banner.png"
@@ -39,6 +39,10 @@ It is important to note that this guide does not constitute a comprehensive
 Neovim configuration. Rather, it serves to demonstrate various concepts of Nix
 configuration. After completing this guide, you should be able to supplement
 your plugins and configurations accordingly.
+
+I prepared repository with a commit per each section:
+
+[https://github.com/PrimaMateria/blog-neovim-nix](https://github.com/PrimaMateria/blog-neovim-nix)
 
 {{ end() }}
 
@@ -981,13 +985,13 @@ mkdir .secrets
 git-crypt init
 git-crypt export-key <PATH>
 echo ".secrets/** filter=git-crypt diff=git-crypt" > .gitattributes
-echo '{ openai-api-key = "<API_KEY>"; }' > .secrets/secrets.nix
+echo '{ openai-api-key = "secretkey"; }' > .secrets/secrets.nix
 ```
 
 All the files in the `.secrets` directory will have content tracked encrypted.
 Locally the `git-crypt` automatically decrypts the files.
 
-{{ tip(tip="Be aware that adding encrypted secrets to remote repo will make running app from the remote flake not availabe anymore. Also installing it as package will require the local flake.") }}
+{{ tip(tip="Be aware that adding encrypted secrets to remote repo will make running app from the remote flake not availabe anymore. Also installing it as package will require referencing the local unencrypted flake.") }}
 
 Now, let's add the plugin, and its configuration.
 
@@ -997,12 +1001,13 @@ Now, let's add the plugin, and its configuration.
 with pkgs.vimPlugins; [
   telescope-nvim
   telescope-recent-files
+  nvim-lspconfig
   ultisnips
   ChatGPT-nvim
 ]
 ```
 
-{{ tip(tip="Interesting point here is that if you look into the [ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim) README, you can notice that it requires bunch of other plugins to work. Nixpkgs offers a place to declare these dependencies for the plugins. When the `packages.all.start` are processed, these dependencies are indetified and installed together with the main plugin.") }}
+{{ tip(tip="Interesting point here is that if you look into the [ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim) README, you can notice that it requires bunch of other plugins to work. Nixpkgs offers a place to declare these dependencies for the plugins. When the `packages.all.start` are processed, these dependencies are indetified and installed together with the main plugin automatically.") }}
 
 ```lua
 -- config/lua/nvim-chatgpt.lua
@@ -1017,7 +1022,7 @@ the wrapper shell application.
 # packages/myNeovim.nix
 { pkgs }:
 let
-  customRC = import ../config;
+  customRC = import ../config { inherit pkgs; };
   secrets = import ../.secrets/secrets.nix;
   plugins = import ../plugins.nix { inherit pkgs; };
   runtimeDeps = import ../runtimeDeps.nix { inherit pkgs; };
@@ -1044,8 +1049,8 @@ in pkgs.writeShellApplication {
 }
 ```
 
-Import `secrets` in the `let-in` block, and the use it to set environment
-variable `OPENAI_API_KEY` in the shell application's text.
+Imported `secrets` in the `let-in` block are used to set an environment variable
+`OPENAI_API_KEY` in the shell application's text.
 
 Now space-a-a should open window with openai prompt.
 
@@ -1062,8 +1067,8 @@ architectures/systems. For now your config has everywhere hardcoded
 I was already experimenting with it and I was trying to install in
 [Nix-on-Droid](https://f-droid.org/en/packages/com.termux.nix/), but I got some
 errors. If I will find working solutions later, I will write a blog post about
-it. It would be pretty useful to have your lightweight development environment
-on the phone. Maybe just grab some small keyboard, and anywhere you could stay
-crafty. If not real programming, then just developing your ideas.
+it as well. It would be cool to have your lightweight development environment on
+the phone. Maybe just grab some small keyboard, and you could stay crafty on the
+road. Even if not hardcore programming, then just working on your ideas.
 
 {{ end() }}
