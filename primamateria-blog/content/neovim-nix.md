@@ -20,35 +20,25 @@ manageable way.
 
 <!-- more -->
 
-## Introduction
+## Preface
 
-This step-by-step guide will show you how to set up your own Neovim as a Nix
-Flake. I won't explain what Nix and Nix Flake are here, as there are already
-many other resources that do this perfectly.
+This guide will provide a step-by-step process for setting up your own Neovim as
+a Nix Flake. I won't delve into the explanation of Nix and Nix Flake, as there
+are already ample resources that do this wonderfully.
 
-{% todo() %} Add links to nix docs {% end %}
+With this setup, you can utilize Git and Nix's capabilities to keep your
+configuration files, list of plugins, and required external dependencies in sync
+across multiple devices. This will not only ensure that your editor
+configuration is consistent, but also your entire development environment.
 
-With this setup, you can use Git and Nix's magic to keep your configuration
-files, list of plugins, and required external dependencies synced across
-multiple machines. This will not only keep your editor configuration in sync,
-but also your entire development environment. Additionally, you can use this
-setup to keep your editor configuration in sync with your colleagues.
+Please keep in mind that I am also in the process of learning Nix and may have
+made some errors. Therefore, I kindly request that you provide your feedback in
+the comments section.
 
-Please, be aware that I am also learning nix and possibly I might have done
-something the wrong way. If you have more experience, and have a constructive
-feedback please drop a message.
-
-{% todo() %} Add contact page {% end %} {% todo() %} Create repo and add git
-checkout commands to each chapter. {% end %}
-
-TODO: Disclaimer that this is not full-blown neovim configuration. Guide is
-meant to demosntrate different concepts of nix configuration. Once done, you
-should be able to fill the gaps with your plugins and configs.
-
-This post come out quite long. I don't think Nix is so hard. It's more the fact
-that I try not forget anything I have learned, and I might go into some details
-that could be skipped. But if they would be skipped then the knowledge would be
-not shared and lost.
+It is important to note that this guide does not constitute a comprehensive
+Neovim configuration. Rather, it serves to demonstrate various concepts of Nix
+configuration. After completing this guide, you should be able to supplement
+your plugins and configurations accordingly.
 
 {{ end() }}
 
@@ -581,14 +571,14 @@ In this state, your Neovim should be runnable, and you can test the new
 
 ## Add runtime dependency
 
-Have you heard about [mason.nvim](https://github.com/williamboman/mason.nvim)? I
-have noticed it just recently, and it makes completely sense that it is getting
-popular. Managing external runtime dependencies, like language servers, was
-pain. I have looked briefly at it, and it seems that they manage limited list of
-dependencies they support. It is honorable effort, but the community feeding and
-maintaing Nixpkgs compared to the mason's community is much larger. This is why
-I think Nix will give you more freedom to declare and configure your reusable
-development environment.
+Have you heard of [mason.nvim](https://github.com/williamboman/mason.nvim)? I
+only recently discovered it, but it's no surprise that it's gaining popularity.
+Managing external runtime dependencies, such as language servers, used to be a
+pain. I briefly examined it and it appears that it manages a limited list of
+dependencies it supports. While it's an honorable effort, the community behind
+and maintaining Nixpkgs is much larger compared to the community behind mason.
+This is why I believe that Nix will provide greater freedom for declaring and
+configuring a reusable development environment.
 
 In this chapter we will add two dependencies to demonstrate a bug I have
 discovered, and how to overcome it. First thing, to keep it tidy, define your
