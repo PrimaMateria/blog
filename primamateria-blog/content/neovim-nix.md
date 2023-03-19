@@ -48,11 +48,11 @@ correspond to the section titles.
 
 ## Initialize the flake
 
-Flake will take inputs, and it will generate an output which will be a package
-that can be installed using the nix package manager, as well as an app that can
-be executed directly.
+Flake will take inputs, and it will generate two outputs. First a package that
+can be installed using the nix package manager, and second an app that can be
+executed directly from the flake.
 
-First we start with bare flake structure:
+First we start with flake skeleton:
 
 ```nix
 # flake.nix
@@ -65,10 +65,10 @@ First we start with bare flake structure:
 
 Next, we will add 2 inputs:
 
-1. `nixpkgs` - a source of all nix packages we can later declare
+1. `nixpkgs` - a source for all nix packages we can later declare
 1. `neovim` - Neovim itself
 
-{{ tip(tip="If you want to use unstable neovim, simply change the url to `github:neovim/neovim?dir=contrib`. This will be default use the main branch. But be aware that sometimes it can happen that Neovim's master branch is too fresh, and nix can fail to build it.") }}
+{{ tip(tip="If you want to use unstable Neovim, simply change the url to `github:neovim/neovim?dir=contrib`. This will use the main branch. Be aware that sometimes it can happen that nix can fail to build it.") }}
 
 ```nix
 # flake.nix
@@ -87,9 +87,15 @@ Next, we will add 2 inputs:
 }
 ```
 
-{{ why(question="Why do we override Neovim's flake nixpkgs input to follow the unstable version? ", answer="This way we instruct Neovim to be build using the same packages. Probably it would work even without it. And I kind of repeat it as a convention. But I can't see it as a recursive fix -meaning, if Neovim depends on other flakes, their nixpkgs inputs won't follow the provided value.") }}
+{% todo() %} Investigate {% end %}
 
-As the initial step, we will pass Neovim from the input to the output.
+{{ why(
+    question="Why do we override Neovim's flake nixpkgs input to follow the unstable version?",
+    answer="This way we instruct Neovim to be built using packages from the same channel as we define in our input."
+   )
+}}
+
+As first, we will simply pass Neovim from the input to the output.
 
 ```nix
 # flake.nix
@@ -123,18 +129,21 @@ Now, lets run the app!
 nix run
 ```
 
-{{ tip(tip="If you got error that `flake.nix` cannot be found, then it is because all files belonging to the flake must be tracked in git repository.") }}
+{{ tip(tip="If you got error that `flake.nix` cannot be found, then it is
+because all files belonging to the flake must be tracked in git repository.
+
+`git add .`") }}
 
 If all goes well, you should be welcomed with the neovim welcome message and the
-version should be the most up-to-date one from the master branch.
+version should correspond to the current stable version.
 
 {{ end() }}
 
 ## Custom Neovim package
 
-What you have done so far, is just grab Neovim and provided it on the output of
-your flake. Let's prepare it for the customization. First extract neovim to
-separate package.
+What you have done so far is that you just grabbed Neovim and provided it on the
+output of your flake. Now, let's prepare it for the customization. First,
+extract Neovim to a separate package.
 
 ```nix
 # packages/myNeovim.nix
@@ -146,7 +155,7 @@ separate package.
     }
 ```
 
-Next create an overlay over the nixpkgs which will extend nixpkgs with the your
+Next, create an overlay over the nixpkgs which will extend nixpkgs with your
 Neovim package.
 
 ```nix
@@ -189,17 +198,14 @@ Neovim package.
 }
 ```
 
-Here we introduced overlays. An overlay allows you to add or override some
-attributes of already present package from nixpkgs. Overlay is a function with 2
-arguments: `prev` and `final`. `prev` is the original "untouched" `nixpkgs` and
-`final` is then the modified `nixpkgs`.
-
-The overlays are set to `nixpkgs` together with the `system`. Based on the
-`system` nix will know which package it needs to use in the build process.
+An overlay allows you to define new package, or override some attributes of
+already present package. Overlay is a function with 2 arguments: `prev` and
+`final`. `prev` is the original "untouched" `nixpkgs` and `final` is the
+modified `nixpkgs` which contains the modifications.
 
 In the first overlay `overlayFlakeInputs` you override `neovim` with the Neovim
-package that comes from the flake inputs. In the second overlay you introduce
-new attribute `myNeovim` which calls a function defined in separate file:
+package that comes from the flake inputs. In the second overlay you define new
+package `myNeovim` which is defined in `packages/myNeovim.nix`.
 
 The function takes an input `pkgs` which is set to overlay's `final` argument.
 Therefore the `pkgs.neovim` now refers to the `neovim` declared in
@@ -207,8 +213,8 @@ Therefore the `pkgs.neovim` now refers to the `neovim` declared in
 `neovim` would actually refer to package defined in original nixpkgs on unstable
 channel.
 
-Test with `nix run` if everything is allright. And don't forget to add new file
-to the git repository so the flake can see it.
+You can test by running `nix run`. If done right, Neovim should still start as
+before. Don't forget to track new file in git.
 
 {{ end() }}
 
