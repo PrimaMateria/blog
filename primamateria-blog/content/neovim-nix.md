@@ -28,21 +28,21 @@ are already ample resources that do this wonderfully.
 
 With this setup, you can utilize Git and Nix's capabilities to keep your
 configuration files, list of plugins, and required external dependencies in sync
-across multiple devices. This will not only ensure that your editor
+across multiple devices. This will not ensure that only your editor
 configuration is consistent, but also your entire development environment.
 
 Please keep in mind that I am also in the process of learning Nix and may have
 made some errors. Therefore, I kindly request that you provide your feedback in
-the comments section.
+the comments section if you have some.
 
 It is important to note that this guide does not constitute a comprehensive
 Neovim configuration. Rather, it serves to demonstrate various concepts of Nix
 configuration. After completing this guide, you should be able to supplement
 your plugins and configurations accordingly.
 
-I prepared repository with a commit per each section:
-
-[https://github.com/PrimaMateria/blog-neovim-nix](https://github.com/PrimaMateria/blog-neovim-nix)
+I prepared a [repository](https://github.com/PrimaMateria/blog-neovim-nix) which
+contains all the code examples introduced in this post. The commits' messages
+correspond to the section titles.
 
 {{ end() }}
 
@@ -270,7 +270,7 @@ in pkgs.wrapNeovim pkgs.neovim {
     }
 ```
 
-### Understand Vim scripts
+### Vim scripts
 
 At first we created to vim scripts: `nvim-setters.vim` and `nvim-0-init.vim`.
 The latter one has `0` in the name to ensure that it is the first file in the
@@ -278,7 +278,7 @@ directory. For an example, this is important for the leader key. If we would
 call `nnoremap <leader>x foo<cr>` before updating `mapleader` to desired key, it
 would assume a default `\` leader key for these mappings.
 
-### Understand config's default nix script
+### Config's default nix script
 
 Then you created `default.nix`. Default file acts somehow as `index.js` in
 javascript. If you later import path leading to directory, nix will
@@ -290,7 +290,7 @@ content of our `vimrc`.
 The body of function is a call to `sourceConfigFiles` with argument `vim`. In
 the `let-in` block you can see both defined.
 
-### Understand transformation of Vim Script to Config files in nix store
+### Transformation of Vim script to Config files in nix store
 
 `vim` is a result `script2ConfigFiles` call with argument `"vim"`. The argument
 defines the sub-directory name from which we want to read the vim scripts.
@@ -320,7 +320,7 @@ So that is the `vim` variable - the list of strings which are full paths
 pointing to `/nix/store` derivation which holds copies of all your vim files in
 the `config/vim` directory.
 
-### Understand transformation of Config files paths to vim source commands
+### Transformation of Config files paths to Vim source commands
 
 Function `sourceConfigFiles` takes the list of installed script files, and each
 of it transforms to a list of strings `source <NIX_STORE_PATH_OF_VIM_SCRIPT>`.
