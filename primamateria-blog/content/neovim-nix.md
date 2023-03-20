@@ -91,16 +91,6 @@ sometimes it can happen that nix can fail to build it.") }}
 }
 ```
 
-{% todo() %} Investigate {% end %}
-
-{{ why(question="
-
-Why do we override Neovim's flake nixpkgs input to follow the unstable
-version?", answer="
-
-This way we instruct Neovim to be built using packages from the same channel as
-we define in our input.") }}
-
 As first, we will simply pass Neovim from the input to the output.
 
 ```nix
