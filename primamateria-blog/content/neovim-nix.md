@@ -295,7 +295,7 @@ in sourceConfigFiles vim
 The body of the function consists of a call to `sourceConfigFiles` with argument
 `vim`. In the `let-in` block you can see both defined.
 
-### Vim script to nix store
+### Vim scripts to nix store
 
 Value of the variable `vim` is a result of `script2ConfigFiles` call. The
 argument defines the sub-directory name from which we want to read the vim
