@@ -17,4 +17,97 @@ The requested operation is successful. Changes will not be effective until the s
 
 Rebooting
 
+Windows Terminal
+PS C:\Users\matus.benko> wsl --import NixOS .\dev\NixOS\ .\Downloads\nixos-wsl-installer.tar.gz --version 2
+Import in progress, this may take a few minutes.
+The operation completed successfully.
+
+wsl -d NixOS
+Frozen on Starting systemd...
+
+Second try
+PS C:\Users\matus.benko> wsl -d NixOS
+nsenter: failed to parse pid: '-p'
+https://github.com/nix-community/NixOS-WSL/issues/67
+https://discourse.nixos.org/t/nixos-wsl-2-error-with-22-05-5c211b47-nsenter-failed-to-parse-pid-p/24238
+
+PS C:\Users\matus.benko> wsl -l -v
+  NAME     STATE           VERSION
+* NixOS    Running         2
+PS C:\Users\matus.benko> wsl -t NixOS
+The operation completed successfully.
+PS C:\Users\matus.benko> wsl --unregister NixOS
+Unregistering.
+The operation completed successfully.
+
+rmdir .\dev\NixOS\
+
+PS C:\Users\matus.benko> wsl --import NixOS .\dev\NixOS\ .\Downloads\nixos-wsl-x86_64-linux.tar.gz --version 2
+Import in progress, this may take a few minutes.
+Unspecified error
+Error code: Wsl/Service/E_FAIL
+
+Second try worked
+
+Windows Terminal Config
+Name: NixOS
+Command line: %SystemRoot%\System32\wsl.exe -d NixOS
+Starting directory: ~
+
+https://github.com/NixOS/nixos-artwork/blob/master/logo/nix-snowflake.svg
+https://svgtopng.com/
+
+Booted
+Systemd hangup on first run is fixed as well
+```
+
+```
+cd /home/nixos
+nix-shell -p git git-crypt neovim
+
+[nixos@nixos:~]$ nix-shell -p git git-crypt neovim
+warning: error: unable to download 'https://cache.nixos.org/nix-cache-info': Couldn't resolve host name (6); retrying in 272 ms
+
+Changed /etc/resolv.conf
+nameserver 8.8.8.8
+
+# Download keychain
+Download to Windows, unzip in Windows
+[nix-shell:~]$ cp -r /mnt/c/Users/matus.benko/Downloads/keychain/ ./
+
+
+git clone https://github.com/PrimaMateria/nixos.git
+cd nixos/
+git-crypt unlock ~/keychain/nixos.key
+# Apply system
+sudo nixos-rebuild switch --flake .#yueix
+some warnings, saw them before, ignoring
+
+# Restart WSL, should boot to mbenko@yueix
+PS C:\Users\matus.benko> wsl -t NixOS
+systemd frozen again, need to patch my files with stuff in updated tar file
+
+mkdir dev
+sudo su
+mv /home/nixos/nixos/ /home/nixos/keychain/ /home/mbenko/dev
+chown -R mbenko  dev/keychain/ dev/nixos/
+exit
+
+nix-shell -p git git-crypt neovim
+cd dev/nixos/
+git-crypt unlock ~/dev/keychain/nixos.key
+./apply-users.sh
+
+# Restart WSL again
+# fix resolv.conf again
+cd ~/dev/nixos
+git remote remove origin
+git remote add origin git@github.com:PrimaMateria/nixos.git
+git fetch
+git branch --set-upstream-to=origin/master master
+
+sudo rm -rf /home/nixos
+```
+
+```
 ```
