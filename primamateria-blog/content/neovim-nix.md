@@ -351,21 +351,22 @@ in pkgs.wrapNeovim pkgs.neovim {
 
 {{ why(question="
 
-Why do it such complicated way?", answer="
+Why to do it such complicated way?", answer="
 
-At the beginning I had all configs in one big nix string. This became messy and
-hard to navigate. I extracted configuration for each plugin to a separate nix
-file, and combined them later together via import calls.
+Initially, I had all configurations stored in one large nix string, which
+quickly became messy and difficult to navigate. To improve the organization, I
+extracted the configuration for each plugin into a separate nix file and
+combined them later using import calls.
 
-I still didn't like that I write vim code in nix string. I decided to package
-all files to derivation and source them as vim files.
+However, I still found it unfit to write Vim code within the nix string. To
+address this issue, I packaged all of the files into a derivation and sourced
+them as Vim files.
 
-It also helps that now it is enough just to add a new file to the directory, and
-it will be automatically sourced, rather than importing it here or there
-manually.") }}
+With this new setup, adding a new file to the directory is as simple as placing
+it there, and it will be automatically sourced, rather than having to manually
+import it.") }}
 
-Now, after starting your Neovim with `nix run` you should see the numbers
-column.
+After starting your Neovim with `nix run` you should see the numbers column.
 
 {{ end() }}
 
