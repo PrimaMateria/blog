@@ -625,18 +625,21 @@ the new `telescope-recent-files` plugin by pressing space-space.
 ## Add runtime dependency
 
 Have you heard of [mason.nvim](https://github.com/williamboman/mason.nvim)? I
-only recently discovered it, but it's no surprise that it's gaining popularity.
-Managing external runtime dependencies, such as language servers, used to be a
-pain. I briefly examined it and it appears that it manages a limited list of
-dependencies it supports. While it's an honorable effort, the community behind
-and maintaining Nixpkgs is much larger compared to the community behind mason.
-This is why I believe that Nix will provide greater freedom for declaring and
-configuring a reusable development environment.
+have discovered it only recently, and it's no surprise that it's gaining a lot
+of popularity.
+
+Managing external runtime dependencies, such as language servers, used to be
+pain. I briefly examined it and it appears that it offers limited list of
+dependencies it supports. While it's an honorable effort, the community that
+contributes and maintains Nixpkgs is much larger compared to the community that
+works on Mason. This is why I believe that Nix provides greater freedom for
+declaring and configuring a reusable development environments.
 
 In this chapter we will add two dependencies to demonstrate a bug I have
-discovered, and how to overcome it. First thing, to keep it tidy, define your
-dependencies in separate file. Ideally it would be one list of listing packages
-fron Nixpkgs, but in our case we will create a set containing two lists.
+discovered. First thing, define your dependencies in separate file.
+
+Ideally it would be one list that contains all required Nix packages, but in our
+case we will create two lists.
 
 ```nix
 # runtimeDeps.nix
@@ -649,7 +652,9 @@ fron Nixpkgs, but in our case we will create a set containing two lists.
 }
 ```
 
-Modify your Neovim package as follows:
+Next, move a package that was previous returned from the module function to the
+`let-in` block, and assign it to the variable `myNeovimUnwrapped`. Instead of it
+now the module function will return new package - a simple shell application.
 
 ```nix
 # packages/myNeovim.nix
@@ -681,33 +686,34 @@ in pkgs.writeShellApplication {
 }
 ```
 
-First thing that was changed is that we moved a package that was previous
-returned from the module function to the `let-in` block, and assigned it to the
-variable `myNeovimUnwrapped`. Instead of it now the module function returns new
-package - a simple shell application.
+In the shell application we have defined `runtimeInputs`, and passed to it a
+list containing two packages that correspond to the dependency lists specified
+in the previous file. These packages are build using `symlinkJoin`. It takes the
+provided `paths` and creates symlinks pointing to them, all bundled together in
+one package. So it's one package that aggregates other packages through
+symlinks.
 
-In the shell application we have defined `runtimeInputs` and passed to it a list
-containing two packages that correspond to the dependency lists specified in the
-previous file. These packages are build using `symlinkJoin`. It takes the
-provided `paths` and creates symlinks pointing to them, all together in one
-package. So it's one package that aggregates other packages through symlinks.
+{{ tip(tip="Here occures the bug. For some reason, `symlinkJoin` fails to create
+properly all symlinks if both dependencies - typescript server and lazygit - are
+defined together. Some links will be ommitted in the resulted package.
 
-{{ tip(tip="Here occures the bug mentioned earlier. For some reason,
-`symlinkJoin` fails to create properly all symlinks if both dependencies -
-typescript server and lazygit - are defined together. Some links will be missing
-in the resulted package.
-
-I don't know what is the reason that some packages are incompatible. That's also
-why I have not yet opened a github issue for it. The naive and rough guess is
-that `nodePackages.*` can't be mixed with other 'root' packages.") }}
+I don't know exactly what causes thus bug and which packages are incompatible.
+That's also why I have not yet opened a github issue for it. The naive guess is
+that `nodePackages.*` can't be mixed with packages from 'root'. ") }}
 
 The shell application we have defined is called a
 [wrapper](https://nixos.wiki/wiki/Nix_Cookbook#Wrapping_packages), and it allows
 us to enrich the original unwrapped application. In our case packages in the
 `runtimePaths` paths will be added to `PATH` environment vairable, and therefore
-will be avaible for the Neovim process.
+will be avaible for Neovim's process.
 
-{{ why(question='Why do we pass `"$@"` to unwrapped Neovim?', answer="This is shell variable which has value of all parameters passed to the script. For example, if you want to edit a specific file `nvim foo.txt`, then the parameter `foo.txt` must forwarded to the original unwrapped `nvim`.") }}
+{{ why(question='
+
+Why do we pass `"$@"` to unwrapped Neovim?', answer="
+
+This is shell variable which has value of all parameters passed to the script.
+For example, if you want to edit a specific file with `nvim foo.txt`, then the
+parameter `foo.txt` must be forwarded to the original unwrapped `nvim`.") }}
 
 You can test now that in terminal running `typescript-language-server --version`
 will tell you that the command is not recognized. But running the command inside
