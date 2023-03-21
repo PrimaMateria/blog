@@ -511,7 +511,8 @@ a Telescope extension which provides a picker for recent files.
 
 Add
 [smartpde/telescope-recent-files](https://github.com/smartpde/telescope-recent-files)
-to your flake inputs.
+to your flake inputs. In the `overlayFlakeInputs` we extend existing list of
+`vimPlugins` with a new package.
 
 ```nix
 # flake.nix
@@ -564,8 +565,9 @@ to your flake inputs.
 }
 ```
 
-In the `overlayFlakeInputs` we extend existing list of `vimPlugins` with a new
-package.
+To create a package you can take advantage of existing util `buildVimPlugin`.
+Actually, this is how all plugins in Nixpkgs are defined. As the source pass the
+github repo from the flake inputs.
 
 ```nix
 # packages/vimPlugins/telescopeRecentFiles.nix
@@ -576,21 +578,22 @@ pkgs.vimUtils.buildVimPlugin {
 }
 ```
 
-To create a package you take advantage of existing utility function
-`buildVimPlugin`. Actually this is how all plugins already added to Nixpkgs are
-defined as well. As the source you pass the github repo from the flake inputs.
+{{ tip(tip="
 
-{{ tip(tip="I noticed that some plugins have defined a Makefile. They follow the
-[mini.nvim](https://github.com/echasnovski/mini.nvim) template. The make command
-doesn't need to be executed for the plugin to work. What is in the repo is
-already fully defined plugin that can be loaded to the Neovim.
+I have noticed that some plugins have a Makefile. They follow the
+[mini.nvim](https://github.com/echasnovski/mini.nvim) template.
 
-When Nix makes derivation with standard `mkDerivation` call, and it finds the
-Makefile, it automatically tries to build it. This might fail, and it's not
-necessary for the plugin to work. To skip this automatic build include
-`skipBuild = true` into the set passed to `buildVimPlugin` function.") }}
+When Nix builds derivation with standard `mkDerivation` call, and it finds the
+Makefile, it automatically tries to build it. This might fail.
 
-Next, you can add the plugin to the plugin list as usual.
+The make command doesn't need to be executed for the plugin to work. What is in
+the repo is already fully defined plugin that can be loaded to the Neovim as it
+is.
+
+To skip this automatic build include `skipBuild = true` into the set that is
+passed to `buildVimPlugin` function.") }}
+
+Now, you can add the plugin to the plugin list as before.
 
 ```nix
 # plugins.nix
@@ -601,7 +604,8 @@ with pkgs.vimPlugins; [
 ]
 ```
 
-To make it work, extend the existing lua script for the Telescope.
+Extend existing Telescope config to load the extension, and set up a keymap for
+the new picker.
 
 ```lua
 -- config/lua/nvim-telescope.lua
@@ -613,8 +617,8 @@ vim.api.nvim_set_keymap("n", "<leader><tab>", ":lua require('telescope.builtin')
 vim.api.nvim_set_keymap("n", "<leader><leader>", ":lua require('telescope').extensions.recent_files.pick()<CR>", opt)
 ```
 
-In this state, your Neovim should be runnable, and you can test the new
-`telescope-recent-files` plugin by pressing space-space.
+In the current state your Neovim should be runnable, and you should be able test
+the new `telescope-recent-files` plugin by pressing space-space.
 
 {{ end() }}
 
