@@ -441,8 +441,8 @@ Telescope works, you still need to write a config for it.
 
 ## Add lua script config
 
-You will add lua script to `config/lua` and extend `config/default.nix` to load
-it in simmilar manner as you loaded the vim script.
+Add lua script to `config/lua` and extend `config/default.nix` to load it the
+simmilar way as loading vim script.
 
 ```lua
 -- config/lua/nvim-telescope.lua
@@ -451,6 +451,16 @@ local telescope = require("telescope")
 telescope.setup({})
 vim.api.nvim_set_keymap("n", "<leader><tab>", ":lua require('telescope.builtin').find_files()<CR>", opt)
 ```
+
+Extend `sourceConfigFiles` to choose between `source` and `luafile` call based
+on the file's extension.
+
+Then prepare `lua` list using `scripts2ConfigFiles` with `lua` sub-directory as
+the argument.
+
+At last, modify the body of module function to execute `sourceConfigFiles` on
+both vim and lua lists and concatenate the returned strings with new-line
+character into one single string.
 
 ```nix
 # config/default.nix
@@ -481,11 +491,7 @@ in builtins.concatStringsSep "\n"
 (builtins.map (configs: sourceConfigFiles configs) [ vim lua ])
 ```
 
-First extend `sourceConfigFiles` to use `source` or `luafile` based on the
-file's extension. Then prepare `lua` variable by calling `scripts2ConfigFiles`
-and pointing it to `lua` sub-directory. At last, modify the body of module
-function to execute `sourceConfigFiles` on list of variables and concatenate the
-returned strings with new-line character into one single string.
+The result will looks like this:
 
 ```vim
 source /nix/store/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/nvim-0-init.vim
@@ -493,8 +499,8 @@ source /nix/store/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/nvim-setters
 luafile /nix/store/z1p9n8cdi4wqhskazxsb2vy1gj2h83mx-nvim-lua-configs/nvim-telescope.lua
 ```
 
-Now, if you execute `nix run` and hit space-tab, it should show telescope
-window.
+Now, if you execute `nix run` and hit space-tab, you should see telescope window
+pop up.
 
 {{ end() }}
 
