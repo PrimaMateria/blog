@@ -13,7 +13,7 @@ In this blog post, I will guide you through the process of setting up Neovim as
 a Nix Flake, allowing you to keep your editor configuration in sync across
 multiple machines. We'll start by initializing the flake. We'll add Vim script
 configuration, organizing Vim scripts in separate files and transforming them
-into config files in the nix store. I will guide you through adding plugins, lua
+into config files in the Nix store. I will guide you through adding plugins, Lua
 scripts, and runtime dependencies to Neovim using Nix. By the end of this blog
 post, you will be able to configure your own development environment in a more
 manageable way.
@@ -49,7 +49,7 @@ correspond to the section titles.
 ## Initialize the flake
 
 Flake will take inputs, and it will generate two outputs. First a package that
-can be installed using the nix package manager, and second an app that can be
+can be installed using the Nix package manager, and second an app that can be
 executed directly from the flake.
 
 First we start with flake skeleton:
@@ -65,14 +65,14 @@ First we start with flake skeleton:
 
 Next, we will add 2 inputs:
 
-1. `nixpkgs` - a source for all nix packages we can later declare
+1. `nixpkgs` - a source for all Nix packages we can later declare
 1. `neovim` - Neovim itself
 
 {{ tip(tip="
 
 If you want to use unstable Neovim, simply change the url to
 `github:neovim/neovim?dir=contrib`. This will use the main branch. Be aware that
-sometimes it can happen that nix can fail to build it.") }}
+sometimes it can happen that Nix can fail to build it.") }}
 
 ```nix
 # flake.nix
@@ -151,7 +151,7 @@ extract Neovim to a separate package.
     }
 ```
 
-Next, create an overlay over the Nixpkgs which will extend nixpkgs with your
+Next, create an overlay over the Nixpkgs which will extend Nixpkgs with your
 Neovim package.
 
 ```nix
@@ -251,7 +251,7 @@ set number
 ### default.nix
 
 Next, create `default.nix`. Default file acts somehow as `index.js` in
-JavaScript. If you import path leading to a directory, nix will automatically
+JavaScript. If you import path leading to a directory, Nix will automatically
 look for `default.nix` in it.
 
 `default.nix` is defined as a function which returns string which represents the
@@ -285,7 +285,7 @@ in sourceConfigFiles vim
 The body of the function consists of a call to `sourceConfigFiles` with argument
 `vim`. In the `let-in` block you can see both defined.
 
-### Vim scripts to nix store
+### Vim scripts to Nix store
 
 Value of the variable `vim` is a result of `script2ConfigFiles` call. The
 argument defines the subdirectory name from which we want to read the vim
@@ -300,14 +300,14 @@ directory (`src = ./${dir}`) to it.
 The body of `script2ConfigFiles` evaluates as follows:
 
 - `builtins.readDir configDir` returns all files in the path defined by
-  `configDir`. If we pass to a `configDir` a nix derivation, nix will
+  `configDir`. If we pass to a `configDir` a Nix derivation, Nix will
   automatically evaluate it to a path in `/nix/store` leading to this
   derivation. Returned set consists of attributes being filenames and values
   being file types.
 - `builtins.attrNames (builtins.readDir configDir)` selects attributes
   (filenames) and collects them to a list of strings.
 - `builtins.map (file: "${configDir}/${file}") <list of filenames>` will
-  translate each filename to an absolute path to this file stored in nix store.
+  translate each filename to an absolute path to this file stored in Nix store.
 
 To summarize, the `vim` variable is a list of strings which are absolute paths
 pointing to `/nix/store` derivation which holds copies of all your Vim configs
@@ -343,12 +343,12 @@ in pkgs.wrapNeovim pkgs.neovim {
 
 Why to do it such complicated way?", answer="
 
-Initially, I had all configurations stored in one large nix string, which
+Initially, I had all configurations stored in one large Nix string, which
 quickly became messy and difficult to navigate. To improve the organization, I
-extracted the configuration for each plugin into a separate nix file and
+extracted the configuration for each plugin into a separate Nix file and
 combined them later using import calls.
 
-However, I still found it unfit to write Vim code within the nix string. To
+However, I still found it unfit to write Vim code within the Nix string. To
 address this issue, I packaged all the files into a derivation and sourced them
 as Vim files.
 
@@ -460,7 +460,7 @@ Then prepare `lua` list using `scripts2ConfigFiles` with `lua` subdirectory as
 the argument.
 
 At last, modify the body of module function to execute `sourceConfigFiles` on
-both vim and Lua lists and concatenate the returned strings with new-line
+both Vim and Lua lists and concatenate the returned strings with new-line
 character into one single string.
 
 ```nix
@@ -723,9 +723,9 @@ Neovim's terminal (`:term`) will work. The same should also apply for `lazygit`.
 
 {{ end() }}
 
-## Generate Lua config from nix
+## Generate Lua config from Nix
 
-All nix packages are in `/nix/store` in a directory which is prefixed with a
+All Nix packages are in `/nix/store` in a directory which is prefixed with a
 hash generated from the content of the package. If we want to reference some
 package from the configuration scripts, we must resolve the path of the package
 on build time otherwise we would not know exactly which hash is the correct one.
@@ -780,14 +780,14 @@ nvim_lsp.tsserver.setup({
 ```
 
 The interesting part is the tsserver's `path` in the `init_options`. The value
-contains a nix variable `${pkgs.nodePackages.typescript}` which will be resolved
-to the absolute path leading to the typescript package in the nix store.
+contains a Nix variable `${pkgs.nodePackages.typescript}` which will be resolved
+to the absolute path leading to the typescript package in the Nix store.
 
 {{ why(question="
 
 What is `vim: ft=vim` at top of the file?", answer="
 
-We have a nix function which returns multiline string. Since most of the content
+We have a Nix function which returns multiline string. Since most of the content
 in this file is Lua code, you might want to instruct Vim to use Lua formatting
 with the [modeline](https://neovim.io/doc/user/options.html#modeline).") }}
 
@@ -832,23 +832,23 @@ in builtins.concatStringsSep "\n"
 
 New function `nixFiles2ConfigFiles` takes a `dir` argument, and returns (similar
 like for `scripts2ConfigFiles`) a list of full paths to config files located in
-the nix store.
+the Nix store.
 
 The implementation maps every file found in the provided directory to a separate
-package - one single text file in nix store. The name of the package is obtained
+package - one single text file in Nix store. The name of the package is obtained
 by removing the `.nix` suffix, so the `nvim-lspconfig.lua.nix` will become
 `nvim-lspconfig.lua`. And the content of the text file package is the string
 returned by the function in the luanix configuration.
 
-While this content is written, nix variables are resolved, and therefore
-`${pkgs.nodePackages.typescript}` will become a full nix store path of the
+While this content is written, Nix variables are resolved, and therefore
+`${pkgs.nodePackages.typescript}` will become a full Nix store path of the
 typescript package.
 
 Lastly, `luanix` will be processed by `sourceConfigFiles`, and since the text
 packages end correctly with `.lua`, in the vimrc they will be sourced with
 `luafile` call. So the result in the generated config file will look like this:
 
-The RC now loads also new Lua script which was produced from nix code.
+The RC now loads also new Lua script which was produced from Nix code.
 
 ```vim
 source /nix/store/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/nvim-0-init.vim
@@ -912,10 +912,10 @@ The package with snippets is prepared, and we will use in the next chapter.
 
 {{ end() }}
 
-## Generate Vim config from nix
+## Generate Vim config from Nix
 
 To come the full circle, introduce `vimnix` script with configuration for the
-Ultisnips plugin where you will set the path pointing to snippets package in nix
+Ultisnips plugin where you will set the path pointing to snippets package in Nix
 store.
 
 First, let's add the plugin.
@@ -943,8 +943,8 @@ in ''
 ''
 ```
 
-Again, this is a nix function returning multiline string containing Vim script.
-And we use nix variable `${ultisnipsSnippets}` which is defined in `let-in`
+Again, this is a Nix function returning multiline string containing Vim script.
+And we use Nix variable `${ultisnipsSnippets}` which is defined in `let-in`
 block and references the package created in the previous chapter.
 
 {{ why(question="
@@ -1002,9 +1002,9 @@ You would need to configure also completion plugin to make proper use of the
 snippets. For the demonstration purposes this is enough.
 
 To test, since we don't have completion set up, we can just open our `test.ts`
-and run `:UltisnipsEdit`. It should open the snippet file in the nix store
+and run `:UltisnipsEdit`. It should open the snippet file in the Nix store
 (`<c-g>` to see the current file path). Originally, you could edit the file like
-that, but files in nix store are read-only, so you need to modify the snippet
+that, but files in Nix store are read-only, so you need to modify the snippet
 file you created in Ultisnips directory.
 
 {{ end() }}
@@ -1060,7 +1060,7 @@ desired files when they are sent to the remote repository and decrypt them when
 they are returned to the local.
 
 I choose to declare `git` and `git-crypt` outside the Neovim flake. If you are
-using nix configuration just add it to the `environment.systemPackages`, or if
+using Nix configuration just add it to the `environment.systemPackages`, or if
 you are using home manager add it to `home.packages`.
 
 ```bash
