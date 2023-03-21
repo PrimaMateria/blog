@@ -33,7 +33,7 @@ configuration is consistent, but also your entire development environment.
 
 Please keep in mind that I am also in the process of learning Nix and may have
 made some errors. Therefore, I kindly request that you provide your feedback in
-the comments section if you have some.
+the comments' section if you have some.
 
 It is important to note that this guide does not constitute a comprehensive
 Neovim configuration. Rather, it serves to demonstrate various concepts of Nix
@@ -119,7 +119,7 @@ As first, we will simply pass Neovim from the input to the output.
 Our flake provides Neovim as a default package for the `x86_64-linux` system,
 and a default app executes Neovim's binary.
 
-Now, lets run the app!
+Now, let's run the app!
 
 ```bash
 nix run
@@ -130,7 +130,7 @@ because all files belonging to the flake must be tracked in git repository.
 
 `git add .`") }}
 
-If all goes well, you should be welcomed with the neovim welcome message and the
+If all goes well, you should be welcomed with the Neovim welcome message and the
 version should correspond to the current stable version.
 
 {{ end() }}
@@ -151,7 +151,7 @@ extract Neovim to a separate package.
     }
 ```
 
-Next, create an overlay over the nixpkgs which will extend nixpkgs with your
+Next, create an overlay over the Nixpkgs which will extend nixpkgs with your
 Neovim package.
 
 ```nix
@@ -204,9 +204,9 @@ package that comes from the flake inputs. In the second overlay you define new
 package `myNeovim` which is defined in `packages/myNeovim.nix`.
 
 The function takes an input `pkgs` which is set to overlay's `final` argument.
-Therefore the `pkgs.neovim` now refers to the `neovim` declared in
-`overlayFlakeInputs`. If you would pass in the flake `prev` argument, then the
-`neovim` would actually refer to package defined in original nixpkgs on unstable
+Therefore, the `pkgs.neovim` now refers to the `neovim` declared in
+`overlayFlakeInputs`. If you passed in the flake `prev` argument, then the
+`neovim` would actually refer to package defined in original Nixpkgs on unstable
 channel.
 
 You can test by running `nix run`. If done right, Neovim should still start as
@@ -218,19 +218,19 @@ before. Don't forget to track new file in git.
 
 {{ tip(tip="
 
-Some of my Neovim configuration is still written in Vim sript. I know it should
-possible to migrate it all to lua, but this will be a project for later.") }}
+Some of my Neovim configuration is still written in Vim script. I know it should
+be possible to migrate it all to Lua, but this will be a project for later.") }}
 
 ### Vim scripts
 
 We will organize vim scripts in separate files in `config/vim/`.
 
-At first we created two Vim scripts: `nvim-setters.vim` and `nvim-0-init.vim`.
+At first, we created two Vim scripts: `nvim-setters.vim` and `nvim-0-init.vim`.
 The latter one has `0` in the name to ensure that it is the first, because the
 order of files in directory corresponds also to order of their sourcing in the
 config file.
 
-For an example, this is important for the leader key. If we would call
+For an example, this is important for the leader key. If we called
 `nnoremap <leader>x foo<cr>` before updating `mapleader` to desired key, it
 would assume a default `\` as the leader key for these mappings.
 
@@ -288,7 +288,7 @@ The body of the function consists of a call to `sourceConfigFiles` with argument
 ### Vim scripts to nix store
 
 Value of the variable `vim` is a result of `script2ConfigFiles` call. The
-argument defines the sub-directory name from which we want to read the vim
+argument defines the subdirectory name from which we want to read the vim
 scripts.
 
 `script2ConfigFiles` function first in `let-in` block prepares `configDir`
@@ -297,13 +297,13 @@ derivation. This derivation is a directory which contains all vim files. The
 during the evaluation) in the `/nix/store` and copies everything from our source
 directory (`src = ./${dir}`) to it.
 
-The body of `script2ConfigFiles` evalautes as follows:
+The body of `script2ConfigFiles` evaluates as follows:
 
 - `builtins.readDir configDir` returns all files in the path defined by
   `configDir`. If we pass to a `configDir` a nix derivation, nix will
   automatically evaluate it to a path in `/nix/store` leading to this
   derivation. Returned set consists of attributes being filenames and values
-  being filetypes.
+  being file types.
 - `builtins.attrNames (builtins.readDir configDir)` selects attributes
   (filenames) and collects them to a list of strings.
 - `builtins.map (file: "${configDir}/${file}") <list of filenames>` will
@@ -311,7 +311,7 @@ The body of `script2ConfigFiles` evalautes as follows:
 
 To summarize, the `vim` variable is a list of strings which are absolute paths
 pointing to `/nix/store` derivation which holds copies of all your vim configs
-from the `config/vim/`.
+from the `config/vim/`.ed
 
 ### Sourcing vim scripts
 
@@ -325,7 +325,7 @@ source /nix/store/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/nvim-setters
 
 ### Custom RC
 
-At last, load the configuration string to your custom NeoVim package.
+At last, load the configuration string to your custom Neovim package.
 
 ```nix
 # packages/myNeovim.nix
@@ -349,20 +349,21 @@ extracted the configuration for each plugin into a separate nix file and
 combined them later using import calls.
 
 However, I still found it unfit to write Vim code within the nix string. To
-address this issue, I packaged all of the files into a derivation and sourced
-them as Vim files.
+address this issue, I packaged all the files into a derivation and sourced them
+as Vim files.
 
 With this new setup, adding a new file to the directory is as simple as placing
 it there, and it will be automatically sourced, rather than having to manually
 import it.") }}
 
-After starting your Neovim with `nix run` you should see the numbers column.
+After starting your Neovim with `nix run` you should see the column with line
+numbers.
 
 {{ end() }}
 
 ## Add plugin from Nixpkgs
 
-Usually you will find the most popular plugins in nixpkgs. Plugins can also list
+Usually you will find the most popular plugins in Nixpkgs. Plugins can also list
 their own dependencies to other plugins, and they will be installed together
 automatically.
 
@@ -406,11 +407,11 @@ Word `all` doesn't matter and can be anything. `start` signifies that the
 plugins will be loaded on Neovim's launch. Another possible selector is `opt`
 which is used for lazy-load of plugins via command `:packadd $plugin-name`.
 
-I didn't yet find a reason to use this option. If I would need to define a
+I didn't yet find a reason to use this option. If I needed to define a
 specialized Neovim flavor (e.g. one for web development, another for Arduino), I
 would probably construct different apps in the flake.") }}
 
-You can search plugins in nixpkgs through
+You can search plugins in Nixpkgs through
 [website](https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=vimPlugins.telescope).
 Notice that the selected channel is unstable. This channel might have some
 additional plugins compared to stable channel, or newer versions.
@@ -421,28 +422,28 @@ How about searching from the terminal?", answer="
 
 Actually, it is harder than you would think. You can always do
 `nix search nixpkgs vimPlugins.telescope`, but this will search `nixpkgs` stable
-channel. If you run `sudo nix-channel --list`, you can see which url is
+channel. If you run `sudo nix-channel --list`, you can see which URL is
 associated with the `nixpkgs` alias.
 
 The only way I have found was to add the unstable channel
 `sudo nix-channel --add https://nixos.org/channels/nixpkgs-unstable unstable`,
 update the channels with `sudo nix-channel --update`, and then search with
 `nix-env -qaP 'vimplugin.telescope.*' | grep unstable`. The catch here is that
-in this case you don't query the package's attribute path, but the its symbolic
+in this case you don't query the package's attribute path, but its symbolic
 name, which might have different format and just makes it even more confusing.
 
-The good news that community is aware of this shortcomming, so in my opinion
-this will be addressed in one of the upcoming releases.") }}
+The good news that community is aware of this shortcoming, so in my opinion this
+will be addressed in one of the upcoming releases.") }}
 
 At this step Neovim should be still runnable, but before you can verify that
 Telescope works, you still need to write a config for it.
 
 {{ end() }}
 
-## Add lua script config
+## Add Lua script config
 
-Add lua script to `config/lua` and extend `config/default.nix` to load it the
-simmilar way as loading vim script.
+Add Lua script to `config/lua` and extend `config/default.nix` to load it the
+similar way as loading vim script.
 
 ```lua
 -- config/lua/nvim-telescope.lua
@@ -455,11 +456,11 @@ vim.api.nvim_set_keymap("n", "<leader><tab>", ":lua require('telescope.builtin')
 Extend `sourceConfigFiles` to choose between `source` and `luafile` call based
 on the file's extension.
 
-Then prepare `lua` list using `scripts2ConfigFiles` with `lua` sub-directory as
+Then prepare `lua` list using `scripts2ConfigFiles` with `lua` subdirectory as
 the argument.
 
 At last, modify the body of module function to execute `sourceConfigFiles` on
-both vim and lua lists and concatenate the returned strings with new-line
+both vim and Lua lists and concatenate the returned strings with new-line
 character into one single string.
 
 ```nix
@@ -491,7 +492,7 @@ in builtins.concatStringsSep "\n"
 (builtins.map (configs: sourceConfigFiles configs) [ vim lua ])
 ```
 
-The result will looks like this:
+The result will look like this:
 
 ```vim
 source /nix/store/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/nvim-0-init.vim
@@ -506,8 +507,8 @@ pop up.
 
 ## Add plugin not found in Nixpkgs
 
-To demenostrate how to add a plugin which is not found in Nixpkgs, you will add
-a Telescope extension which provides a picker for recent files.
+To demonstrate how to add a plugin which is not found in Nixpkgs, you will add a
+Telescope extension which provides a picker for recent files.
 
 Add
 [smartpde/telescope-recent-files](https://github.com/smartpde/telescope-recent-files)
@@ -565,9 +566,9 @@ to your flake inputs. In the `overlayFlakeInputs` we extend existing list of
 }
 ```
 
-To create a package you can take advantage of existing util `buildVimPlugin`.
+To create a package you can take advantage of existing utility `buildVimPlugin`.
 Actually, this is how all plugins in Nixpkgs are defined. As the source pass the
-github repo from the flake inputs.
+GitHub repo from the flake inputs.
 
 ```nix
 # packages/vimPlugins/telescopeRecentFiles.nix
@@ -617,8 +618,8 @@ vim.api.nvim_set_keymap("n", "<leader><tab>", ":lua require('telescope.builtin')
 vim.api.nvim_set_keymap("n", "<leader><leader>", ":lua require('telescope').extensions.recent_files.pick()<CR>", opt)
 ```
 
-In the current state your Neovim should be runnable, and you should be able test
-the new `telescope-recent-files` plugin by pressing space-space.
+In the current state your Neovim should be runnable, and you should be able to
+test the new `telescope-recent-files` plugin by pressing space-space.
 
 {{ end() }}
 
@@ -629,7 +630,7 @@ have discovered it only recently, and it's no surprise that it's gaining a lot
 of popularity.
 
 Managing external runtime dependencies, such as language servers, used to be
-pain. I briefly examined it and it appears that it offers limited list of
+pain. I briefly examined it, and it appears that it offers limited list of
 dependencies it supports. While it's an honorable effort, the community that
 contributes and maintains Nixpkgs is much larger compared to the community that
 works on Mason. This is why I believe that Nix provides greater freedom for
@@ -652,9 +653,10 @@ case we will create two lists.
 }
 ```
 
-Next, move a package that was previous returned from the module function to the
-`let-in` block, and assign it to the variable `myNeovimUnwrapped`. Instead of it
-now the module function will return new package - a simple shell application.
+Next, move a package that was previously returned from the module function to
+the `let-in` block, and assign it to the variable `myNeovimUnwrapped`. Instead
+of it now the module function will return new package - a simple shell
+application.
 
 ```nix
 # packages/myNeovim.nix
@@ -693,19 +695,19 @@ provided `paths` and creates symlinks pointing to them, all bundled together in
 one package. So it's one package that aggregates other packages through
 symlinks.
 
-{{ tip(tip="Here occures the bug. For some reason, `symlinkJoin` fails to create
+{{ tip(tip="Here occurs the bug. For some reason, `symlinkJoin` fails to create
 properly all symlinks if both dependencies - typescript server and lazygit - are
-defined together. Some links will be ommitted in the resulted package.
+defined together. Some links will be omitted in the resulted package.
 
 I don't know exactly what causes thus bug and which packages are incompatible.
-That's also why I have not yet opened a github issue for it. The naive guess is
+That's also why I have not yet opened a GitHub issue for it. The naive guess is
 that `nodePackages.*` can't be mixed with packages from 'root'. ") }}
 
 The shell application we have defined is called a
 [wrapper](https://nixos.wiki/wiki/Nix_Cookbook#Wrapping_packages), and it allows
 us to enrich the original unwrapped application. In our case packages in the
-`runtimePaths` paths will be added to `PATH` environment vairable, and therefore
-will be avaible for Neovim's process.
+`runtimePaths` paths will be added to `PATH` environment variable, and therefore
+will be available for Neovim's process.
 
 {{ why(question='
 
@@ -721,13 +723,13 @@ Neovim's terminal (`:term`) will work. The same should also apply for `lazygit`.
 
 {{ end() }}
 
-## Generate lua config from nix
+## Generate Lua config from nix
 
 All nix packages are in `/nix/store` in a directory which is prefixed with a
 hash generated from the content of the package. If we want to reference some
 package from the configuration scripts, we must resolve the path of the package
-on build time otherwise we would no know exactly which hash is the correct one.
-The traditional lua script configuration files that we have already set up lack
+on build time otherwise we would not know exactly which hash is the correct one.
+The traditional Lua script configuration files that we have already set up lack
 this ability.
 
 In this chapter you will add Typescript runtime dependency, and instruct
@@ -785,10 +787,9 @@ to the absolute path leading to the typescript package in the nix store.
 
 What is `vim: ft=vim` at top of the file?", answer="
 
-We haves a nix function which returns multiline string. Since most of the
-content in this file is lua code, you might want to instruct Vim to use lua
-formatting with the
-[modeline](https://neovim.io/doc/user/options.html#modeline).") }}
+We have a nix function which returns multiline string. Since most of the content
+in this file is Lua code, you might want to instruct Vim to use Lua formatting
+with the [modeline](https://neovim.io/doc/user/options.html#modeline).") }}
 
 Next, extend the `config/default.nix` to process and source new configuration.
 
@@ -847,7 +848,7 @@ Lastly, `luanix` will be processed by `sourceConfigFiles`, and since the text
 packages end correctly with `.lua`, in the vimrc they will be sourced with
 `luafile` call. So the result in the generated config file will look like this:
 
-The RC now loads also new lua script which was produced from nix code.
+The RC now loads also new Lua script which was produced from nix code.
 
 ```vim
 source /nix/store/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/nvim-0-init.vim
@@ -878,9 +879,9 @@ You should see an error `Type 'string' is not assignable to type 'number'.`
 ## Package anything else
 
 In this chapter you won't do anything new. You will use already introduced
-mechanics to package addtional files. Hopefully, this will highlight the pattern
-used for enriching your development environment. To be more specific, you will
-add a snippet file for the typescript.
+mechanics to package additional files. Hopefully, this will highlight the
+pattern used for enriching your development environment. To be more specific,
+you will add a snippet file for the typescript.
 
 ```snippets
 # ultisnips/typescript.snippets
@@ -891,7 +892,7 @@ snippet af "arrow function"
 endsnippet
 ```
 
-Similar as before, we we will take everything from `ultisnips` directory, and
+Similar as before, we will take everything from `ultisnips` directory, and
 package it together.
 
 ```nix
@@ -914,7 +915,7 @@ The package with snippets is prepared, and we will use in the next chapter.
 ## Generate Vim config from nix
 
 To come the full circle, introduce `vimnix` script with configuration for the
-ultisnips plugin where you will set the path pointing to snippets package in nix
+Ultisnips plugin where you will set the path pointing to snippets package in nix
 store.
 
 First, let's add the plugin.
@@ -930,7 +931,7 @@ with pkgs.vimPlugins; [
 ]
 ```
 
-Then, in new directory `vimnix` create configuration for ultisnipps.
+Then, in new directory `vimnix` create configuration for Ultisnipps.
 
 ```nix
 # config/vimnix/nvim-ultisnips.vim.nix
@@ -952,7 +953,7 @@ Why we didn't put the `ultisnipsSinppets` package to the overlay, similar as
 `neovim` or `telescope-recent-files` packages?", answer="
 
 You totally could do that. Let's call this decision a personal preference. The
-reasoning behind is that I feel like the cohesion is better with ultisnips
+reasoning behind is that I feel like the cohesion is better with Ultisnips
 fingerprinting in less modules. But feel free to do it anyway you find the
 best.") }}
 
@@ -1004,14 +1005,14 @@ To test, since we don't have completion set up, we can just open our `test.ts`
 and run `:UltisnipsEdit`. It should open the snippet file in the nix store
 (`<c-g>` to see the current file path). Originally, you could edit the file like
 that, but files in nix store are read-only, so you need to modify the snippet
-file you created in ultisnips directory.
+file you created in Ultisnips directory.
 
 {{ end() }}
 
 ## Use your Neovim
 
-Create an alias for `nix run` or add your neovim as a package to your Home
-Manager. I preffer to create an alias.
+Create an alias for `nix run` or add your Neovim as a package to your Home
+Manager. I prefer to create an alias.
 
 ```bash
 nvim = "nix run ~/dev/neovim-nix --";
@@ -1058,9 +1059,9 @@ You can use [git-crypt](https://github.com/AGWA/git-crypt) to encrypt the
 desired files when they are sent to the remote repository and decrypt them when
 they are returned to the local.
 
-I choose to declare `git` and `git-crypt` outside of the neovim flake. If you
-are using nix configuration just add it to the `environment.systemPackages`, or
-if you are using home manager add it to `home.packages`.
+I choose to declare `git` and `git-crypt` outside the Neovim flake. If you are
+using nix configuration just add it to the `environment.systemPackages`, or if
+you are using home manager add it to `home.packages`.
 
 ```bash
 mkdir .secrets
@@ -1076,7 +1077,7 @@ Locally the `git-crypt` automatically decrypts the files.
 {{ tip(tip="
 
 Be aware that adding encrypted secrets to remote repo will make running app from
-the remote flake not availabe anymore. Also installing it as package will
+the remote flake not available anymore. Also installing it as package will
 require referencing the local unencrypted flake.") }}
 
 Now, let's add the plugin, and its configuration.
@@ -1099,8 +1100,8 @@ require("chatgpt").setup({ })
 vim.api.nvim_set_keymap("n", "<leader>aa", "<cmd>ChatGPT<cr>", { noremap = true })
 ```
 
-The last piece is to make our secret API key avaialable. For that just extend
-the wrapper shell application.
+The last piece is to make our secret API key available. For that just extend the
+wrapper shell application.
 
 Imported `secrets` in the `let-in` block are used to set an environment variable
 `OPENAI_API_KEY` in the shell application's text.
@@ -1144,13 +1145,13 @@ Now space-a-a should open window with openai prompt.
 
 Maybe you are already aware of
 [numtide/flake-utlis](https://github.com/numtide/flake-utils), and the popular
-helper function that allows you to prepare package for mutliple architectures.
-For now your config has everywhere hardcoded `x86_64-linux`.
+helper function that allows you to prepare package for multiple architectures.
+For now your config has everywhere hard-coded `x86_64-linux`.
 
-I was already experimenting with it and I was trying to use the flake in
+I was already experimenting with it, and I was trying to use the flake in
 [Nix-on-Droid](https://f-droid.org/en/packages/com.termux.nix/), but I got some
-errors. If I will find working solutions later, I will write a blog post about
-it as well.
+errors. If I find working solutions later, I will write a blog post about it as
+well.
 
 It would be cool to have your lightweight development environment on the phone.
 Maybe just grab some small keyboard, and you could stay crafty on the road. Even
