@@ -11,8 +11,8 @@ tags = ["nixos","neovim"]
 
 In this blog post, I will guide you through the process of setting up Neovim as
 a Nix Flake, allowing you to keep your editor configuration in sync across
-multiple machines. We'll start by initializing the flake. We'll add vim script
-configuration, organizing vim scripts in separate files and transforming them
+multiple machines. We'll start by initializing the flake. We'll add Vim script
+configuration, organizing Vim scripts in separate files and transforming them
 into config files in the nix store. I will guide you through adding plugins, lua
 scripts, and runtime dependencies to Neovim using Nix. By the end of this blog
 post, you will be able to configure your own development environment in a more
@@ -214,7 +214,7 @@ before. Don't forget to track new file in git.
 
 {{ end() }}
 
-## Add vim script config
+## Add Vim script config
 
 {{ tip(tip="
 
@@ -223,7 +223,7 @@ be possible to migrate it all to Lua, but this will be a project for later.") }}
 
 ### Vim scripts
 
-We will organize vim scripts in separate files in `config/vim/`.
+We will organize Vim scripts in separate files in `config/vim/`.
 
 At first, we created two Vim scripts: `nvim-setters.vim` and `nvim-0-init.vim`.
 The latter one has `0` in the name to ensure that it is the first, because the
@@ -292,7 +292,7 @@ argument defines the subdirectory name from which we want to read the vim
 scripts.
 
 `script2ConfigFiles` function first in `let-in` block prepares `configDir`
-derivation. This derivation is a directory which contains all vim files. The
+derivation. This derivation is a directory which contains all Vim files. The
 `installPhase` creates `$out` directory (this variable is automatically provided
 during the evaluation) in the `/nix/store` and copies everything from our source
 directory (`src = ./${dir}`) to it.
@@ -310,10 +310,10 @@ The body of `script2ConfigFiles` evaluates as follows:
   translate each filename to an absolute path to this file stored in nix store.
 
 To summarize, the `vim` variable is a list of strings which are absolute paths
-pointing to `/nix/store` derivation which holds copies of all your vim configs
+pointing to `/nix/store` derivation which holds copies of all your Vim configs
 from the `config/vim/`.ed
 
-### Sourcing vim scripts
+### Sourcing Vim scripts
 
 Function `sourceConfigFiles` takes the list of installed script files, and
 transforms it to a list source calls.
@@ -443,7 +443,7 @@ Telescope works, you still need to write a config for it.
 ## Add Lua script config
 
 Add Lua script to `config/lua` and extend `config/default.nix` to load it the
-similar way as loading vim script.
+similar way as loading Vim script.
 
 ```lua
 -- config/lua/nvim-telescope.lua
@@ -943,7 +943,7 @@ in ''
 ''
 ```
 
-Again, this is a nix function returning multiline string containing vim script.
+Again, this is a nix function returning multiline string containing Vim script.
 And we use nix variable `${ultisnipsSnippets}` which is defined in `let-in`
 block and references the package created in the previous chapter.
 
