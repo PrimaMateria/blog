@@ -362,13 +362,12 @@ After starting your Neovim with `nix run` you should see the numbers column.
 
 ## Add plugin from Nixpkgs
 
-Usually you will find the most popular plugins in nixpkgs. Plugins definition in
-nixpkgs can also list their dependencies, so when the it depends on other
-plugins, these will be installed and included to Neovim automatically without a
-need to explicitly listing them.
+Usually you will find the most popular plugins in nixpkgs. Plugins can also list
+their own dependencies to other plugins, and they will be installed together
+automatically.
 
-For the example, we will add the Telescope plugin. First we will create a
-separate nix file which will contain a list of the plugins:
+As an example we will add the Telescope plugin. First we will create a separate
+nix file which will contain a list of the plugins:
 
 ```nix
 # plugins.nix
@@ -378,10 +377,12 @@ with pkgs.vimPlugins; [
 ]
 ```
 
-{{ tip(tip="`with-expression` allows you to avoid repeating the selects from `pkgs.vimPlugins` for each listed plugin.") }}
+{{ tip(tip="
 
-Add now extend your Neovim package to include all plugins listed in
-`plugins.nix`:
+`with-expression` allows you to avoid repeating the selects from
+`pkgs.vimPlugins` for each listed plugin.") }}
+
+Next, extend your Neovim package to include all plugins listed in `plugins.nix`:
 
 ```nix
 # packages/myNeovim.nix
@@ -397,30 +398,44 @@ in pkgs.wrapNeovim pkgs.neovim {
     }
 ```
 
-{{ why(question="Why we set `packages.all.start`?", answer="Word `all` doesn't matter and can be anything. And the `start` signifies that the plugins will be loaded on the Neovim's launch. The other options is `opt` which allows to load plugin only via command `:packadd $plugin-name`. I don't see yet a reason for using opt plugins. If I would need to craft a specialized Neovim flavor (e.g. one for web development, another for arduino), I would probably construct different apps in the flake.") }}
+{{ why(question="
 
-You can search plugins in nixpkgs either through
+What exactly is `packages.all.start`?", answer="
+
+Word `all` doesn't matter and can be anything. `start` signifies that the
+plugins will be loaded on Neovim's launch. Another possible selector is `opt`
+which is used for lazy-load of plugins via command `:packadd $plugin-name`.
+
+I didn't yet find a reason to use this option. If I would need to define a
+specialized Neovim flavor (e.g. one for web development, another for Arduino), I
+would probably construct different apps in the flake.") }}
+
+You can search plugins in nixpkgs through
 [website](https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=vimPlugins.telescope).
 Notice that the selected channel is unstable. This channel might have some
-additional plugins compared to stable channel, or newer version of them.
+additional plugins compared to stable channel, or newer versions.
 
-{{ why(question="How about searching from the terminal?", answer="Actually, it
-is harder than you would think. You can always do
-`nix search nixpkgs vimPlugins.telescope`, but this will search `nixpkgs`
-channel which corresponds with the stable channel. If you run
-`sudo nix-channel --list`, it will reveal to you which url is associated with
-the `nixpkgs` alias.
+{{ why(question="
+
+How about searching from the terminal?", answer="
+
+Actually, it is harder than you would think. You can always do
+`nix search nixpkgs vimPlugins.telescope`, but this will search `nixpkgs` stable
+channel. If you run `sudo nix-channel --list`, you can see which url is
+associated with the `nixpkgs` alias.
 
 The only way I have found was to add the unstable channel
 `sudo nix-channel --add https://nixos.org/channels/nixpkgs-unstable unstable`,
-update channels with `sudo nix-channel --update`, and then search with
-`nix-env -qaP 'vimplugin.telescope.*' | grep unstable`. The trick here is that
+update the channels with `sudo nix-channel --update`, and then search with
+`nix-env -qaP 'vimplugin.telescope.*' | grep unstable`. The catch here is that
 in this case you don't query the package's attribute path, but the its symbolic
-name, which I find unclear.") }}
+name, which might have different format and just makes it even more confusing.
+
+The good news that community is aware of this shortcomming, so in my opinion
+this will be addressed in one of the upcoming releases.") }}
 
 At this step Neovim should be still runnable, but before you can verify that
-Telescope works, we still need to write a config for it. This is decribed in
-next chapter.
+Telescope works, you still need to write a config for it.
 
 {{ end() }}
 
