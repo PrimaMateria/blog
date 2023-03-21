@@ -911,11 +911,11 @@ The package with snippets is prepared, and we will use in the next chapter.
 
 {{ end() }}
 
-## Generate vim config from nix
+## Generate Vim config from nix
 
-To finish the whole circle, you will introduce `vimnix` script. It will be
-configuration for the ultisnips plugin where you will set the path pointing to
-nix store's snippets package.
+To come the full circle, introduce `vimnix` script with configuration for the
+ultisnips plugin where you will set the path pointing to snippets package in nix
+store.
 
 First, let's add the plugin.
 
@@ -930,7 +930,7 @@ with pkgs.vimPlugins; [
 ]
 ```
 
-Then in new directory `vimnix` create configuration for ultisnipps.
+Then, in new directory `vimnix` create configuration for ultisnipps.
 
 ```nix
 # config/vimnix/nvim-ultisnips.vim.nix
@@ -946,10 +946,18 @@ Again, this is a nix function returning multiline string containing vim script.
 And we use nix variable `${ultisnipsSnippets}` which is defined in `let-in`
 block and references the package created in the previous chapter.
 
-{{ why(question="Why we didn't put the `ultisnipsSinppets` package to the overlay, similar as `neovim` or `telescope-recent-files` packages?", answer="You totally could do that. Let's call this decision a personal preference. The reasoning behind is that I feel like the cohesion is better with ultisnips fingerprinting in less modules. But feel free to do it anyway you find the best.") }}
+{{ why(question="
+
+Why we didn't put the `ultisnipsSinppets` package to the overlay, similar as
+`neovim` or `telescope-recent-files` packages?", answer="
+
+You totally could do that. Let's call this decision a personal preference. The
+reasoning behind is that I feel like the cohesion is better with ultisnips
+fingerprinting in less modules. But feel free to do it anyway you find the
+best.") }}
 
 In the `config/default.nix` we have everything prepared. Just load `vimnix`, and
-add it tot the list of configs that will be sourced.
+add it to the list of configs that are sourced.
 
 ```nix
 # config/default.nix
@@ -990,25 +998,32 @@ in builtins.concatStringsSep "\n"
 ```
 
 You would need to configure also completion plugin to make proper use of the
-snippets. For the demonstration purposes this is enough. To test, since we don't
-have completion set up, we can just open our `test.ts` and run `:UltisnipsEdit`.
-It should open the snippet file in the nix store (`<c-g>` to see the current
-file path). Originally, you could edit the file here, but, of course, files from
-nix store are read-only.
+snippets. For the demonstration purposes this is enough.
+
+To test, since we don't have completion set up, we can just open our `test.ts`
+and run `:UltisnipsEdit`. It should open the snippet file in the nix store
+(`<c-g>` to see the current file path). Originally, you could edit the file like
+that, but files in nix store are read-only, so you need to modify the snippet
+file you created in ultisnips directory.
 
 {{ end() }}
 
 ## Use your Neovim
 
-Alias for nix run or add to package. Packages needs nix update. As mentioned,
-this flake can be installed as package, or run as an application. I preffer to
-create an alias.
+Create an alias for `nix run` or add your neovim as a package to your Home
+Manager. I preffer to create an alias.
 
 ```bash
 nvim = "nix run ~/dev/neovim-nix --";
 ```
 
-{{ why(question="What are the `--` at the end?", answer="A `--` signals the end of options and disables further option processing. Any arguments after the -- are treated as filenames and arguments. Basically, stuff after the double-dash will apply to `nvim` command and not to `nix run`.") }}
+{{ why(question="
+
+What are the `--` at the end?", answer="
+
+A `--` signals the end of options and disables further option processing. Any
+arguments after the -- are treated as filenames and arguments. Basically, stuff
+after the double-dash will apply to `nvim` command and not to `nix run`.") }}
 
 I like to provide local path to the flake, so when I want to apply new changes I
 don't need always push to remote. It's good for testing. But you can also run
@@ -1022,21 +1037,22 @@ nvim = "nix run github:PrimaMateria/neovim-nix --";
 
 ## Updating
 
-Nix flakes create `flake.lock` where the inputs are frozen to specific versions.
-Updating is as simple as `nix flake update`.
+Building flake creates `flake.lock` where the inputs are frozen to specific
+version. Updating is as simple as `nix flake update`.
 
-{{ tip(tip="The best thing is that if something
-goes wrong, and you don't have time to investigate, just revert the changes
-in `flake.lock`, and you are back in your previous working version.") }}
+{{ tip(tip="
+
+The best thing is that if something goes wrong, and you don't have time to
+investigate, just revert the changes in `flake.lock`, run again, and you are
+back in your previous working version.") }}
 
 {{ end() }}
 
 ## Bonus: Secrets
 
 This is a bonus chapter. Storing secrets in a git repository may not be
-necessary for you, but it is a useful skill to learn. In the context of Neovim,
-I have only used it to store an OpenAI API key which is needed for the
-[ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim) plugin.
+necessary for you. I have only used it to store an OpenAI API key which is
+needed for the [ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim) plugin.
 
 You can use [git-crypt](https://github.com/AGWA/git-crypt) to encrypt the
 desired files when they are sent to the remote repository and decrypt them when
@@ -1054,10 +1070,14 @@ echo ".secrets/** filter=git-crypt diff=git-crypt" > .gitattributes
 echo '{ openai-api-key = "secretkey"; }' > .secrets/secrets.nix
 ```
 
-All the files in the `.secrets` directory will have content tracked encrypted.
+All the files in the `.secrets` directory will have content on remote encrypted.
 Locally the `git-crypt` automatically decrypts the files.
 
-{{ tip(tip="Be aware that adding encrypted secrets to remote repo will make running app from the remote flake not availabe anymore. Also installing it as package will require referencing the local unencrypted flake.") }}
+{{ tip(tip="
+
+Be aware that adding encrypted secrets to remote repo will make running app from
+the remote flake not availabe anymore. Also installing it as package will
+require referencing the local unencrypted flake.") }}
 
 Now, let's add the plugin, and its configuration.
 
@@ -1073,8 +1093,6 @@ with pkgs.vimPlugins; [
 ]
 ```
 
-{{ tip(tip="Interesting point here is that if you look into the [ChatGPT.nvim](https://github.com/jackMort/ChatGPT.nvim) README, you can notice that it requires bunch of other plugins to work. Nixpkgs offers a place to declare these dependencies for the plugins. When the `packages.all.start` are processed, these dependencies are indetified and installed together with the main plugin automatically.") }}
-
 ```lua
 -- config/lua/nvim-chatgpt.lua
 require("chatgpt").setup({ })
@@ -1083,6 +1101,9 @@ vim.api.nvim_set_keymap("n", "<leader>aa", "<cmd>ChatGPT<cr>", { noremap = true 
 
 The last piece is to make our secret API key avaialable. For that just extend
 the wrapper shell application.
+
+Imported `secrets` in the `let-in` block are used to set an environment variable
+`OPENAI_API_KEY` in the shell application's text.
 
 ```nix
 # packages/myNeovim.nix
@@ -1115,26 +1136,24 @@ in pkgs.writeShellApplication {
 }
 ```
 
-Imported `secrets` in the `let-in` block are used to set an environment variable
-`OPENAI_API_KEY` in the shell application's text.
-
 Now space-a-a should open window with openai prompt.
 
 {{ end() }}
 
 ## Support other systems
 
-Maybe you are already aware about
+Maybe you are already aware of
 [numtide/flake-utlis](https://github.com/numtide/flake-utils), and the popular
-helper function that allows you to prepare package for mutliple.
-architectures/systems. For now your config has everywhere hardcoded
-`x86_64-linux`.
+helper function that allows you to prepare package for mutliple architectures.
+For now your config has everywhere hardcoded `x86_64-linux`.
 
-I was already experimenting with it and I was trying to install in
+I was already experimenting with it and I was trying to use the flake in
 [Nix-on-Droid](https://f-droid.org/en/packages/com.termux.nix/), but I got some
 errors. If I will find working solutions later, I will write a blog post about
-it as well. It would be cool to have your lightweight development environment on
-the phone. Maybe just grab some small keyboard, and you could stay crafty on the
-road. Even if not hardcore programming, then just working on your ideas.
+it as well.
+
+It would be cool to have your lightweight development environment on the phone.
+Maybe just grab some small keyboard, and you could stay crafty on the road. Even
+if not hardcore programming, then just working on your ideas.
 
 {{ end() }}
