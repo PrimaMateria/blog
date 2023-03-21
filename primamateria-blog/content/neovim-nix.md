@@ -717,7 +717,7 @@ parameter `foo.txt` must be forwarded to the original unwrapped `nvim`.") }}
 
 You can test now that in terminal running `typescript-language-server --version`
 will tell you that the command is not recognized. But running the command inside
-Neovim's terminal (`:term`) will work. The same should apply for `lazygit`.
+Neovim's terminal (`:term`) will work. The same should also apply for `lazygit`.
 
 {{ end() }}
 
@@ -726,12 +726,26 @@ Neovim's terminal (`:term`) will work. The same should apply for `lazygit`.
 All nix packages are in `/nix/store` in a directory which is prefixed with a
 hash generated from the content of the package. If we want to reference some
 package from the configuration scripts, we must resolve the path of the package
-on build time. The traditional lua script configuration files that you have
-already set up lack this ability.
+on build time otherwise we would no know exactly which hash is the correct one.
+The traditional lua script configuration files that we have already set up lack
+this ability.
 
 In this chapter you will add Typescript runtime dependency, and instruct
-`typescript-language-server` to use this custom typescript instance. Extend
-runtime dependencies.
+`typescript-language-server` to use this custom typescript instance.
+
+First, add `nvim-lspconfig` plugin:
+
+```nix
+# plugins.nix
+{ pkgs }:
+with pkgs.vimPlugins; [
+  telescope-nvim
+  telescope-recent-files
+  nvim-lspconfig
+]
+```
+
+Then, add typescript to runtime dependencies.
 
 ```nix
 # runtimeDeps.nix
@@ -763,11 +777,18 @@ nvim_lsp.tsserver.setup({
 ''
 ```
 
-The interesting part is the tsserver's `path` set to `init_options` of the LSP.
-The value contains a nix variable `${pkgs.nodePackages.typescript}` which will
-be resolved to the absolute path of the typescript in the nix store.
+The interesting part is the tsserver's `path` in the `init_options`. The value
+contains a nix variable `${pkgs.nodePackages.typescript}` which will be resolved
+to the absolute path leading to the typescript package in the nix store.
 
-{{ why(question="What is `vim: ft=vim` at top of the file?", answer="We haves a nix function which returns  multiline string. Since most of this nix file will be the lua code in the string, you might want to instruct vim to use lua formatting with this [modeline](https://neovim.io/doc/user/options.html#modeline).") }}
+{{ why(question="
+
+What is `vim: ft=vim` at top of the file?", answer="
+
+We haves a nix function which returns multiline string. Since most of the
+content in this file is lua code, you might want to instruct Vim to use lua
+formatting with the
+[modeline](https://neovim.io/doc/user/options.html#modeline).") }}
 
 Next, extend the `config/default.nix` to process and source new configuration.
 
@@ -808,13 +829,13 @@ in builtins.concatStringsSep "\n"
 (builtins.map (configs: sourceConfigFiles configs) [ vim lua luanix])
 ```
 
-The new function `nixFiles2ConfigFiles` takes a `dir` argument, and returns
-(similar like for `scripts2ConfigFiles`) a list of full paths to config files
-located in the nix store.
+New function `nixFiles2ConfigFiles` takes a `dir` argument, and returns (similar
+like for `scripts2ConfigFiles`) a list of full paths to config files located in
+the nix store.
 
 The implementation maps every file found in the provided directory to a separate
-package - one single text file. The name of the package is obtained by removing
-the `.nix` suffix, so the `nvim-lspconfig.lua.nix` will become
+package - one single text file in nix store. The name of the package is obtained
+by removing the `.nix` suffix, so the `nvim-lspconfig.lua.nix` will become
 `nvim-lspconfig.lua`. And the content of the text file package is the string
 returned by the function in the luanix configuration.
 
@@ -822,9 +843,11 @@ While this content is written, nix variables are resolved, and therefore
 `${pkgs.nodePackages.typescript}` will become a full nix store path of the
 typescript package.
 
-Lastly, `luanix` will be processed by `sourceCOnfigFiles`, and since the text
+Lastly, `luanix` will be processed by `sourceConfigFiles`, and since the text
 packages end correctly with `.lua`, in the vimrc they will be sourced with
 `luafile` call. So the result in the generated config file will look like this:
+
+The RC now loads also new lua script which was produced from nix code.
 
 ```vim
 source /nix/store/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/nvim-0-init.vim
@@ -833,20 +856,8 @@ luafile /nix/store/z1p9n8cdi4wqhskazxsb2vy1gj2h83mx-nvim-lua-configs/nvim-telesc
 luafile /nix/store/s8ar23b2x81m746w0gvn2mkdlcs4p8qb-nvim-lspconfig.lua
 ```
 
-At last add `nvim-lspconfig` plugin:
-
-```nix
-# plugins.nix
-{ pkgs }:
-with pkgs.vimPlugins; [
-  telescope-nvim
-  telescope-recent-files
-  nvim-lspconfig
-]
-```
-
-Now to test it, we can create typescript type error, and see if the tsserver
-will catch it.
+Now to test it we can create typescript with a type error, and see if the
+tsserver will catch it.
 
 ```json
 # tmp/test/tsconfig.json
