@@ -44,16 +44,6 @@ I prepared a [repository](https://github.com/PrimaMateria/blog-neovim-nix) which
 contains all the code examples introduced in this post. The commits' messages
 correspond to the section titles.
 
-<!-- prettier-ignore-start -->
-{% mermaid() %}
-flowchart TD
-    neovim["neovim"]
-    flake["flake"]
-
-    neovim --> flake
-{% end %}
-<!-- prettier-ignore-end -->
-
 {{ end() }}
 
 ## Initialize the flake
