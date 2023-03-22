@@ -44,6 +44,16 @@ I prepared a [repository](https://github.com/PrimaMateria/blog-neovim-nix) which
 contains all the code examples introduced in this post. The commits' messages
 correspond to the section titles.
 
+<!-- prettier-ignore-start -->
+{% mermaid() %}
+flowchart TD
+    neovim["neovim"]
+    flake["flake"]
+
+    neovim --> flake
+{% end %}
+<!-- prettier-ignore-end -->
+
 {{ end() }}
 
 ## Initialize the flake
@@ -209,6 +219,30 @@ Therefore, the `pkgs.neovim` now refers to the `neovim` declared in
 `neovim` would actually refer to package defined in original Nixpkgs on unstable
 channel.
 
+<!-- prettier-ignore-start -->
+{% mermaid() %}
+flowchart TD
+    nixpkgs["<b>Nixpkgs</b><br/>neovim (stable)"]
+    neovim["Neovim"]
+    overlay1["Overlay Flake Inputs"]
+    nixpkgs2["<b>Nixpkgs</b><br/>neovim (flake)"]
+    overlay2["Overlay My Neovim"]
+    myneovim["My Neovim"]
+    nixpkgs3["<b>Nixpkgs</b><br/>neovim (neovim flake)<br/>myNeovim"]
+    
+    nixpkgs -->|prev| overlay1
+    neovim --> overlay1
+    overlay1 -->|final| nixpkgs2
+    
+    nixpkgs2 -->|prev| overlay2
+    myneovim --> overlay2
+    overlay2 -->|final| nixpkgs3
+{% end %}
+<!-- prettier-ignore-end -->
+
+At last, you replaced `neovim.packages.x86_64-linux.neovim` on the output of
+your flake with your newly defined `myNeovim`.
+
 You can test by running `nix run`. If done right, Neovim should still start as
 before. Don't forget to track new file in git.
 
@@ -312,6 +346,22 @@ The body of `script2ConfigFiles` evaluates as follows:
 To summarize, the `vim` variable is a list of strings which are absolute paths
 pointing to `/nix/store` derivation which holds copies of all your Vim configs
 from the `config/vim/`.ed
+
+<!-- prettier-ignore-start -->
+{% mermaid() %}
+flowchart TD
+    vimScripts["vim configs<br/><pre>config/vim</pre>"]
+    nixPackage["nix package<br/><pre>/nix/store/XYZ-nvim-vim-configs</pre>"] 
+    fileList["file list<br/><pre>{<br />  nvim-0-init.vim = 'regular';<br />  nvim-setters.vim = 'regular';<br/>}</pre>"] 
+    fileNames["file names<br/><pre>['nvim-0-init.vim' 'nvim-setters.vim']</pre>"]
+    absolutePaths["absolute paths<br/><code><pre/>[<br/>  '/nix/store/XYZ-nvim-vim-configs/nvim-0-init.vim'<br/>  '/nix/store/XYZ-nvim-vim-configs/nvim-setters.vim'<br/>]</pre>"]
+
+    vimScripts -->|make derivation| nixPackage 
+    nixPackage -->|read dir| fileList
+    fileList -->|attribute names| fileNames
+    fileNames -->|map| absolutePaths
+{% end %}
+<!-- prettier-ignore-end -->
 
 ### Sourcing Vim scripts
 

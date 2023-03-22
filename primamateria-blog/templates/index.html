@@ -13,6 +13,13 @@
     <link rel="stylesheet" href="{{ get_url(path="main.css", trailing_slash=false) }}">
     <link rel="stylesheet" href="{{ get_url(path="custom.css", trailing_slash=false) | safe }}">
 
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
     {% if config.generate_feed %}
         <link rel="alternate" type={% if config.feed_filename == "atom.xml" %}"application/atom+xml"{% else %}"application/rss+xml"{% endif %} title="RSS" href="{{ get_url(path=config.feed_filename) | safe }}">
     {% endif %}
