@@ -218,7 +218,7 @@ flowchart TD
     nixpkgs2["<b>Nixpkgs</b><br/>neovim (flake)"]
     overlay2["Overlay My Neovim"]
     myneovim["My Neovim"]
-    nixpkgs3["<b>Nixpkgs</b><br/>neovim (neovim flake)<br/>myNeovim"]
+    nixpkgs3["<b>Nixpkgs</b><br/>neovim (flake)<br/>myNeovim"]
     
     nixpkgs -->|prev| overlay1
     neovim --> overlay1
