@@ -84,7 +84,7 @@ sometimes it can happen that Nix can fail to build it.") }}
     };
     neovim = {
       url = "github:neovim/neovim/stable?dir=contrib";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
   outputs = { self, nixpkgs, neovim }: { };
