@@ -468,7 +468,7 @@ command `nix registry list`. In my default configuration, it is set to
 to the unstable channel.
 
 If you'd like to search within the stable channel, you can use the command
-`nix search github:NixOS/nixpkgs/nixos-22.11` vimPlugins.telescope. To make it
+`nix search github:NixOS/nixpkgs/nixos-22.11 vimPlugins.telescope`. To make it
 easier to search within this channel in the future, you can add a new registry
 alias using the command nix `registry add`.") }}
 
