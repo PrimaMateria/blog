@@ -470,7 +470,7 @@ to the unstable channel.
 If you'd like to search within the stable channel, you can use the command
 `nix search github:NixOS/nixpkgs/nixos-22.11 vimPlugins.telescope`. To make it
 easier to search within this channel in the future, you can add a new registry
-alias using the command nix `registry add`.") }}
+alias using the command `nix registry add`.") }}
 
 At this step Neovim should be still runnable, but before you can verify that
 Telescope works, you still need to write a config for it.
