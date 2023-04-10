@@ -460,20 +460,17 @@ additional plugins compared to stable channel, or newer versions.
 
 How about searching from the terminal?", answer="
 
-Actually, it is harder than you would think. You can always do
-`nix search nixpkgs vimPlugins.telescope`, but this will search `nixpkgs` stable
-channel. If you run `sudo nix-channel --list`, you can see which URL is
-associated with the `nixpkgs` alias.
+To execute a search in the terminal, use the command
+`nix search nixpkgs vimPlugins.telescope`. This will search within the `nixpkgs`
+registry alias. To find out which flake this alias corresponds to, run the
+command `nix registry list`. In my default configuration, it is set to
+`global flake:nixpkgs github:NixOS/nixpkgs/nixpkgs-unstable`, which corresponds
+to the unstable channel.
 
-The only way I have found was to add the unstable channel
-`sudo nix-channel --add https://nixos.org/channels/nixpkgs-unstable unstable`,
-update the channels with `sudo nix-channel --update`, and then search with
-`nix-env -qaP 'vimplugin.telescope.*' | grep unstable`. The catch here is that
-in this case you don't query the package's attribute path, but its symbolic
-name, which might have different format and just makes it even more confusing.
-
-The good news that community is aware of this shortcoming, so in my opinion this
-will be addressed in one of the upcoming releases.") }}
+If you'd like to search within the stable channel, you can use the command
+`nix search github:NixOS/nixpkgs/nixos-22.11` vimPlugins.telescope. To make it
+easier to search within this channel in the future, you can add a new registry
+alias using the command nix `registry add`.") }}
 
 At this step Neovim should be still runnable, but before you can verify that
 Telescope works, you still need to write a config for it.
