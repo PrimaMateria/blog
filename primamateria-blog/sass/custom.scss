@@ -1,3 +1,11 @@
+.update {
+  margin-top: 32px;
+  margin-bottom: 32px;
+  .content {
+    font-style: italic;
+  }
+}
+
 .octopus {
   display: grid;
   grid-template-columns: 60px auto;

@@ -20,6 +20,15 @@ manageable way.
 
 <!-- more -->
 
+{{ update(date="2023-06-03", content="
+
+Thanks to the help of [Sam Willis](https://github.com/samjwillis97), the mystery
+of the non-functioning `symlinkjoin` has been clarified, and a workaround has
+been found. Sam also assisted me in using `flake-utils`, which enabled me to
+successfully build Neovim on Nix-on-Droid. In order to preserve the integrity of
+the original post, I have described these changes in a follow-up post:
+[link](todo). ") }}
+
 ## Preface
 
 This guide will provide a step-by-step process for setting up your own Neovim as

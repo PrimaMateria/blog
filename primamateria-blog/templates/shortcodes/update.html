@@ -1,0 +1,9 @@
+<div class="update article-info">
+  <div>Update</div>
+  <div class="article-date">
+    {{ date | date(format=config.extra.anpu_date_format) }}
+  </div>
+  <div class="content">
+    <div>{{content | markdown | safe }}</div>
+  </div>
+</div>
