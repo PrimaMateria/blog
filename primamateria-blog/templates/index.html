@@ -21,6 +21,27 @@
       });
     </script>
 
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="{{ config.title }}">
+    {% if page %}
+    <meta property="og:title" content="{{ page.title }}">
+    <meta property="og:url" content="{{ get_url(path=page.path, trailing_slash=false) }}">
+    <meta property="og:description" content="{{ page.summary }}">
+    {% if page.extra.banner %}
+    <meta property='og:image' content="{{ resize_image(path=page.extra.banner, width=1200, height=627, op="fill", format="auto", quality=75) }}"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="627"/>
+    {% endif %}
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="{{ page.date | date(format="%Y-%m-%d") }}">
+    {% if page.updated %}<meta property="article:modified_time" content="{{ page.updated | date(format="%Y-%m-%d") }}">{% endif %}
+    {% if page.extra.author_url %}<meta property="article:author" content="{{ page.extra.author_url }}">{% endif %}
+    {% for tag in page.taxonomies.tags %}<meta property="article:tags" content="{{ tag }}">{% endfor %}
+    {% else %}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ get_url(path="", trailing_slash=false) }}">
+    {% endif %}
+
     {% if config.generate_feed %}
         <link rel="alternate" type={% if config.feed_filename == "atom.xml" %}"application/atom+xml"{% else %}"application/rss+xml"{% endif %} title="RSS" href="{{ get_url(path=config.feed_filename) | safe }}">
     {% endif %}
