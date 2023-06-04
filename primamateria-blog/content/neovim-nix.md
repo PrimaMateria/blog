@@ -27,7 +27,7 @@ of the non-functioning `symlinkjoin` has been clarified, and a workaround has
 been found. Sam also assisted me in using `flake-utils`, which enabled me to
 successfully build Neovim on Nix-on-Droid. In order to preserve the integrity of
 the original post, I have described these changes in a follow-up post:
-[link](todo). ") }}
+[Neovim flake Updates](@/neovim-nix-update.md). ") }}
 
 ## Preface
 
