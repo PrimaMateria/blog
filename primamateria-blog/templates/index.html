@@ -28,18 +28,17 @@
     <meta property="og:url" content="{{ get_url(path=page.path, trailing_slash=false) }}">
     <meta property="og:description" content="{{ page.summary }}">
     {% if page.extra.banner %}
-    <meta property='og:image' content="{{ resize_image(path=page.extra.banner, width=1200, height=627, op="fill", format="auto", quality=75) }}"/>
-    <meta property='og:image:width' content="1200"/>
-    <meta property='og:image:height' content="627"/>
+    <meta property='og:image' content="{{ resize_image(path=page.extra.banner, width=756, height=378, op="fill", format="auto", quality=75) }}"/>
+    <meta property='og:image:width' content="756"/>
+    <meta property='og:image:height' content="378"/>
     {% endif %}
     <meta property="og:type" content="article">
-    <meta property="article:published_time" content="{{ page.date | date(format="%Y-%m-%d") }}">
+    {% if page.date %}<meta property="article:published_time" content="{{ page.date | date(format="%Y-%m-%d") }}">{% endif %}
     {% if page.updated %}<meta property="article:modified_time" content="{{ page.updated | date(format="%Y-%m-%d") }}">{% endif %}
     {% if page.extra.author_url %}<meta property="article:author" content="{{ page.extra.author_url }}">{% endif %}
+    {% if page.taxonomies.tags %}
     {% for tag in page.taxonomies.tags %}<meta property="article:tags" content="{{ tag }}">{% endfor %}
-    {% else %}
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ get_url(path="", trailing_slash=false) }}">
+    {% endif %}
     {% endif %}
 
     {% if config.generate_feed %}
