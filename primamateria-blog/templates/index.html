@@ -26,11 +26,13 @@
     {% if page %}
     <meta property="og:title" content="{{ page.title }}">
     <meta property="og:url" content="{{ get_url(path=page.path, trailing_slash=false) }}">
-    <meta property="og:description" content="{{ page.summary }}">
+    {% if page.summary %}
+    <meta property="og:description" content="{{ page.summary | striptags }}">
+    {% endif %}
     {% if page.extra.banner %}
-    <meta property='og:image' content="{{ resize_image(path=page.extra.banner, width=756, height=378, op="fill", format="auto", quality=75) }}"/>
-    <meta property='og:image:width' content="756"/>
-    <meta property='og:image:height' content="378"/>
+    <meta property='og:image' content="{{ resize_image(path=page.extra.banner, width=1200, height=630, op="fill", format="auto", quality=75) | get(key='url') }}"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
     {% endif %}
     <meta property="og:type" content="article">
     {% if page.date %}<meta property="article:published_time" content="{{ page.date | date(format="%Y-%m-%d") }}">{% endif %}
