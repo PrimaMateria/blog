@@ -30,7 +30,7 @@
     <meta property="og:description" content="{{ page.summary | striptags }}">
     {% endif %}
     {% if page.extra.banner %}
-    <meta property='og:image' content="{{ resize_image(path=page.extra.banner, width=1200, height=630, op="fill", format="auto", quality=75) | get(key='url') }}"/>
+    <meta property='og:image' content="{{ resize_image(path=page.extra.banner, width=1200, height=630, op="fill", format="auto", quality=75) | get(key='url') | safe }}"/>
     <meta property='og:image:width' content="1200"/>
     <meta property='og:image:height' content="630"/>
     {% endif %}
