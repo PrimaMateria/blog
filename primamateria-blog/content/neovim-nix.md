@@ -20,7 +20,7 @@ manageable way.
 
 <!-- more -->
 
-{{ update(date="2023-06-03", content="
+{{ update(date="2023-06-04", content="
 
 Thanks to the help of [Sam Willis](https://github.com/samjwillis97), the mystery
 of the non-functioning `symlinkjoin` has been clarified, and a workaround has

@@ -1,6 +1,6 @@
 +++
 title = "Neovim flake Updates"
-date = 2023-06-03
+date = 2023-06-04
 
 [extra]
 banner = "neovim-update.png"
