@@ -637,7 +637,7 @@ The make command doesn't need to be executed for the plugin to work. What is in
 the repo is already fully defined plugin that can be loaded to the Neovim as it
 is.
 
-To skip this automatic build include `skipBuild = true` into the set that is
+To skip this automatic build include `dontBuild = true` into the set that is
 passed to `buildVimPlugin` function.") }}
 
 Now, you can add the plugin to the plugin list as before.
