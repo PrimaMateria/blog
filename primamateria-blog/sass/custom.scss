@@ -62,3 +62,9 @@ pre {
   margin-right: 8px;
   font-size: 0.8em;
 }
+
+@media (max-width: 767px) {
+  .zola-anchor {
+    display: none;
+  }
+}
