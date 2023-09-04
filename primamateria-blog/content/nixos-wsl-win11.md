@@ -1,4 +1,6 @@
-```
+Installation start 20:38
+
+``` Wrong
 Downloading image
 https://github.com/nix-community/NixOS-WSL/releases/tag/22.05-5c211b47
 nixos-wsl-installer.tar.gz 
@@ -41,13 +43,20 @@ Unregistering.
 The operation completed successfully.
 
 rmdir .\dev\NixOS\
+```
 
+Download checkpoint 20:50
+
+```
 PS C:\Users\matus.benko> wsl --import NixOS .\dev\NixOS\ .\Downloads\nixos-wsl-x86_64-linux.tar.gz --version 2
+
+/* Work only
 Import in progress, this may take a few minutes.
 Unspecified error
 Error code: Wsl/Service/E_FAIL
 
 Second try worked
+*/
 
 Windows Terminal Config
 Name: NixOS
@@ -61,15 +70,20 @@ Booted
 Systemd hangup on first run is fixed as well
 ```
 
+Checkppoint 20:53
+
 ```
 cd /home/nixos
 nix-shell -p git git-crypt neovim
 
 [nixos@nixos:~]$ nix-shell -p git git-crypt neovim
+
+/* Work only
 warning: error: unable to download 'https://cache.nixos.org/nix-cache-info': Couldn't resolve host name (6); retrying in 272 ms
 
 Changed /etc/resolv.conf
 nameserver 8.8.8.8
+*/
 
 # Download keychain
 Download to Windows, unzip in Windows
@@ -81,8 +95,27 @@ cd nixos/
 git-crypt unlock ~/keychain/nixos.key
 # Apply system
 sudo nixos-rebuild switch --flake .#yueix
-some warnings, saw them before, ignoring
+```
 
+Checkpoint 20:57
+
+```
+/* shaddamix
+hanging on 'querying fuse'
+restarted
+had restart multiple times, hanging on download from cache.nixos.org
+
+sudo nixos-rebuild switch --flake .#yueix --option build-use-substitutes false
+https://discourse.nixos.org/t/i-seem-to-be-stuck-because-a-binary-cache-is-down/23641
+*/
+
+some warnings, saw them before, ignoring
+warning: the following units failed: systemd-binfmt.service
+```
+
+Checkpoint 21:18
+
+```
 # Restart WSL, should boot to mbenko@yueix
 PS C:\Users\matus.benko> wsl -t NixOS
 systemd frozen again, need to patch my files with stuff in updated tar file
@@ -96,7 +129,24 @@ exit
 nix-shell -p git git-crypt neovim
 cd dev/nixos/
 git-crypt unlock ~/dev/keychain/nixos.key
-./apply-users.sh
+```
+
+Checkpoint 21:22
+
+```
+./users.sh
+
+/* shaddamix
+connection issues again
+turned of nordvpn and it helped
+used option and it finally finished
+*/
+
+```
+
+Checkpoint 21:39
+
+```
 
 # Restart WSL again
 # fix resolv.conf again
