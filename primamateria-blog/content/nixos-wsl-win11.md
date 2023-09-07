@@ -1,9 +1,9 @@
 Installation start 20:38
 
-``` Wrong
+```Wrong
 Downloading image
 https://github.com/nix-community/NixOS-WSL/releases/tag/22.05-5c211b47
-nixos-wsl-installer.tar.gz 
+nixos-wsl-installer.tar.gz
 
 Running Windows Terminal PowerShell
 wsl --import NixOS .\NixOS\ .\Downloads\nixos-wsl-installer.tar.gz --version 2
@@ -15,7 +15,7 @@ Running PowerShell from start menu as administrator
 PS C:\Windows\system32> wsl --install --no-distribution
 Installing: Windows Subsystem for Linux
 Windows Subsystem for Linux has been installed.
-The requested operation is successful. Changes will not be effective until the system is rebooted.  
+The requested operation is successful. Changes will not be effective until the system is rebooted.
 
 Rebooting
 
@@ -59,9 +59,34 @@ Second try worked
 */
 
 Windows Terminal Config
+https://windowsterminalthemes.dev/
+Tomorrow Night Bright
+paste in the settings json file
+
+Appearance:
+Hide title bar: off
+Always show tabs: off
+Use active terminal title as application title: off
+Pane animations: off
+
+Rendering:
+Atlas Engine: on
+
+Actions:
+Remove ctr+c and ctrl+v
+
+Profile:
 Name: NixOS
 Command line: %SystemRoot%\System32\wsl.exe -d NixOS
 Starting directory: ~
+
+Color scheme: Tomorrow Night Bright
+Font face: SourceCodePro Nerd Font Mono
+Font size: 9
+Font weight: Medium
+Scrollbar visibility: Hidden
+
+https://github.com/ryanoasis/nerd-fonts#patched-fontshttps://github.com/ryanoasis/nerd-fonts#patched-fonts
 
 https://github.com/NixOS/nixos-artwork/blob/master/logo/nix-snowflake.svg
 https://svgtopng.com/
@@ -140,6 +165,9 @@ Checkpoint 21:22
 connection issues again
 turned of nordvpn and it helped
 used option and it finally finished
+
+sudo chown -R mbenko /nix/var/nix/gcroots/per-user/mbenko/
+sudo chown mbenko /nix/var/nix/profiles/per-user/mbenko/
 */
 
 ```
@@ -160,4 +188,5 @@ sudo rm -rf /home/nixos
 ```
 
 ```
+
 ```
