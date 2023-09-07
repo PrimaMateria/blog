@@ -1,3 +1,14 @@
++++
+title = "NixOS WSL installation"
+date = 2023-03-18
+
+[extra]
+banner = "neovim-banner.png"
+
+[taxonomies]
+tags = ["nixos","wsl"]
++++
+
 Installation start 20:38
 
 ```Wrong
@@ -185,8 +196,4 @@ git fetch
 git branch --set-upstream-to=origin/master master
 
 sudo rm -rf /home/nixos
-```
-
-```
-
 ```
