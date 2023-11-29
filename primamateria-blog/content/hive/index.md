@@ -32,46 +32,26 @@ by my current understanding and open to your comments and opinions.
 
 # Road to Hive
 
-Started with Will T's series. Copied most of the configs without fully
-understanding what I am doing. Was able to keep it on for sometime, even grow
-WSL with enough trust to switch my daily office from Ubuntu to Nix.
+I started with
+[Will T's NixOS series ](https://www.youtube.com/watch?v=QKoQ1gKJY5A&list=PL-saUBvIJzOkjAw_vOac75v-x6EzNzZq-)
+in 2022, copying configs without fully understanding them. But I managed to keep
+it going for a while, and even eventually moved my daily office tasks from
+Ubuntu to NixOS on WSL.
 
-[Will T - NixOS series ](https://www.youtube.com/watch?v=QKoQ1gKJY5A&list=PL-saUBvIJzOkjAw_vOac75v-x6EzNzZq-)
+After creating Neovim flake I got some confidence. Felt like I understood much
+more, and I was ready for the next step. I wanted to redo my main NixOS config.
 
-Neovim Nix, boost in confidence. A feeling of understanding every corner. Ready
-for the next step. Ready to refactor my main nixos configuration.
+In my first config things got real messy - I mixed flakes, dwelved on the
+old-school `import`, messed with callPackage without understanding what it does,
+and I totally missed the "nix modules boat", even if I used them as copy-pasta
+here and there.
 
-Messy, flake/callPackage/import/modules/flakes. I want to create a declarable
-tmuxp sessions where I can combine different windows on different NixOS
-instances, and I have no clue how to start.
+I didn't have a solid grip on the language and module system, and I needed some
+guidance for how to organize my configs. So I started doing some research and I
+encountered the [NixOS Guide](https://github.com/mikeroyal/NixOS-Guide).
 
-Not solid understanding of language, module system. Craving for guiding hand,
-start research and discovery of nixos guide.
-
-[NixOS Guide](https://github.com/mikeroyal/NixOS-Guide)
-
-Digga, obsoleted and abandoned by David. Migrated to std. Hive repository, keys
-are hidden. Start digging around.
-
-Before full commitment, searching for alternatives. Found flake-parts.
-
-{{ resize_image_w(path="hive/flake-parts.png", width=1008) }}
-
-Poke around ... is it really the hot stuff? The docs seemed halff-baked.
-Couldn't easily fully grasp the concept, felt that I need more opinionated
-framework to guide me.
-
-Decided to give the Hive a try.
-
-Found Lord-Valeen repository and started messing around. Later on still felt
-that I missing the basic and started to study Haumea, Paisano, std and hive more
-carefully.
-
-After establishing some codebase, prepared testing WSL and started to building
-tries. At last was able to break through, build system first, build the home
-manager afterwards. From there it is smooth sailing, still feeling like there
-are new things to discover, but already in productive state, able to slow down
-and let it come as it is.
+I found [Digga](https://github.com/divnix/digga), but already with a deprecation
+notice.
 
 {{ tip(tip="
 
@@ -79,10 +59,32 @@ Digga was already
 [removed](https://github.com/mikeroyal/NixOS-Guide/commit/14a6d9530bb958bae7eaf531191bcc99f03e44f0)
 from the NixOS Guide.") }}
 
+The author mentions migration to `std`, `flake-parts` or `flake-utils-plus`.
+While investigating `std`, the `hive` came into my attention - a mysterious
+project with a explicit prohibition on providing README, and even so getting
+traction. I was intrigued.
+
+But before committing fully, I looked for alternatives.
+
+{{ resize_image_w(path="hive/flake-parts.png", width=1008) }}
+
+That's not me asking on the Discord, but someone else with the same idea.
+
+Poked around to see if it's good. Docs seemed incomplete. Couldn't fully
+understand it, so I wanted a more straightforward framework to guide me. Decided
+to try Hive.
+
+Found Lord-Valeen's repo and messed around. Realized I was missing basics, so I
+studied Haumea, Paisano, std, and Hive more carefully.
+
+Built some codebase, set up testing on WSL, and started building tries. Finally
+broke through, first with the build system, then the home manager. Smooth
+sailing from there. Still discovering new things but in a productive state, able
+to take it slow.
+
 Discovery of hive:
 
-Hive a mysterious project with a explicit prohibition on providing README, and
-even so getting traction. I was intrigued.
+Hive
 
 # describe nix module
 
