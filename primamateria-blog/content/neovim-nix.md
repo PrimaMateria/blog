@@ -29,6 +29,17 @@ successfully build Neovim on Nix-on-Droid. In order to preserve the integrity of
 the original post, I have described these changes in a follow-up post:
 [Neovim flake Updates](@/neovim-nix-update.md). ") }}
 
+{{ update(date="2023-11-30", content="
+
+There is [NixVim](https://github.com/nix-community/nixvim) - a growing Neovim
+repository that contains many plugins that can be easily enabled and configured
+with Nix. Consider choosing this option because everyone can benefit from the
+plugins contribued there. However, if you are looking for your own small
+customized 'nook' configuration and want to continue using vim/lua configs, then
+you are in the right place.
+
+") }}
+
 ## Preface
 
 This guide will provide a step-by-step process for setting up your own Neovim as

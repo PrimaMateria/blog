@@ -6,10 +6,16 @@ date = 2023-11-28
 banner = "hive.png"
 
 [taxonomies]
-tags = ["nixos","hive"]
+tags = ["nixos","hive","paisano","haumea"]
 +++
 
-What is hive?
+Hive is a framework that aims to assist with the organization of personal Nix
+configurations. This post describes why I have chosen to migrate to it and
+explains how I accomplished it. It is intended for curious Nix users who feel
+that their current configuration is disorganized and are seeking a new approach
+to rework their code.
+
+<!-- more -->
 
 # Factoids
 
@@ -17,18 +23,19 @@ What is hive?
 - Hive spawns from std.
 - David Arnold is the author.
 - First commit in the repository is from 29th March 2022.
--
 
-<!-- more -->
+{{ end() }}
 
-# Disclaimer
+{{ tip(tip="
 
-In this post, I will describe my own approach to using Hive. It may differ from
+In this post, I will describe my own approach of using Hive. It may differ from
 the prevailing convention of naming things, and it may not utilize the latest
 available Nix tools. I approach my problem as a developer who aims to create a
 convenient and reproducible development environment. I am not an operations
 professional who needs to ensure absolute security. Additionally, I am limited
 by my current understanding and open to your comments and opinions.
+
+") }} {{ end() }}
 
 # Road to Hive
 
@@ -36,62 +43,131 @@ I started with
 [Will T's NixOS series ](https://www.youtube.com/watch?v=QKoQ1gKJY5A&list=PL-saUBvIJzOkjAw_vOac75v-x6EzNzZq-)
 in 2022, copying configs without fully understanding them. But I managed to keep
 it going for a while, and even eventually moved my daily office tasks from
-Ubuntu to NixOS on WSL.
+Ubuntu WSL to NixOS WSL.
 
-After creating Neovim flake I got some confidence. Felt like I understood much
-more, and I was ready for the next step. I wanted to redo my main NixOS config.
+After creating the [Neovim flake](@/neovim-nix.md) I got some confidence. Felt
+like I understood much more, and I was ready for the next step. I wanted to redo
+my main NixOS config.
 
 In my first config things got real messy - I mixed flakes, dwelved on the
 old-school `import`, messed with callPackage without understanding what it does,
 and I totally missed the "nix modules boat", even if I used them as copy-pasta
 here and there.
 
-I didn't have a solid grip on the language and module system, and I needed some
-guidance for how to organize my configs. So I started doing some research and I
-encountered the [NixOS Guide](https://github.com/mikeroyal/NixOS-Guide).
-
-I found [Digga](https://github.com/divnix/digga), but already with a deprecation
-notice.
+I didn't have a solid grip on the language and on themodule system, and I needed
+some guidance for how to organize my configs. So I started doing some research
+and I found the [NixOS Guide](https://github.com/mikeroyal/NixOS-Guide), and
+inside link to [Digga](https://github.com/divnix/digga). But the projects was
+already with a deprecation notice.
 
 {{ tip(tip="
 
 Digga was already
 [removed](https://github.com/mikeroyal/NixOS-Guide/commit/14a6d9530bb958bae7eaf531191bcc99f03e44f0)
-from the NixOS Guide.") }}
+from the NixOS Guide, but Hive had not yet been added.
 
-The author mentions migration to `std`, `flake-parts` or `flake-utils-plus`.
-While investigating `std`, the `hive` came into my attention - a mysterious
-project with a explicit prohibition on providing README, and even so getting
-traction. I was intrigued.
+") }}
 
-But before committing fully, I looked for alternatives.
+The author mentions migration to std, flake-parts or flake-utils-plus. While
+investigating std, the Hive was
+[mentioned](https://std.divnix.com/#the-standard-nixos-story-in-case-you-wondered)
+in the docs:
+
+> _"Once you got fed up with divnix/digga or a disorganized personal
+> configuration, please head straight over to divnix/hive and join the chat,
+> there. It's work in progress. But hey! It means: we can progress together!"_
+
+And there it was, Hive, a mysterious project with a README ban, with small
+community and with some praise in the matrix chat. I was intrigued.
+
+But before fully committing, I looked for alternatives.
 
 {{ resize_image_w(path="hive/flake-parts.png", width=1008) }}
 
-That's not me asking on the Discord, but someone else with the same idea.
+That's from Discord and it's not me asking, but someone with the same dilemma.
 
-Poked around to see if it's good. Docs seemed incomplete. Couldn't fully
-understand it, so I wanted a more straightforward framework to guide me. Decided
-to try Hive.
+I have poked around the flake-parts' [documentation](https://flake.parts/), but
+it was too steep for me to fully grok the concept. It felt like I am on the same
+starting line for both Hive and flake-parts. Little what I have observed was
+that the repositories using Hive contained some kind of block types, which gave
+me an impression that it is more opionated framework, and as a newb this was
+something I was looking for.
 
-Found Lord-Valeen's repo and messed around. Realized I was missing basics, so I
-studied Haumea, Paisano, std, and Hive more carefully.
+I followed [Lord-Valen's repo](https://github.com/Lord-Valen/configuration.nix).
+The rough foundation draft I created by rewriting Valen's flake, and by blindly
+migrating my old configs without even checking if it builds. Once I had my
+"dream structure" in place, I created fresh WSL instance and keep on fixing the
+code until I was able to do the first full build and system switch. From this
+moment I had already good grasp on it and the rest of final detailing was smooth
+sailing.
 
-Built some codebase, set up testing on WSL, and started building tries. Finally
-broke through, first with the build system, then the home manager. Smooth
-sailing from there. Still discovering new things but in a productive state, able
-to take it slow.
+{{ end() }}
 
-Discovery of hive:
+# NixOS Module
 
-Hive
+Before I start describing Hive, I have to mention the NixOS module this is an
+essential mechanism.
 
-# describe nix module
+The usual structure is as follows:
 
-# describe hive's domain
+```nix
+{ config, pkgs, lib, ... }:
+with lib;
+let
+  cfg = config.thisModule;
+in {
+  imports = [
+    ./someOtherModule1.nix
+    ./someOtherModule2.nix
+  ];
+  options.thisModule = {
+    someOption = mkOption {
+      type = types.bool;
+      default = false;
+    };
+  };
+  config = {
+    someConfig = mkIf cfg.someOption "someValue";
+    someOtherConfig = "someOtherValue";
+  };
+}
+```
 
-# my ideal cell structure
+There are 3 important sections:
 
-# bee enters the cell
+- `imports` - that list other NixOS modules that will get imported
+- `options` - that list options of the current module
+- `config` - that is the main "body" with default and option-based configuration
 
-# links and how to search github for hive projects
+{{ tip(tip="
+
+Usually the docs mention `enable` option, that is common in NixOS and Home
+Manager configurations. In my case I write and import modules that I intend to
+use, so I never use `enable`. Although I can see now the idea of repositories of
+prepared and mantained modules. This also why I got a feedback on my Neovim
+flake tutorial that the prefferred way should be contributing to
+[nixvim](https://github.com/nix-community/nixvim).
+
+") }}
+
+If modules doesn't have options, then we can omit the config field and place the
+"main body" on top level:
+
+```nix
+{ pkgs, ... }: {
+  impors = [ ./someOtherModule.nix ];
+  environment.systemPackages =  [ pkgs.hello ];
+}
+```
+
+{{ end() }}
+
+# Hive Biology
+
+cell, blocks, bee, growOn, findLoad, paisano, haumea
+
+# Dream Structure
+
+# Links
+
+and how to search github for hive projects
