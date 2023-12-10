@@ -21,7 +21,7 @@ to rework their code.
 
 - Hive is a spiritual successor of Digga.
 - Hive spawns from std.
-- David Arnold is the author.
+- The author is David Arnold.
 - First commit in the repository is from 29th March 2022.
 
 {{ end() }}
@@ -33,7 +33,7 @@ the prevailing convention of naming things, and it may not utilize the latest
 available Nix tools. I approach my problem as a developer who aims to create a
 convenient and reproducible development environment. I am not an operations
 professional who needs to ensure absolute security. Additionally, I am limited
-by my current understanding and open to your comments and opinions.
+by my current understanding, and I am open to your comments and opinions.
 
 ") }} {{ end() }}
 
@@ -135,9 +135,9 @@ in {
 
 There are 3 important sections:
 
-- `imports` - that list other NixOS modules that will get imported
-- `options` - that list options of the current module
-- `config` - that is the main "body" with default and option-based configuration
+- `imports` - list of other NixOS modules that will get imported
+- `options` - list of options of the current module
+- `config` - the main "body" with default and option-based configuration
 
 {{ tip(tip="
 
@@ -146,7 +146,7 @@ Manager configurations. In my case I write and import modules that I intend to
 use, so I never use `enable`. Although I can see now the idea of repositories of
 prepared and mantained modules. This also why I got a feedback on my Neovim
 flake tutorial that the prefferred way should be contributing to
-[nixvim](https://github.com/nix-community/nixvim).
+[NixVim](https://github.com/nix-community/nixvim).
 
 ") }}
 
