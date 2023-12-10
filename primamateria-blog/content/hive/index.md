@@ -155,18 +155,161 @@ If modules doesn't have options, then we can omit the config field and place the
 
 ```nix
 { pkgs, ... }: {
-  impors = [ ./someOtherModule.nix ];
+  imports = [ ./someOtherModule.nix ];
   environment.systemPackages =  [ pkgs.hello ];
 }
 ```
 
 {{ end() }}
 
+# Hive Flake
+
+Hive is a flake-based configuration. Inputs include:
+
+- **nixpkgs** - the main collection of package descriptions
+- **home-manager** - a tool for managing the user environment
+- **std** - the Standard - as I understand it, it's a more complex framework
+  intended for DevOps to declare configurations for building and deploying
+  projects. The Hive was spawned from the Standard with the intention of
+  focusing on system and home configurations. Personally, I have never used the
+  Standard before and probably will never need to.
+- **hive** - I wouldn't say that Hive is an extension of the Standard. It
+  adheres to the same principles and reuses some block types from std, but other
+  than that, it seems that there isn't much dependency on it.
+
+Outputs are the result of the `hive.growOn` function, that is explained later.
+
+{{ end() }}
+
+# Paisano and Haumea
+
+Important to mention are the transitive dependencies **Paisano** and **Haumea**.
+It looks like both tools were created to solve the similar problem - to enable
+using file systems for declaring modules, and to provide a nix function to
+automatically load, or collect these modules into a nix' attribute set.
+Additionally the load functions provide standardized call parameters, which
+allow to easily access other modules from the configuration. Of course, there
+are more advanced technicks like picking, filtering, or hoisting diferent
+attributes, but it's not needed to go into more details with them.
+
+{{ tip(tip="
+
+[Haumea](https://github.com/nix-community/haumea) exists with
+[initial commit](https://github.com/nix-community/haumea/commit/13c2fcf9e60ac2cd99e25433efd0d35e3b43d14ca)
+from the 1st April 2023, and it's authored by
+[figsoda](https://github.com/figsoda). You can have also look on my brief
+[cheatsheet](@/haumea-cheatsheet.md).
+
+[Paisano](https://github.com/paisano-nix/core) was at first a part of the
+Standard platform, and it was extracted as separate tool with a
+[first commit](https://github.com/paisano-nix/core/commit/9b95b00f7b4ea1af1d4eb5e09b33cdf8fdc1db44)
+to it's own repository on 9th February 2023. There is also a short
+[cheatsheet](@/paisano-cheatsheet.md).
+
+") }}
+
+In the Paisano repository exists a branch where David is trying to use Haumea
+internally, but it is not used yet in Hive (or Standard), although both projects
+are directly using Haumea internally.
+
+{{ end() }}
+
 # Hive Biology
 
-cell, blocks, bee, growOn, findLoad, paisano, haumea
+Cell, Block, Grow, bee, Harvest, findLoad
+
+https://std.divnix.com/guides/growing-cells.html
+https://std.divnix.com/reference/blocktypes.html
+https://std.divnix.com/glossary.html
+
+TODO: build up here an example code
+
+In my own words this is how I understand the basic terms used in Hive:
+
+## Cell
+
+Cells is supposed to be top level structure for organizing the config. Cells is
+constructed from different types of cell blocks. What I usually observed in
+repositories using Hive was one main cell, sometimes accompanied by smaller
+cells for, probably, some more exotic use cases. In my own config I decided the
+cell to contain everything, and I named in "PrimaMateria".
+
+## Cell Block
+
+As mentioned, cell blocks are construction blocks of the cell. They are of
+different types, and then the type defines what kind of transformations will
+happen to the blocks when harvested, and may have different actions associated
+with them. The actions are more related to the Standard platform, and I don't
+use them at all. Later on I will present an approach I observed in Lord-Valen's
+configuration and then my own structure.
+
+The cell block types I am using in my configuration are only:
+
+- **functions** - the most versatile type, that can be used for NixOS modules
+- **nixosConfigurations** - block of this type returns list of NixOS system
+  configurations, and uses the Bee module
+- **homeConfigurations** - simalarly the block returns list of Home Manager
+  configurations. It is, as well, using the Bee module.
+
+## Bee
+
+Bee module is a configuration for the of the build process that transforms the
+blocks to the flake outputs. It contains the list of target systems, and slots
+for passing Home Manager, WSL, Darwin and of course Nix packages flakes, that
+will be used to build the outputs.
+
+## Grow and Soils
+
+`growOn` is paisano function that takes dynamic amount of paramters. The first
+one is always a setup of the Hive, where the source folder is specified,
+together with the cell block types available in our configuration. The rest of
+the parameters, I believe, are called "layers of soil", they are recursively
+merged together to one set describing the outputs of the flake.
+
+## Harvest
+
+collect already in hive
+
+## Find and Load
+
+{{ end() }}
+
+{{ tip(tip="
+
+At the end I want to mention, that I am not a big fan of using biology terms to
+name things in programming. I got already use to them, but in the project
+without even a README they make understanding the source code one more step more
+harder.
+
+") }}
+
+{{ why(question="
+
+Yeah, criticizing is easy, but can you come with better names?
+
+", answer="
+
+The well know clique applies here - the hardest thing in the programmer life is
+naming things.
+
+- `cell` - `collection`
+- `cellBlock` - `unit`, or just a `block` is fine either
+- `grow` - `setup`
+- `collect` - good one
+- `bee` - `buildConfig`
+- `findLoad` - good one
+
+") }}
 
 # Dream Structure
+
+also mention that not using agenix, but kept using git-crypt
+
+- **wsl** - for my personal use case. I am using NixOS running on WSL. Actually,
+  it's the only tested config I have done with Hive simply because over time I
+  realized that this is the most convenient combination for me - at work, I am
+  forced to use Windows, and at home, I can combine a convenient gaming
+  experience with a handy NixOS environment.
 
 # Links
 
