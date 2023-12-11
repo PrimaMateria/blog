@@ -260,7 +260,7 @@ Hive is a flake-based configuration. Inputs include:
 
 ```nix
 {
-  outputs = { ... }@inputs:
+  outputs = { std, hive, ... }@inputs:
     hive.growOn
       {
         inherit inputs;
