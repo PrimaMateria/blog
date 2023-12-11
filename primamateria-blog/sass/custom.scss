@@ -56,6 +56,18 @@ pre {
   background-color: #fff;
 }
 
+code,
+pre,
+kbd {
+  line-height: 1;
+}
+
+ul ol,
+ol ol,
+ul ul {
+  margin: 0;
+}
+
 .zola-anchor {
   border: none;
   margin-left: -28px;

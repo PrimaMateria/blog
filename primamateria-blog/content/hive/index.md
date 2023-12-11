@@ -162,25 +162,6 @@ If modules doesn't have options, then we can omit the config field and place the
 
 {{ end() }}
 
-# Hive Flake
-
-Hive is a flake-based configuration. Inputs include:
-
-- **nixpkgs** - the main collection of package descriptions
-- **home-manager** - a tool for managing the user environment
-- **std** - the Standard - as I understand it, it's a more complex framework
-  intended for DevOps to declare configurations for building and deploying
-  projects. The Hive was spawned from the Standard with the intention of
-  focusing on system and home configurations. Personally, I have never used the
-  Standard before and probably will never need to.
-- **hive** - I wouldn't say that Hive is an extension of the Standard. It
-  adheres to the same principles and reuses some block types from std, but other
-  than that, it seems that there isn't much dependency on it.
-
-Outputs are the result of the `hive.growOn` function, that is explained later.
-
-{{ end() }}
-
 # Paisano and Haumea
 
 Important to mention are the transitive dependencies **Paisano** and **Haumea**.
@@ -211,6 +192,111 @@ to it's own repository on 9th February 2023. There is also a short
 In the Paisano repository exists a branch where David is trying to use Haumea
 internally, but it is not used yet in Hive (or Standard), although both projects
 are directly using Haumea internally.
+
+{{ end() }}
+
+# Testing Environment
+
+For testing this tutorial I will be using Nix' built-in functionality to run
+system configuration in the virtual machine. At first define initial flake
+without Hive:
+
+```nix
+{
+  outputs = { ... }@inputs:
+    {
+      nixosConfigurations.experiment = inputs.nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ({ pkgs, ... }: {
+
+            users.users.foo = {
+              isNormalUser = true;
+              initialPassword = "foo";
+            };
+
+            environment.systemPackages = with pkgs; [ hello ];
+            system.stateVersion = "23.11";
+          })
+        ];
+      };
+    };
+
+  inputs = {
+    nixpkgs-stable.url = "github:nixos/nixpkgs/23.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/master";
+    nixpkgs.follows = "nixpkgs-unstable";
+  };
+}
+```
+
+Now test it with:
+
+```
+nix run '.#nixosConfigurations.experiment.config.system.build.vm'
+```
+
+The Qemu window will start with a machine that will load the configuration. Log
+in with "foo/foo", and try to run `hello`:
+
+<div style="margin-top: 24px">
+{{ resize_image_w(path="hive/vm-test.png", width=450) }}
+</div>
+
+{{ end() }}
+
+# Hive Flake
+
+Hive is a flake-based configuration. Inputs include:
+
+- **std** - the Standard - as I understand it, it's a more complex framework
+  intended for DevOps to declare configurations for building and deploying
+  projects. The Hive was spawned from the Standard with the intention of
+  focusing on system and home configurations. Personally, I have never used the
+  Standard before and probably will never need to.
+- **hive** - I wouldn't say that Hive is an extension of the Standard. It
+  adheres to the same principles and reuses some block types from std, but other
+  than that, it seems that there isn't much dependency on it.
+
+```nix
+{
+  outputs = { ... }@inputs:
+    hive.growOn
+      {
+        inherit inputs;
+        # TODO: define cells source directory
+        # TODO: define cell blocks
+      }
+      {
+        nixosConfigurations = hive.collect self "nixosConfigurations";
+      };
+
+  inputs = {
+    nixpkgs-stable.url = "github:nixos/nixpkgs/23.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/master";
+    nixpkgs.follows = "nixpkgs-unstable";
+
+    std = {
+      url = "github:divnix/std";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hive = {
+      url = "github:divnix/hive";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+}
+```
+
+Outputs are the result of the `hive.growOn` function. `growOn` is paisano
+function that takes variable count of parameters. The first one is always a
+setup of the Hive, where the source folder for the cells is specified, together
+with the cell block types available in our configuration.
+
+The rest of the parameters, I believe, are called "layers of soil", they are
+recursively merged together to one attribute set that becomes the conventional
+outputs of the flake.
 
 {{ end() }}
 
@@ -251,20 +337,31 @@ The cell block types I am using in my configuration are only:
 - **homeConfigurations** - simalarly the block returns list of Home Manager
   configurations. It is, as well, using the Bee module.
 
-## Bee
+# Bee
 
 Bee module is a configuration for the of the build process that transforms the
 blocks to the flake outputs. It contains the list of target systems, and slots
 for passing Home Manager, WSL, Darwin and of course Nix packages flakes, that
 will be used to build the outputs.
 
-## Grow and Soils
+```nix
+#        ████  ████
+#      ██    ██    ██
+#        ██    ██  ██
+#          ██████████
+#        ████░░██░░░░██
+#      ██░░██░░██░░░░░░▓▓
+#  ▓▓▓▓██░░██░░██░░▓▓░░██
+#      ██░░██░░██░░░░░░██
+#        ████░░██░░░░██
+#          ██████████
 
-`growOn` is paisano function that takes dynamic amount of paramters. The first
-one is always a setup of the Hive, where the source folder is specified,
-together with the cell block types available in our configuration. The rest of
-the parameters, I believe, are called "layers of soil", they are recursively
-merged together to one set describing the outputs of the flake.
+{ inputs, cell }: {
+  system = "x86_64-linux";
+  pkgs = inputs.nixpkgs;
+}
+
+```
 
 ## Harvest
 
@@ -305,6 +402,7 @@ naming things.
 
 also mention that not using agenix, but kept using git-crypt
 
+- **home-manager** - a tool for managing the user environment
 - **wsl** - for my personal use case. I am using NixOS running on WSL. Actually,
   it's the only tested config I have done with Hive simply because over time I
   realized that this is the most convenient combination for me - at work, I am
