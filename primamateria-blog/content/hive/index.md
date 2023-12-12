@@ -26,6 +26,8 @@ to rework their code.
 
 {{ end() }}
 
+TODO: remove octopus
+
 {{ tip(tip="
 
 In this post, I will describe my own approach of using Hive. It may differ from
@@ -268,7 +270,7 @@ Hive is a flake-based configuration. Inputs include:
         # TODO: define cell blocks
       }
       {
-        nixosConfigurations = hive.collect self "nixosConfigurations";
+        # TODO: define flake output
       };
 
   inputs = {
@@ -300,19 +302,7 @@ outputs of the flake.
 
 {{ end() }}
 
-# Hive Biology
-
-Cell, Block, Grow, bee, Harvest, findLoad
-
-https://std.divnix.com/guides/growing-cells.html
-https://std.divnix.com/reference/blocktypes.html
-https://std.divnix.com/glossary.html
-
-TODO: build up here an example code
-
-In my own words this is how I understand the basic terms used in Hive:
-
-## Cell
+# Cell
 
 Cells is supposed to be top level structure for organizing the config. Cells is
 constructed from different types of cell blocks. What I usually observed in
@@ -320,22 +310,26 @@ repositories using Hive was one main cell, sometimes accompanied by smaller
 cells for, probably, some more exotic use cases. In my own config I decided the
 cell to contain everything, and I named in "PrimaMateria".
 
-## Cell Block
+TODO: create directory and add cellsFrom
 
-As mentioned, cell blocks are construction blocks of the cell. They are of
-different types, and then the type defines what kind of transformations will
-happen to the blocks when harvested, and may have different actions associated
-with them. The actions are more related to the Standard platform, and I don't
-use them at all. Later on I will present an approach I observed in Lord-Valen's
-configuration and then my own structure.
+# Cell Block
+
+Cell blocks are construction blocks of the cell. They are of different types,
+and then the type defines what kind of transformations will happen to the blocks
+when harvested, and may have different actions associated with them. The actions
+are more related to the Standard platform, and I don't use them at all. Later on
+I will present an approach I observed in Lord-Valen's configuration and then my
+own structure.
+
+TODO: rewrite to focus the tutorial
 
 The cell block types I am using in my configuration are only:
 
 - **functions** - the most versatile type, that can be used for NixOS modules
 - **nixosConfigurations** - block of this type returns list of NixOS system
   configurations, and uses the Bee module
-- **homeConfigurations** - simalarly the block returns list of Home Manager
-  configurations. It is, as well, using the Bee module.
+
+TODO: migrate nixos configuration to cellblock TODO: explain findLoad
 
 # Bee
 
@@ -363,13 +357,38 @@ will be used to build the outputs.
 
 ```
 
-## Harvest
+TODO: connect with nixos configuration
 
-collect already in hive
+# Collect
 
-## Find and Load
+collect already in hive/harvest
 
-{{ end() }}
+TODO: collect in flake and test
+
+# Standard Structure
+
+- TODO: mention that from valen
+- TODO: rewrite the puml to mermaid
+
+# Dream Structure
+
+- TODO: create graph
+- TODO: talk about what are modules, what are cell blocks
+- TODO: say it is experimenting stage and not the recommending
+- TODO: mention not having tried the standalone install yet
+
+also mention that not using agenix, but kept using git-crypt
+
+- **home-manager** - a tool for managing the user environment
+- **wsl** - for my personal use case. I am using NixOS running on WSL. Actually,
+  it's the only tested config I have done with Hive simply because over time I
+  realized that this is the most convenient combination for me - at work, I am
+  forced to use Windows, and at home, I can combine a convenient gaming
+  experience with a handy NixOS environment.
+- **homeConfigurations** - simalarly the block returns list of Home Manager
+  configurations. It is, as well, using the Bee module.
+
+# Critique
 
 {{ tip(tip="
 
@@ -379,6 +398,8 @@ without even a README they make understanding the source code one more step more
 harder.
 
 ") }}
+
+TODO: rewrite to octopus conversation
 
 {{ why(question="
 
@@ -398,17 +419,10 @@ naming things.
 
 ") }}
 
-# Dream Structure
-
-also mention that not using agenix, but kept using git-crypt
-
-- **home-manager** - a tool for managing the user environment
-- **wsl** - for my personal use case. I am using NixOS running on WSL. Actually,
-  it's the only tested config I have done with Hive simply because over time I
-  realized that this is the most convenient combination for me - at work, I am
-  forced to use Windows, and at home, I can combine a convenient gaming
-  experience with a handy NixOS environment.
-
 # Links
 
 and how to search github for hive projects
+
+https://std.divnix.com/guides/growing-cells.html
+https://std.divnix.com/reference/blocktypes.html
+https://std.divnix.com/glossary.html
