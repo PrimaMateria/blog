@@ -380,7 +380,21 @@ TODO: migrate nixos configuration to cellblock
 ```
 
 ```nix
-# TODO: nixosConfigurations.nix
+{ inputs, cell }:
+let
+  inherit (inputs) nixpkgs;
+in
+{
+  experiment = {
+    users.users.foo = {
+      isNormalUser = true;
+      initialPassword = "foo";
+    };
+
+    environment.systemPackages = with nixpkgs; [ hello ];
+    system.stateVersion = "23.11";
+  };
+}
 ```
 
 ```nix
@@ -450,7 +464,24 @@ will be used to build the outputs.
 ```
 
 ```nix
-# TODO: add bee to nixosconfigurations
+{ inputs, cell }:
+let
+  inherit (inputs) nixpkgs;
+  inherit (cell) bee;
+in
+{
+  experiment = {
+    inherit bee;
+
+    users.users.foo = {
+      isNormalUser = true;
+      initialPassword = "foo";
+    };
+
+    environment.systemPackages = with nixpkgs; [ hello ];
+    system.stateVersion = "23.11";
+  };
+}
 ```
 
 ```nix
@@ -493,7 +524,46 @@ TODO: connect with nixos configuration
 
 collect already in hive/harvest
 
-TODO: collect in flake and test TODO: test
+- TODO: collect in flake and test
+- TODO: test
+
+```nix
+{
+  outputs = { self, std, hive, ... }@inputs:
+    hive.growOn
+      {
+        inherit inputs;
+        cellsFrom = ./cells;
+        cellBlocks = with hive.blockTypes; with std.blockTypes; [
+          (functions "bee")
+          nixosConfigurations
+        ];
+      }
+      {
+        nixosConfigurations = hive.collect self "nixosConfigurations";
+      };
+
+  inputs = {
+    nixpkgs-stable.url = "github:nixos/nixpkgs/23.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/master";
+    nixpkgs.follows = "nixpkgs-unstable";
+
+    std = {
+      url = "github:divnix/std";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hive = {
+      url = "github:divnix/hive";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+}
+```
+
+```
+nix run '.#nixosConfigurations.experiment-experiment.config.system.build.vm'
+```
 
 # Find load
 
@@ -550,8 +620,8 @@ The well know clique applies here - the hardest thing in the programmer life is
 naming things.
 
 - `cell` - `collection`
-- `cellBlock` - `unit`, or just a `block` is fine either
-- `grow` - `setup`
+- `cellBlock` - `class`
+- `growOn` - `setup`
 - `collect` - good one
 - `bee` - `buildConfig`
 - `findLoad` - good one
