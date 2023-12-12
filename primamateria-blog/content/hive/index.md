@@ -374,7 +374,7 @@ TODO: migrate nixos configuration to cellblock
 
 ```
 ├── cells
-│  └── cell
+│  └── experiment
 │     └── nixosConfigurations.nix
 └── flake.nix
 ```
@@ -439,7 +439,7 @@ will be used to build the outputs.
 
 ```
 ├── cells
-│  └── cell
+│  └── experiment
 │     ├── nixosConfigurations.nix
 │     └── bee.nix
 └── flake.nix
@@ -569,6 +569,68 @@ nix run '.#nixosConfigurations.experiment-experiment.config.system.build.vm'
 
 TODO: explain findLoad
 
+```
+├── cells
+│  └── experiment
+│     ├── nixosConfigurations
+│     │  ├── default.nix
+│     │  ├── home.nix
+│     │  └── work.nix
+│     └── bee.nix
+└── flake.nix
+```
+
+```nix
+{ inputs, cell }:
+let
+  inherit (inputs) nixpkgs;
+  inherit (cell) bee;
+in
+{
+  inherit bee;
+
+  users.users.foo = {
+    isNormalUser = true;
+    initialPassword = "foo";
+  };
+
+  environment.systemPackages = with nixpkgs; [ hello ];
+  system.stateVersion = "23.11";
+}
+```
+
+```nix
+{ inputs, cell }:
+let
+  inherit (inputs) nixpkgs;
+  inherit (cell) bee;
+in
+{
+  inherit bee;
+
+  users.users.foo = {
+    isNormalUser = true;
+    initialPassword = "foo";
+  };
+
+  environment.systemPackages = with nixpkgs; [ cowsay ];
+  system.stateVersion = "23.11";
+}
+```
+
+```nix
+{ inputs, cell }:
+inputs.hive.findLoad {
+  inherit inputs cell;
+  block = ./.;
+}
+```
+
+```
+nix run '.#nixosConfigurations.experiment-work.config.system.build.vm'
+nix run '.#nixosConfigurations.experiment-home.config.system.build.vm'
+```
+
 # Haumea load
 
 TODO: talk about default.nix in dir, and how rest is haumea loaded and stuff
@@ -578,6 +640,51 @@ with underscore
 
 - TODO: mention that from valen
 - TODO: rewrite the puml to mermaid
+- TODO: mention about missing homeConfigurations
+
+<!-- prettier-ignore-start -->
+{% mermaid() %}
+flowchart BT
+
+    subgraph cell
+        homeModules --> homeProfiles
+        homeProfiles --> homeSuites
+        homeProfiles --> nixosConfigurations
+        homeSuites --> nixosConfigurations
+
+        nixosModules --> nixosProfiles
+        nixosProfiles --> nixosSuites
+        nixosProfiles  --> nixosConfigurations
+        nixosSuites --> nixosConfigurations
+        userProfiles --> nixosSuites
+
+        diskoConfigurations --> hardwareProfiles
+        hardwareProfiles --> nixosConfigurations
+        arionProfiles --> nixosConfigurations
+
+        nixosConfigurations --> colmenaConfigurations
+        nixosConfigurations --> installers
+    end
+
+    subgraph inputs
+       nixos-hardware
+       nixos-generators
+    end
+
+    nixos-hardware --> hardwareProfiles
+    nixos-generators --> installers
+{% end %}
+<!-- prettier-ignore-end -->
+
+<!-- prettier-ignore-start -->
+{% mermaid() %}
+flowchart BT
+
+    modules --> profiles
+    profiles --> suites
+    suites --> nixosConfigurations
+{% end %}
+<!-- prettier-ignore-end -->
 
 # Dream Structure
 
@@ -585,6 +692,101 @@ with underscore
 - TODO: talk about what are modules, what are cell blocks
 - TODO: say it is experimenting stage and not the recommending
 - TODO: mention not having tried the standalone install yet
+
+<!-- prettier-ignore-start -->
+{% mermaid() %}
+flowchart BT
+
+    applications --> homeConfigurations
+    devices --> machines
+    machines --> nixosConfigurations
+    system --> installations
+    installations --> nixosConfigurations
+    secrets
+{% end %}
+<!-- prettier-ignore-end -->
+
+Look on the nixosConfigurations side for mentat, wokwok and gg.
+
+<!-- prettier-ignore-start -->
+{% mermaid() %}
+flowchart BT
+
+    devices["
+      <b>devices</b>
+      disk_ssd_win
+      ethernet
+      graphics_nvidia_3080
+      monitor_acer
+      mouse_logitech_g502
+      printer_hp_deskjet
+    "]:::list
+
+    machines["
+      <b>machines</b>
+      tower
+    "]:::list
+
+    system["
+      <b>system</b>
+      bootloader
+      bluetooth
+      networking
+      sound
+      essentials
+      i3
+    "]:::list
+
+    installations["
+      <b>installations</b>
+      common
+      bare_metal
+    "]:::list
+
+    nixosConfigurations["
+      <b>nixosConfigurations</b>
+      mentat
+    "]:::list
+
+    devices --> machines
+    machines --> nixosConfigurations
+    system --> installations
+    installations --> nixosConfigurations
+
+    classDef list text-align:left;
+
+{% end %}
+<!-- prettier-ignore-end -->
+
+<!-- prettier-ignore-start -->
+{% mermaid() %}
+flowchart BT
+
+    system["
+      <b>system</b>
+      wsl
+      essentials
+      vnc
+    "]:::list
+
+    installations["
+      <b>installations</b>
+      common
+      wsl
+    "]:::list
+
+    nixosConfigurations["
+      <b>nixosConfigurations</b>
+      wokwok
+    "]:::list
+
+    system --> installations
+    installations --> nixosConfigurations
+
+    classDef list text-align:left;
+
+{% end %}
+<!-- prettier-ignore-end -->
 
 also mention that not using agenix, but kept using git-crypt
 
@@ -620,7 +822,7 @@ The well know clique applies here - the hardest thing in the programmer life is
 naming things.
 
 - `cell` - `collection`
-- `cellBlock` - `class`
+- `cellBlock` - ``
 - `growOn` - `setup`
 - `collect` - good one
 - `bee` - `buildConfig`
