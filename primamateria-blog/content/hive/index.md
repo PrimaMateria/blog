@@ -312,6 +312,47 @@ cell to contain everything, and I named in "PrimaMateria".
 
 TODO: create directory and add cellsFrom
 
+Create new directory path `cells/experiment` and keep it empty for now.
+
+```
+├── cells
+│  └── experiment
+└── flake.nix
+```
+
+Update `growOn` parameter set with `cellsFrom` attribute.
+
+```nix
+{
+  outputs = { std, hive, ... }@inputs:
+    hive.growOn
+      {
+        inherit inputs;
+        cellsFrom = ./cells;
+        # TODO: define cell blocks
+      }
+      {
+        # TODO: define flake output
+      };
+
+  inputs = {
+    nixpkgs-stable.url = "github:nixos/nixpkgs/23.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/master";
+    nixpkgs.follows = "nixpkgs-unstable";
+
+    std = {
+      url = "github:divnix/std";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hive = {
+      url = "github:divnix/hive";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+}
+```
+
 # Cell Block
 
 Cell blocks are construction blocks of the cell. They are of different types,
@@ -329,7 +370,51 @@ The cell block types I am using in my configuration are only:
 - **nixosConfigurations** - block of this type returns list of NixOS system
   configurations, and uses the Bee module
 
-TODO: migrate nixos configuration to cellblock TODO: explain findLoad
+TODO: migrate nixos configuration to cellblock
+
+```
+├── cells
+│  └── cell
+│     └── nixosConfigurations.nix
+└── flake.nix
+```
+
+```nix
+# TODO: nixosConfigurations.nix
+```
+
+```nix
+{
+  outputs = { std, hive, ... }@inputs:
+    hive.growOn
+      {
+        inherit inputs;
+        cellsFrom = ./cells;
+        cellBlocks = with hive.blockTypes; [
+          nixosConfigurations
+        ];
+      }
+      {
+        # TODO: define flake output
+      };
+
+  inputs = {
+    nixpkgs-stable.url = "github:nixos/nixpkgs/23.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/master";
+    nixpkgs.follows = "nixpkgs-unstable";
+
+    std = {
+      url = "github:divnix/std";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hive = {
+      url = "github:divnix/hive";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+}
+```
 
 # Bee
 
@@ -337,6 +422,14 @@ Bee module is a configuration for the of the build process that transforms the
 blocks to the flake outputs. It contains the list of target systems, and slots
 for passing Home Manager, WSL, Darwin and of course Nix packages flakes, that
 will be used to build the outputs.
+
+```
+├── cells
+│  └── cell
+│     ├── nixosConfigurations.nix
+│     └── bee.nix
+└── flake.nix
+```
 
 ```nix
 #        ████  ████
@@ -354,7 +447,44 @@ will be used to build the outputs.
   system = "x86_64-linux";
   pkgs = inputs.nixpkgs;
 }
+```
 
+```nix
+# TODO: add bee to nixosconfigurations
+```
+
+```nix
+{
+  outputs = { std, hive, ... }@inputs:
+    hive.growOn
+      {
+        inherit inputs;
+        cellsFrom = ./cells;
+        cellBlocks = with std.blockTypes; with hive.blockTypes; [
+          (functions "bee")
+          nixosConfigurations
+        ];
+      }
+      {
+        # TODO: define flake output
+      };
+
+  inputs = {
+    nixpkgs-stable.url = "github:nixos/nixpkgs/23.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/master";
+    nixpkgs.follows = "nixpkgs-unstable";
+
+    std = {
+      url = "github:divnix/std";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hive = {
+      url = "github:divnix/hive";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+}
 ```
 
 TODO: connect with nixos configuration
@@ -363,7 +493,16 @@ TODO: connect with nixos configuration
 
 collect already in hive/harvest
 
-TODO: collect in flake and test
+TODO: collect in flake and test TODO: test
+
+# Find load
+
+TODO: explain findLoad
+
+# Haumea load
+
+TODO: talk about default.nix in dir, and how rest is haumea loaded and stuff
+with underscore
 
 # Standard Structure
 
