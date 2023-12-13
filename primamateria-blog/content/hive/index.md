@@ -569,6 +569,9 @@ nix run '.#nixosConfigurations.experiment-experiment.config.system.build.vm'
 
 TODO: explain findLoad
 
+`findLoad` automatically loads all files in the path provided in the `block`
+attribute.
+
 ```
 ├── cells
 │  └── experiment
@@ -633,8 +636,19 @@ nix run '.#nixosConfigurations.experiment-home.config.system.build.vm'
 
 # Haumea load
 
-TODO: talk about default.nix in dir, and how rest is haumea loaded and stuff
-with underscore
+The files loaded by `findLoad` are loaded the Haumea way. That is important to
+know when loading a directory instead of one file. Content in the Nix files in
+this directory is then treated as value of an attribute with name that equals
+the file name. That's the core Haumea magic.
+
+Maybe I don't fully yet understand the power of Haumea load, but in my case I
+found it useful only to define `options` for the NixOS module in a separate file
+called `options.nix`. I split the code, but as a customly name NixOS module,
+that I don't want Haumea to automatically dump into a attribute of the default
+module. Therefore I ended up creating "private" submodules with names that are
+prefixed with `__` which makes them ignored by Haumea.
+
+TODO: example with Haumea loaded file and with private submodule
 
 # Standard Structure
 
