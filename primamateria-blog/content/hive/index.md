@@ -28,7 +28,7 @@ to rework their code.
 
 TODO: remove octopus
 
-{{ tip(tip="
+{{ nerdy(text="
 
 In this post, I will describe my own approach of using Hive. It may differ from
 the prevailing convention of naming things, and it may not utilize the latest
@@ -62,7 +62,7 @@ and I found the [NixOS Guide](https://github.com/mikeroyal/NixOS-Guide), and
 inside link to [Digga](https://github.com/divnix/digga). But the projects was
 already with a deprecation notice.
 
-{{ tip(tip="
+{{ nerdy(text="
 
 Digga was already
 [removed](https://github.com/mikeroyal/NixOS-Guide/commit/14a6d9530bb958bae7eaf531191bcc99f03e44f0)
@@ -141,7 +141,7 @@ There are 3 important sections:
 - `options` - list of options of the current module
 - `config` - the main "body" with default and option-based configuration
 
-{{ tip(tip="
+{{ nerdy(text="
 
 Usually the docs mention `enable` option, that is common in NixOS and Home
 Manager configurations. In my case I write and import modules that I intend to
@@ -175,7 +175,7 @@ allow to easily access other modules from the configuration. Of course, there
 are more advanced technicks like picking, filtering, or hoisting diferent
 attributes, but it's not needed to go into more details with them.
 
-{{ tip(tip="
+{{ nerdy(text="
 
 [Haumea](https://github.com/nix-community/haumea) exists with
 [initial commit](https://github.com/nix-community/haumea/commit/13c2fcf9e60ac2cd99e25433efd0d35e3b43d14ca)
@@ -815,7 +815,7 @@ also mention that not using agenix, but kept using git-crypt
 
 # Critique
 
-{{ tip(tip="
+{{ nerdy(text="
 
 At the end I want to mention, that I am not a big fan of using biology terms to
 name things in programming. I got already use to them, but in the project
@@ -824,13 +824,13 @@ harder.
 
 ") }}
 
-TODO: rewrite to octopus conversation
-
-{{ why(question="
+{{ curious(text="
 
 Yeah, criticizing is easy, but can you come with better names?
 
-", answer="
+") }}
+
+{{ nerdy(text="
 
 The well know clique applies here - the hardest thing in the programmer life is
 naming things.
