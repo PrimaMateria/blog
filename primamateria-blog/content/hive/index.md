@@ -414,6 +414,8 @@ and name the directory `cells`.
 
 ") }}
 
+{{ end() }}
+
 # Cell Block
 
 Cell blocks are the fundamental components of a cell. They exist in different
@@ -498,6 +500,8 @@ will be configured later in the "bee" module.
 Observe how the cell block can access all the inputs of the root flake
 (specified by the `inputs` parameter), as well as all other cell blocks from the
 current cell (specified by the `cell` parameter, which will be used later).
+
+{{ end() }}
 
 # Bee
 
@@ -607,6 +611,8 @@ in
 }
 ```
 
+{{ end() }}
+
 # Collect
 
 Collect function produces transformed blocks from provided cell block. Based on
@@ -666,6 +672,8 @@ experiment nixos can be run in the virtual machine:
 ```
 nix run '.#nixosConfigurations.experiment-experiment.config.system.build.vm'
 ```
+
+{{ end() }}
 
 # findLoad
 
@@ -750,23 +758,260 @@ nix run '.#nixosConfigurations.experiment-work.config.system.build.vm'
 nix run '.#nixosConfigurations.experiment-home.config.system.build.vm'
 ```
 
+{{ end() }}
+
 # Haumea Load
 
-The files loaded by `findLoad` are loaded the Haumea way. That is important to
-know when loading a directory instead of one file. Content in the Nix files in
-this directory is then treated as value of an attribute with name that equals
-the file name. That's the core Haumea magic.
+Instances loaded by `findLoad` are loaded with Haumea. That means that the
+instance can be modularized into different files that will be put together into
+one set where the attributes correspond to the file names.
 
-Maybe I don't fully yet understand the power of Haumea load, but in my case I
-found it useful only to define `options` for the NixOS module in a separate file
-called `options.nix`. I split the code, but as a customly name NixOS module,
-that I don't want Haumea to automatically dump into a attribute of the default
-module. Therefore I ended up creating "private" submodules with names that are
-prefixed with `__` which makes them ignored by Haumea.
+Perhaps I have not yet fully realized the potential of Haumea, but so far I have
+only found it useful for defining NixOS module options separately. In other
+cases, I extract the code into "private" submodules with names that have the
+prefix "\_\_". Haumea ignores these submodules, and I load them either through
+Nix's `import` or with `nixpkgs.callPackage`.
 
-TODO: example with Haumea loaded file and with private submodule
+In this step we introduce "system" cell block, that will act as collection of
+different system configurations for the nixos configurations.
 
-# Standard Structure
+```
+├── cells
+│  └── experiment
+│     ├── bee.nix
+│     ├── nixosConfigurations
+│     │  ├── default.nix
+│     │  ├── home.nix
+│     │  └── work.nix
+│     └── system
+│        ├── common.nix
+│        ├── default.nix
+│        └── parrot
+│           ├── __cowsay.nix
+│           ├── __hello.nix
+│           ├── default.nix
+│           └── options.nix
+└── flake.nix
+```
+
+At first, tell Hive about the new cell block we will be using. Update
+`cellblocks` in the `flake.nix` with `system` cell block of type `functions`.
+
+```nix
+{
+  outputs = { self, std, hive, ... }@inputs:
+    hive.growOn
+      {
+        inherit inputs;
+        cellsFrom = ./cells;
+        cellBlocks = with hive.blockTypes; with std.blockTypes; [
+          (functions "bee")
+          (functions "system")
+          nixosConfigurations
+        ];
+      }
+      {
+        nixosConfigurations = hive.collect self "nixosConfigurations";
+      };
+
+  inputs = {
+    nixpkgs-stable.url = "github:nixos/nixpkgs/23.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/master";
+    nixpkgs.follows = "nixpkgs-unstable";
+
+    std = {
+      url = "github:divnix/std";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hive = {
+      url = "github:divnix/hive";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+}
+```
+
+Instances of the system cell block will be loaded using `findLoad` as before.
+Create `system/default.nix` as follows:
+
+```nix
+{ inputs, cell }:
+inputs.hive.findLoad {
+  inherit inputs cell;
+  block = ./.;
+}
+```
+
+Up until home and work nixos configurations had duplicated code that creates the
+VM user and sets the state version. Extract this code to `system/common.nix`:
+
+```nix
+{
+  users.users.foo = {
+    isNormalUser = true;
+    initialPassword = "foo";
+  };
+  system.stateVersion = "23.11";
+}
+```
+
+Next we will create "parrot" system cell block instance.
+
+{{ curious(text="
+
+Parrot is weird name. Heh, sorry, just go with it.
+
+") }}
+
+Parrot module configures `cowsay` and `hello` packages based on the set options
+values. Create `system/parrot/default.nix`:
+
+```nix
+{ inputs, config }:
+let
+  inherit (inputs) nixpkgs;
+  cfg = config.experiment.system.parrot;
+in
+{
+  config = {
+    environment.systemPackages = [
+      (nixpkgs.callPackage ./__hello.nix { inherit (cfg) greeting; })
+      (nixpkgs.callPackage ./__cowsay.nix { inherit (cfg) art; })
+    ];
+  };
+}
+```
+
+The options definitions will be extracted to separate Hamuea module
+`system/parrot/options.nix`:
+
+```nix
+{ inputs, cell }:
+let
+  inherit (inputs.nixpkgs) lib;
+in
+{
+  experiment.system.parrot = {
+    greeting = lib.mkOption {
+      type = lib.types.str;
+      description = "hello message";
+      default = "Hello world";
+    };
+    art = lib.mkOption {
+      type = lib.types.str;
+      description = "cowsay art - one of items listed by cowsay -l";
+      default = "default";
+    };
+  };
+}
+```
+
+Custom cowsay and hello packages are implemented in private Haumea modules.
+
+```nix
+{ pkgs, art ? "default" }:
+pkgs.writeShellApplication {
+  name = "cowsay";
+  text = ''${pkgs.cowsay}/bin/cowsay -f "${art}" "$@"'';
+}
+```
+
+```nix
+{ pkgs, greeting ? "Hello world" }:
+pkgs.writeShellApplication {
+  name = "hello";
+  text = ''${pkgs.hello}/bin/hello --greeting "${greeting}"'';
+}
+```
+
+{{ nerdy(text="
+
+If they would not be private, Haumea would try to load them into the nixos
+module set, so the result would look like this:
+
+```nix
+{ config = {}; option = {}; cowsay = {}; hello = {}; }
+```
+
+The build would fail with message that NixOS module contains unsupported
+attributes because the top level can contain only `options`, `imports` and
+`config`.
+
+") }}
+
+At last update the work and home nixos configurations utilizing new system
+modules. Each system configure to provice custom values for to the parrot
+options.
+
+```nix
+{ inputs, cell }:
+let
+  inherit (inputs) nixpkgs;
+  inherit (cell) bee system;
+in
+{
+  inherit bee;
+
+  imports = [
+    system.common
+    system.parrot
+    {
+      experiment.system.parrot = {
+        art = "elephant";
+        greeting = "Hello home!";
+      };
+    }
+  ];
+}
+```
+
+```nix
+{ inputs, cell }:
+let
+  inherit (inputs) nixpkgs;
+  inherit (cell) bee system;
+in
+{
+  inherit bee;
+
+  imports = [
+    system.common
+    system.parrot
+    {
+      experiment.system.parrot = {
+        art = "small";
+        greeting = "Hello work!";
+      };
+    }
+  ];
+}
+```
+
+At last, test again the result in the virtual machine:
+
+```
+nix run '.#nixosConfigurations.experiment-work.config.system.build.vm'
+```
+
+<div style="margin-top: 24px">
+{{ resize_image_w(path="hive/vm-test-work.png", width=450) }}
+</div>
+
+```
+nix run '.#nixosConfigurations.experiment-home.config.system.build.vm'
+```
+
+<div style="margin-top: 24px">
+{{ resize_image_w(path="hive/vm-test-home.png", width=450) }}
+</div>
+
+This concludes the tutorial. In next chapters we will discuss the cell
+organization.
+
+{{ end() }}
+
+# Standard Cell Structure
 
 - TODO: mention that from valen
 - TODO: rewrite the puml to mermaid
@@ -816,7 +1061,7 @@ flowchart BT
 {% end %}
 <!-- prettier-ignore-end -->
 
-# Dream Structure
+# Dream Cell Structure
 
 - TODO: create graph
 - TODO: talk about what are modules, what are cell blocks
