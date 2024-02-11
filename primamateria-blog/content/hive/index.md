@@ -371,13 +371,15 @@ conventional outputs of the flake.
 
 ## Cell
 
-Cells is supposed to be top level structure for organizing the config. Cells is
-constructed from different types of cell blocks. What I usually observed in
-repositories using Hive was one main cell, sometimes accompanied by smaller
-cells for, probably, some more exotic use cases. In my own config I decided the
-cell to contain everything, and I named in "PrimaMateria".
+Cells are supposed to be the top-level structure for organizing the
+configuration. Cells are constructed from different types of cell blocks. What I
+have usually observed in repositories using Hive is one main cell, sometimes
+accompanied by smaller cells for, probably, some more exotic use cases. In my
+own configuration, I decided for the cell to contain everything, and I named it
+with my nickname "PrimaMateria".
 
-Create new directory path `cells/experiment` and keep it empty for now.
+Create a new directory path called `cells/experiment` and leave it empty for the
+time being.
 
 ```
 ├── cells
@@ -385,7 +387,7 @@ Create new directory path `cells/experiment` and keep it empty for now.
 └── flake.nix
 ```
 
-Update `growOn` parameter set with `cellsFrom` attribute.
+Update the Hive configuration with the `cellsFrom` attribute.
 
 ```nix
 {
@@ -420,8 +422,8 @@ Update `growOn` parameter set with `cellsFrom` attribute.
 
 {{ nerdy(text="
 
-David, the author of Standard and Hive, suggests naming the directory `nix` as
-opposed to `celss`. This recommendation is based on the idea that it would
+David, the author of Standard and Hive, suggests naming the directory `nix`
+instead of `cells`. This recommendation is based on the idea that it would
 provide a clearer indication of the directory's content to individuals who are
 not familiar with Hive. However, I have chosen to adopt the new domain language
 and name the directory `cells`.
@@ -475,7 +477,7 @@ At first, declare that the hive configuration will use a cell of type
 }
 ```
 
-Now, cceate the new cell block. The filename must match the name of the cell
+Now, create the new cell block. The filename must match the name of the cell
 block type.
 
 ```
@@ -485,9 +487,9 @@ block type.
 └── flake.nix
 ```
 
-Move the "experiment" system to the cell block. Assign the main module, which is
-currently the only module, to the attribute that bears the name of the system
-confuguration.
+Move the "experiment" system to the cell block and assign the main module, which
+is currently the only module, to the attribute that bears the name of the system
+configuration - `experiment`.
 
 ```nix
 { inputs, cell }:
@@ -507,9 +509,9 @@ in
 }
 ```
 
-The meta configuration with the `system` attribute is not included in the cell
-block. Cell blocks are independent of any specific system. The target system
-will be configured later in the "bee" module.
+The top-level configuration with the `system` attribute is not included in the
+cell block. Cell blocks are independent of any specific system. The target
+system will be configured later in the "bee" module.
 
 Observe how the cell block can access all the inputs of the root flake
 (specified by the `inputs` parameter), as well as all other cell blocks from the
@@ -519,10 +521,10 @@ current cell (specified by the `cell` parameter, which will be used later).
 
 ## Bee Module
 
-The Bee module is a configuration used by transformer that transforms the cell
-blocks into transformed system-specific derivatives. It includes a list of
-target systems and slots for passing Home Manager, WSL, Darwin, and, of course,
-Nix package flakes that will be used to produce the transformed blocks.
+The Bee module is a configuration used by the transformer to transform the cell
+blocks into system-specific derivatives. It includes a list of target systems
+and slots for passing Home Manager, WSL, Darwin, and Nix package flakes, which
+will be used to produce the transformed blocks.
 
 Once again, declare a new cell block of the type `functions` as the first step.
 This type is the most versatile and does not undergo any special transformations
@@ -600,7 +602,7 @@ always been able to meet my requirements without an overlay.
 
 ") }}
 
-Finally, assign the bee to the main module of the experiment nixos
+Finally, assign the bee to the main module of the experiment's NixOS
 configuration. Now, the `cell` parameter becomes useful for easily referencing
 the bee cell block.
 
@@ -629,11 +631,11 @@ in
 
 ## Collect
 
-Collect function produces transformed blocks from provided cell block. Based on
-cell block type it selects corresponsing collector and executes it to collect
-and transform cell block instances employing the Bee module. Transformed blocks
-are placed in the soil, that will be processed by `growOn` function to produce
-final flake output.
+The collect function produces transformed blocks from the provided cell block.
+Depending on the type of cell block, it selects the corresponding collector and
+executes it to collect and transform cell block instances using the Bee module.
+The transformed blocks are then placed in the soil, which will be processed by
+the `growOn` function to produce the final flake output.
 
 Collect `nixosConfigurations` cell block.
 
@@ -671,17 +673,17 @@ Collect `nixosConfigurations` cell block.
 }
 ```
 
-If we will look on the output of `nix flake show` it will contain
+If we look at the output of `nix flake show`, it will show us the following:
 
 ```
 ├───nixosConfigurations
 │   └───experiment-experiment: NixOS configuration
 ```
 
-Then name "experiment-experiment" is chosen because the cell is called
-experiment and also the nixos configuration is called experiment. This is little
-confusing, so let's change it in the next step, but before test that the
-experiment nixos can be run in the virtual machine:
+The name "experiment-experiment" is chosen because the cell is called experiment
+and the nixos configuration is also called experiment. This can be a bit
+confusing, so let's change it in the next step. But before that, let's test it
+in the virtual machine.
 
 ```
 nix run '.#nixosConfigurations.experiment-experiment.config.system.build.vm'
@@ -691,13 +693,13 @@ nix run '.#nixosConfigurations.experiment-experiment.config.system.build.vm'
 
 ## findLoad
 
-Function `findLoad` finds all Cell Block Instances of the Cell Block with path
-specified in the `block` attribute. The found instances are loaded using Haumea.
-The loading will be explained in next step.
+The function `findLoad` collects all instances of the cell block with the
+specified path in the "block" attribute. These instances are then loaded using
+Haumea. The process of loading will be explained in the next step.
 
-Create two Cell Block Instances of nixos configurations - home instance that
-will build nixos used at home, and work instance that will build nixos system
-used in work.
+Create two instances in the cell block for nixos configurations - a home
+instance that will build the NixOS system used at home, and a work instance that
+will build the NixOS system used at work.
 
 ```
 ├── cells
@@ -710,8 +712,8 @@ used in work.
 └── flake.nix
 ```
 
-To keep the tutorial simple, let's say that at work we need to use package
-hello. Implement `work.nix` as follows:
+To simplify the tutorial, let's assume that we need to use the package "hello"
+at work. Implement `work.nix` in the following manner:
 
 ```nix
 { inputs, cell }:
@@ -732,7 +734,8 @@ in
 }
 ```
 
-And at home we need to use package cowsay. Implement `home.nix` as follows:
+And at home, we need to use the package "cowsay". Implement `home.nix` as shown
+below:
 
 ```nix
 { inputs, cell }:
@@ -753,8 +756,8 @@ in
 }
 ```
 
-At last, in the `default.nix` call `findLoad` that will find and load home and
-work nixos configurations.
+Finally, in the `default.nix`, call `findLoad` to locate and load the NixOS
+configurations for both home and work.
 
 ```nix
 { inputs, cell }:
@@ -764,8 +767,8 @@ inputs.hive.findLoad {
 }
 ```
 
-Now we can test both nixos systems in the virtual machine. Test that we can call
-hello at work system, and cowsay at home system.
+Now we can test both NixOS systems in the virtual machine. Test if we can call
+"hello" on the work system and "cowsay" on the home system.
 
 ```
 nix run '.#nixosConfigurations.experiment-work.config.system.build.vm'
@@ -776,15 +779,15 @@ nix run '.#nixosConfigurations.experiment-home.config.system.build.vm'
 
 ## Haumea Load
 
-Instances loaded by `findLoad` are loaded with Haumea. That means that the
-instance can be modularized into different files that will be put together into
-one set where the attributes correspond to the file names.
+Instances that are loaded by `findLoad` are loaded using Haumea. This implies
+that the instance can be divided into separate files, which will then be
+combined into a single set where the attributes align with the file names.
 
-Perhaps I have not yet fully realized the potential of Haumea, but so far I have
-only found it useful for defining NixOS module options separately. In other
-cases, I extract the code into "private" submodules with names that have the
-prefix "\_\_". Haumea ignores these submodules, and I load them either through
-Nix's `import` or with `nixpkgs.callPackage`.
+Perhaps I have not fully realized the potential of Haumea yet, but up until now,
+I have only found it useful for defining NixOS module options separately. In
+other situations, I extract the code into "private" submodules with names that
+have the prefix "\_\_". Haumea disregards these submodules, and I load them
+either through Nix's `import` or with `nixpkgs.callPackage`.
 
 In this step we introduce "system" cell block, that will act as collection of
 different system configurations for the nixos configurations.
@@ -808,8 +811,9 @@ different system configurations for the nixos configurations.
 └── flake.nix
 ```
 
-At first, tell Hive about the new cell block we will be using. Update
-`cellblocks` in the `flake.nix` with `system` cell block of type `functions`.
+First, inform Hive about the new cell block that we will be using. Update the
+`cellblocks` in the `flake.nix` file with the `system` cell block of type
+`functions`.
 
 ```nix
 {
@@ -846,8 +850,9 @@ At first, tell Hive about the new cell block we will be using. Update
 }
 ```
 
-Instances of the system cell block will be loaded using `findLoad` as before.
-Create `system/default.nix` as follows:
+Instances of the system cell block will be loaded using the `findLoad` function
+as previously done. Please create the file `system/default.nix` in the following
+manner:
 
 ```nix
 { inputs, cell }:
@@ -857,8 +862,9 @@ inputs.hive.findLoad {
 }
 ```
 
-Up until home and work nixos configurations had duplicated code that creates the
-VM user and sets the state version. Extract this code to `system/common.nix`:
+Prior to the home and work NixOS configurations, there was duplicated code that
+created the VM user and set the state version. This code should be extracted to
+`system/common.nix`.
 
 ```nix
 {
@@ -870,16 +876,17 @@ VM user and sets the state version. Extract this code to `system/common.nix`:
 }
 ```
 
-Next we will create new cell block instance - a "parrot" system module.
+Next, we will create a new cell block instance, which is a "parrot" system
+module.
 
 {{ curious(text="
 
-Parrot is weird name. Heh, sorry, just go with it.
+Parrot is a strange name. Heh, sorry, just go with it.
 
 ") }}
 
-Parrot module configures `cowsay` and `hello` packages based on the set options
-values. Create `system/parrot/default.nix`:
+The Parrot module configures the `cowsay` and `hello` packages based on the set
+options values. Create the file `system/parrot/default.nix`.
 
 ```nix
 { inputs, config }:
@@ -897,8 +904,8 @@ in
 }
 ```
 
-The options definitions will be extracted to separate Hamuea module
-`system/parrot/options.nix`:
+The option definitions will be extracted to a separate Hamuea module,
+`system/parrot/options.nix`.
 
 ```nix
 { inputs, cell }:
@@ -921,7 +928,7 @@ in
 }
 ```
 
-Custom cowsay and hello packages are implemented in private Haumea modules.
+The custom cowsay and hello packages are implemented in private Haumea modules.
 
 ```nix
 { pkgs, art ? "default" }:
@@ -941,22 +948,21 @@ pkgs.writeShellApplication {
 
 {{ nerdy(text="
 
-If they would not be private, Haumea would try to load them into the nixos
-module set, so the result would look like this:
+If they were not private, Haumea would attempt to load them into the NixOS
+module set, resulting in the following:
 
 ```nix
 { config = {}; option = {}; cowsay = {}; hello = {}; }
 ```
 
-The build would fail with message that NixOS module contains unsupported
-attributes because the top level can contain only `options`, `imports` and
-`config`.
+The build would fail with a message stating that the NixOS module contains
+unsupported attributes because the top level can only contain `options`,
+`imports`, and `config`.
 
 ") }}
 
-At last update the work and home nixos configurations utilizing new system
-modules. Each system configure to provice custom values for to the parrot
-options.
+Update the work and home NixOS configurations using the new system modules.
+Configure each system to provide custom values for the parrot options.
 
 ```nix
 { inputs, cell }:
@@ -1002,7 +1008,7 @@ in
 }
 ```
 
-At last, test again the result in the virtual machine:
+Finally, retest the outcome in the virtual machine.
 
 ```
 nix run '.#nixosConfigurations.experiment-work.config.system.build.vm'
@@ -1020,32 +1026,33 @@ nix run '.#nixosConfigurations.experiment-home.config.system.build.vm'
 {{ resize_image_w(path="hive/vm-test-home.png", width=450) }}
 </div>
 
-This concludes the tutorial. In next chapters we will discuss the cell
+This tutorial concludes here. In the upcoming chapters, we will discuss cell
 organization.
 
 {{ end() }}
 
 # Standard Cell Structure
 
-Now when we already know how to create cell blocks and how to connect them a
-question arises about the organization of the hive. What one cell encompasses
-and of which types of cell blocks it consists?
+Now that we already know how to create cell blocks and how to connect them, a
+question arises regarding the organization of the hive. What does one cell
+encompass and what types of cell blocks does it consist of?
 
-First I will present
+First, I will present
 [Lord-Valen's configuration.nix](https://github.com/Lord-Valen/configuration.nix)
-that, I believe, originates from recommended structures used in Standard. In the
-next I will present my own domain language that I hope is tiny bit more
+which, I believe, originates from the recommended structures used in Standard.
+Next, I will present my own domain language that I hope is a tiny bit more
 self-explanatory.
 
-Valen's comb contains three crypticly named cells:
+Valen's comb contains three cells.
 
 - lord-valen
 - repo
 - sioux
 
-Cell "lord-valen" is biggest and I focused on it with further studies. I opened
-each cell block and recorded which other cell block does it use. The result came
-up in the form of the following diagram:
+The cell labeled "lord-valen" is the largest, and I dedicated my attention to
+studying it further. I proceeded to open each cell block and documented which
+other cell block it utilizes. The outcome was presented in the form of the
+following diagram:
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -1081,7 +1088,7 @@ flowchart BT
 {% end %}
 <!-- prettier-ignore-end -->
 
-If we look on the vertical lines we can extract simplified backbone:
+If we examine the vertical lines, we can identify a simplified backbone.
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -1093,7 +1100,7 @@ flowchart BT
 {% end %}
 <!-- prettier-ignore-end -->
 
-If we look on the horizontal line we draw following simplified landscape:
+If we examine the horizontal planes, we can observe such simplified landscape.
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -1107,21 +1114,23 @@ columns 3
 {% end %}
 <!-- prettier-ignore-end -->
 
-Interestingly, Valen does not use separate `homeConfigurations` but he incluse
-home manager config into `nixosConfigurations`.
+Interestingly, Valen does not use separate `homeConfigurations`, but instead
+includes the home manager config into `nixosConfigurations`.
 
 {{ end() }}
 
 # Dream Cell Structure
 
-I challenged myself to draw a scheme in principle same as Standard, but from my
-own perspective of what I have included in my NixOS configuration.
+I challenged myself to create a scheme that is essentially the same as Standard,
+but based on my own perspective and the elements I have included in my NixOS
+configuration.
 
-In my previous repository I had nixos and user configurations separately defined
-and separately installable. So I wanted to preserve this, not sure if it is more
-correct, but I am just used to it.
+In my previous repository, I had separate definitions for nixos and user
+configurations, which could be installed separately. I wanted to maintain this
+setup because I am accustomed to it, although I'm not sure if it is the most
+correct approach.
 
-Next I wanted to avoid usage of `profiles` and `suites` and choose more
+Next, I wanted to avoid using `profiles` and `suites` and instead choose more
 descriptive names. I came up with the following hierarchy:
 
 <!-- prettier-ignore-start -->
@@ -1136,12 +1145,12 @@ flowchart BT
 {% end %}
 <!-- prettier-ignore-end -->
 
-Let's look on how the home system and work system are laid out.
+Let's examine how the home system and work system are arranged.
 
-At home I run NixOS on PC and therefore system must have configured hardware
-like mouse, monitor, disks, printer, etc. Also at home I use pure NixOS bare
-metal installation and therefore I need to configure window maanger, sound,
-graphic, etc.
+At home, I run NixOS on my PC, so the system must have properly configured
+hardware such as a mouse, monitor, disks, printer, etc. Additionally, since I
+use a pure NixOS bare metal installation, I need to configure the window
+manager, sound, graphics, etc.
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -1194,10 +1203,9 @@ flowchart BT
 {% end %}
 <!-- prettier-ignore-end -->
 
-At work I run NixOS on WSL therefore the whole machine part is not required,
-because this parts managed and configured by the host windows system. On the
-other hand the installation on WSL requires it's own specific config and setup
-of VNC.
+At work, I run NixOS on WSL, so the entire machine part is not necessary because
+it is managed and configured by the host Windows system. However, the
+installation on WSL requires its own specific configuration and setup of VNC.
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -1230,11 +1238,11 @@ flowchart BT
 {% end %}
 <!-- prettier-ignore-end -->
 
-At least this is how it should work in the theory. Practically I managed to
-configure only WSL for work, and at home I also settled on WSL configuration
-that allowed me to avoid annoying re-boots each time I want to switch between
-gaming and crafting. Of course it comes its own limitations, but I think this is
-for me currently the lowest energy state.
+This is how it should work in theory, at least. In practice, I was only able to
+configure WSL for work. At home, I also found a WSL configuration that allows me
+to avoid annoying reboots whenever I want to switch between gaming and crafting.
+Of course, it has its limitations, but I believe this is currently the most
+energy-efficient option for me.
 
 {{ end() }}
 
@@ -1242,19 +1250,21 @@ for me currently the lowest energy state.
 
 Hive is still in its early stages with only a few people involved, and most of
 the work is being done by one person. This person may also lose interest over
-time and shift his focus to other projects. Additionally, the lack of openness,
-such as the absence of documentation, may discourage the few interested
-individuals who come across it. It is possible that Hive could easily fade away
-in the future. This is why I have chosen to write this blog post, to uncover
-what is hidden behind the facade of this "secretly open NixOS-Society" and share
-this idea with a wider audience.
+time and shift his focus to other projects.
+
+Additionally, the lack of openness, such as the absence of documentation, may
+discourage the few interested individuals who come across it. It is possible
+that Hive could easily fade away in the future.
+
+This is why I have chosen to write this blog post, to uncover what is hidden
+behind the facade of this "secretly open NixOS-Society" and share this idea with
+a wider audience.
 
 {{ curious(text="
 
-If you have enjoyed this post, please leave a comment, even if it's just a
-simple kudos. You wouldn't believe how great it feels to see that someone has
-read through the work you spent a long time working on and that it is not
-completely ignored.
+If you like this post, please leave a comment, even if it's just a simple kudos.
+You wouldn't believe how great it feels to see that someone has read through the
+work you spent a long time working on and that it is not completely ignored.
 
 ") }}
 
