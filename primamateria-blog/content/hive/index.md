@@ -17,6 +17,15 @@ to rework their code.
 
 <!-- more -->
 
+In this post, I will describe my own approach of using Hive. It may differ from
+the prevailing convention of naming things, and it may not utilize the latest
+available Nix tools. I approach my problem as a developer who aims to create a
+convenient and reproducible development environment. I am not an operations
+professional who needs to ensure absolute security. Additionally, I am limited
+by my current understanding, and I am open to your comments and opinions.
+
+{{ end() }}
+
 # Factoids
 
 - Hive is a spiritual successor of Digga.
@@ -25,19 +34,6 @@ to rework their code.
 - First commit in the repository is from 29th March 2022.
 
 {{ end() }}
-
-TODO: remove octopus
-
-{{ nerdy(text="
-
-In this post, I will describe my own approach of using Hive. It may differ from
-the prevailing convention of naming things, and it may not utilize the latest
-available Nix tools. I approach my problem as a developer who aims to create a
-convenient and reproducible development environment. I am not an operations
-professional who needs to ensure absolute security. Additionally, I am limited
-by my current understanding, and I am open to your comments and opinions.
-
-") }} {{ end() }}
 
 # Road to Hive
 
@@ -310,8 +306,6 @@ repositories using Hive was one main cell, sometimes accompanied by smaller
 cells for, probably, some more exotic use cases. In my own config I decided the
 cell to contain everything, and I named in "PrimaMateria".
 
-TODO: create directory and add cellsFrom
-
 Create new directory path `cells/experiment` and keep it empty for now.
 
 ```
@@ -353,49 +347,27 @@ Update `growOn` parameter set with `cellsFrom` attribute.
 }
 ```
 
+{{ nerdy(text="
+
+David, the author of Standard and Hive, suggests naming the directory `nix` as
+opposed to `celss`. This recommendation is based on the idea that it would
+provide a clearer indication of the directory's content to individuals who are
+not familiar with Hive. However, I have chosen to adopt the new domain language
+and name the directory `cells`.
+
+") }}
+
 # Cell Block
 
-Cell blocks are construction blocks of the cell. They are of different types,
-and then the type defines what kind of transformations will happen to the blocks
-when harvested, and may have different actions associated with them. The actions
-are more related to the Standard platform, and I don't use them at all. Later on
-I will present an approach I observed in Lord-Valen's configuration and then my
-own structure.
+Cell blocks are the fundamental components of a cell. They exist in different
+forms, and each form dictates the changes that take place when they are
+collected. Furthermore, each form may have different actions associated with it.
+Although I personally do not utilize them, based on the documentation, it
+appears that Standard provides a command-line interface (CLI) tool that offers a
+user-friendly way to execute these actions.
 
-TODO: rewrite to focus the tutorial
-
-The cell block types I am using in my configuration are only:
-
-- **functions** - the most versatile type, that can be used for NixOS modules
-- **nixosConfigurations** - block of this type returns list of NixOS system
-  configurations, and uses the Bee module
-
-TODO: migrate nixos configuration to cellblock
-
-```
-├── cells
-│  └── experiment
-│     └── nixosConfigurations.nix
-└── flake.nix
-```
-
-```nix
-{ inputs, cell }:
-let
-  inherit (inputs) nixpkgs;
-in
-{
-  experiment = {
-    users.users.foo = {
-      isNormalUser = true;
-      initialPassword = "foo";
-    };
-
-    environment.systemPackages = with nixpkgs; [ hello ];
-    system.stateVersion = "23.11";
-  };
-}
-```
+At first, declare that the hive configuration will use a cell of type
+`nixosConfiguration`.
 
 ```nix
 {
@@ -430,49 +402,27 @@ in
 }
 ```
 
-# Bee
-
-Bee module is a configuration for the of the build process that transforms the
-blocks to the flake outputs. It contains the list of target systems, and slots
-for passing Home Manager, WSL, Darwin and of course Nix packages flakes, that
-will be used to build the outputs.
+Now, cceate the new cell block. The filename must match the name of the cell
+block type.
 
 ```
 ├── cells
 │  └── experiment
-│     ├── nixosConfigurations.nix
-│     └── bee.nix
+│     └── nixosConfigurations.nix
 └── flake.nix
 ```
 
-```nix
-#        ████  ████
-#      ██    ██    ██
-#        ██    ██  ██
-#          ██████████
-#        ████░░██░░░░██
-#      ██░░██░░██░░░░░░▓▓
-#  ▓▓▓▓██░░██░░██░░▓▓░░██
-#      ██░░██░░██░░░░░░██
-#        ████░░██░░░░██
-#          ██████████
-
-{ inputs, cell }: {
-  system = "x86_64-linux";
-  pkgs = inputs.nixpkgs;
-}
-```
+Move the "experiment" system to the cell block. Assign the main module, which is
+currently the only module, to the attribute that bears the name of the system
+confuguration.
 
 ```nix
 { inputs, cell }:
 let
   inherit (inputs) nixpkgs;
-  inherit (cell) bee;
 in
 {
   experiment = {
-    inherit bee;
-
     users.users.foo = {
       isNormalUser = true;
       initialPassword = "foo";
@@ -483,6 +433,25 @@ in
   };
 }
 ```
+
+The meta configuration with the `system` attribute is not included in the cell
+block. Cell blocks are independent of any specific system. The target system
+will be configured later in the "bee" module.
+
+Observe how the cell block can access all the inputs of the root flake
+(specified by the `inputs` parameter), as well as all other cell blocks from the
+current cell (specified by the `cell` parameter, which will be used later).
+
+# Bee
+
+The Bee module is a configuration of the build process that transforms the
+blocks into flake outputs. It includes a list of target systems and slots for
+passing Home Manager, WSL, Darwin, and, of course, Nix package flakes that will
+be used to build the outputs.
+
+Once again, declare a new cell block of the type `functions` as the first step.
+This type is the most versatile and does not undergo any special transformations
+during the harvest process.
 
 ```nix
 {
@@ -518,7 +487,68 @@ in
 }
 ```
 
-TODO: connect with nixos configuration
+Create the bee module. If your configuration becomes more complex, you may
+eventually have multiple bees.
+
+```
+├── cells
+│  └── experiment
+│     ├── nixosConfigurations.nix
+│     └── bee.nix
+└── flake.nix
+```
+
+```nix
+#        ████  ████
+#      ██    ██    ██
+#        ██    ██  ██
+#          ██████████
+#        ████░░██░░░░██
+#      ██░░██░░██░░░░░░▓▓
+#  ▓▓▓▓██░░██░░██░░▓▓░░██
+#      ██░░██░░██░░░░░░██
+#        ████░░██░░░░██
+#          ██████████
+
+{ inputs, cell }: {
+  system = "x86_64-linux";
+  pkgs = inputs.nixpkgs;
+}
+```
+
+{{ nerdy(text="
+
+If you attempt to define an overlay within the cell block, Hive will warn you
+that this will not work and that overlays need to be already defined in `pkgs`
+provided by the bee. I don't have an example for it because, so far, I have
+always been able to meet my requirements without an overlay.
+
+") }}
+
+Finally, assign the bee to the main module of the experiment nixos
+configuration. Now, the `cell` parameter becomes useful for easily referencing
+the bee cell block.
+
+```nix
+{ inputs, cell }:
+let
+  inherit (inputs) nixpkgs;
+  inherit (cell) bee;
+in
+{
+  experiment = {
+    inherit bee;
+
+    users.users.foo = {
+      isNormalUser = true;
+      initialPassword = "foo";
+    };
+
+    environment.systemPackages = with nixpkgs; [ hello ];
+    system.stateVersion = "23.11";
+  };
+}
+```
 
 # Collect
 
