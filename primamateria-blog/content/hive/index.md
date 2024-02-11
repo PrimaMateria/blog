@@ -191,11 +191,74 @@ In the Paisano repository exists a branch where David is trying to use Haumea
 internally, but it is not used yet in Hive (or Standard), although both projects
 are directly using Haumea internally.
 
+- paisano - grow - builds hive cells to outputs
+- hive - collect - collects and transform cell block employing bee module
+- hive - walkPaisano - iterates through cell block instances, executed
+  operations associated with the cell block type and applies renamer. Product of
+  `walkPaisono` is then part of one soil that at the end becomes flake's output.
+
+- hive - findLoad - finds and loads using haumea instances inside one blocka
+- haumea - load
+
+# The Hive
+
+Hive is using following hierarchy of the building blocks:
+
+<!-- prettier-ignore-start -->
+{% mermaid() %}
+flowchart TB
+  subgraph Hive
+    subgraph Cell
+      subgraph Cell Block
+        subgraph Cell Block Instance
+        end
+      end
+    end
+  end
+{% end %}
+<!-- prettier-ignore-end -->
+
+The blocks will be introduced step by step in the tutorial.
+
+Before we begin, also take a look at the following diagram that describes the
+Hive. Don't be intimidated, it may appear complicated. For now, just quickly
+scan it and continue with the tutorial. Once you have completed the tutorial,
+you can return to review the diagram and see if it becomes clearer to you.
+
+<!-- prettier-ignore-start -->
+{% mermaid() %}
+flowchart TB
+  growOn -->|produces| flakeOutput
+  growOn -->|processing| soil
+  growOn -->|uses| hiveConfig
+  hiveConfig -->|declares source directory of| cellBlock
+  hiveConfig -->|declares list of| cellBlockType
+  soil -->|contains| transformedBlock
+  transformedBlock -->|is produced by| collect
+
+  collect -->|resolves| collector
+  collect -->|processing| cellBlock
+  collector -->|calls| walkPaisano 
+  walkPaisano -->|applies| renamer
+  walkPaisano -->|applies| transformer
+
+  cellBlock -->|calls| findLoad
+  findLoad -->|calls| hamuea-load
+  hamuea-load -->|loads| cellBlockInstance
+
+  cellBlock -->|is of| cellBlockType
+  cellBlockType ---->|has dedicated| collector
+  cellBlockType -->|has dedicated| transformer
+
+  transformer -->|uses| bee
+{% end %}
+<!-- prettier-ignore-end -->
+
 {{ end() }}
 
 # Testing Environment
 
-For testing this tutorial I will be using Nix' built-in functionality to run
+For testing this tutorial we will be using Nix' built-in functionality to run
 system configuration in the virtual machine. At first define initial flake
 without Hive:
 
