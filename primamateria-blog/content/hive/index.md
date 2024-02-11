@@ -344,10 +344,10 @@ Hive is a flake-based configuration. Inputs include:
 }
 ```
 
-Outputs are the result of the `hive.growOn` function. `growOn` is paisano
-function that takes variable count of parameters. The first one is always a
-setup of the Hive, where the source folder for the cells is specified, together
-with the cell block types available in our configuration.
+Outputs are the result of the `hive.growOn` function. `growOn` is Paisano
+function that takes variable count of parameters. The first one is always a Hive
+config, where the cells source directory and cell block types list are
+specified.
 
 The rest of the parameters, I believe, are called "layers of soil", they are
 recursively merged together to one attribute set that becomes the conventional
@@ -856,7 +856,7 @@ VM user and sets the state version. Extract this code to `system/common.nix`:
 }
 ```
 
-Next we will create "parrot" system cell block instance.
+Next we will create new cell block instance - a "parrot" system module.
 
 {{ curious(text="
 
