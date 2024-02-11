@@ -9,11 +9,11 @@ banner = "hive.png"
 tags = ["nixos","hive","paisano","haumea"]
 +++
 
-Hive is a framework that aims to assist with the organization of personal Nix
-configurations. This post describes why I have chosen to migrate to it and
-explains how I accomplished it. It is intended for curious Nix users who feel
-that their current configuration is disorganized and are seeking a new approach
-to rework their code.
+Hive is a framework that aims to help with organizing personal Nix
+configurations. This post explains why I have decided to switch to it and
+provides a step-by-step tutorial for trying it out yourself. It is intended for
+Nix users who are curious and feel that their current configuration is
+disorganized, and are looking for a new way to restructure their code.
 
 <!-- more -->
 
@@ -250,7 +250,16 @@ flowchart TB
 
 {{ end() }}
 
-# Testing Environment
+# Tutorial
+
+I invite you to try out Hive on your own with the following tutorial. It's very
+simple, just enught to explain the key concept I have learned. Afterwards there
+are few more chapter discussing the whole system organization.
+
+You can also find the tutorial sources on
+[github:primamateri/blog-hive](https://github.com/PrimaMateria/blog-hive).
+
+## Testing Environment
 
 For testing this tutorial we will be using Nix' built-in functionality to run
 system configuration in the virtual machine. At first define initial flake
@@ -300,7 +309,7 @@ in with "foo/foo", and try to run `hello`:
 
 {{ end() }}
 
-# Hive Flake
+## Hive Flake
 
 Hive is a flake-based configuration. Inputs include:
 
@@ -355,7 +364,7 @@ outputs of the flake.
 
 {{ end() }}
 
-# Cell
+## Cell
 
 Cells is supposed to be top level structure for organizing the config. Cells is
 constructed from different types of cell blocks. What I usually observed in
@@ -416,7 +425,7 @@ and name the directory `cells`.
 
 {{ end() }}
 
-# Cell Block
+## Cell Block
 
 Cell blocks are the fundamental components of a cell. They exist in different
 forms, and each form dictates the changes that take place when they are
@@ -503,7 +512,7 @@ current cell (specified by the `cell` parameter, which will be used later).
 
 {{ end() }}
 
-# Bee
+## Bee Module
 
 The Bee module is a configuration used by transformer that transforms the cell
 blocks into transformed system-specific derivatives. It includes a list of
@@ -613,7 +622,7 @@ in
 
 {{ end() }}
 
-# Collect
+## Collect
 
 Collect function produces transformed blocks from provided cell block. Based on
 cell block type it selects corresponsing collector and executes it to collect
@@ -675,7 +684,7 @@ nix run '.#nixosConfigurations.experiment-experiment.config.system.build.vm'
 
 {{ end() }}
 
-# findLoad
+## findLoad
 
 Function `findLoad` finds all Cell Block Instances of the Cell Block with path
 specified in the `block` attribute. The found instances are loaded using Haumea.
@@ -760,7 +769,7 @@ nix run '.#nixosConfigurations.experiment-home.config.system.build.vm'
 
 {{ end() }}
 
-# Haumea Load
+## Haumea Load
 
 Instances loaded by `findLoad` are loaded with Haumea. That means that the
 instance can be modularized into different files that will be put together into
@@ -1013,9 +1022,25 @@ organization.
 
 # Standard Cell Structure
 
-- TODO: mention that from valen
-- TODO: rewrite the puml to mermaid
-- TODO: mention about missing homeConfigurations
+Now when we already know how to create cell blocks and how to connect them a
+question arises about the organization of the hive. What one cell encompasses
+and of which types of cell blocks it consists?
+
+First I will present
+[Lord-Valen's configuration.nix](https://github.com/Lord-Valen/configuration.nix)
+that, I believe, originates from recommended structures used in Standard. In the
+next I will present my own domain language that I hope is tiny bit more
+self-explanatory.
+
+Valen's comb contains three crypticly named cells:
+
+- lord-valen
+- repo
+- sioux
+
+Cell "lord-valen" is biggest and I focused on it with further studies. I opened
+each cell block and recorded which other cell block does it use. The result came
+up in the form of the following diagram:
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -1034,8 +1059,8 @@ flowchart BT
         userProfiles --> nixosSuites
 
         diskoConfigurations --> hardwareProfiles
-        hardwareProfiles --> nixosConfigurations
-        arionProfiles --> nixosConfigurations
+        hardwareProfiles ---> nixosConfigurations
+        arionProfiles ---> nixosConfigurations
 
         nixosConfigurations --> colmenaConfigurations
         nixosConfigurations --> installers
@@ -1046,10 +1071,12 @@ flowchart BT
        nixos-generators
     end
 
-    nixos-hardware --> hardwareProfiles
-    nixos-generators --> installers
+    nixos-hardware -..-> hardwareProfiles
+    nixos-generators -..-> installers
 {% end %}
 <!-- prettier-ignore-end -->
+
+If we look on the vertical lines we can extract simplified backbone:
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -1061,27 +1088,55 @@ flowchart BT
 {% end %}
 <!-- prettier-ignore-end -->
 
+If we look on the horizontal line we draw following simplified landscape:
+
+<!-- prettier-ignore-start -->
+{% mermaid() %}
+block-beta
+columns 3
+
+    nixosConfigurations:3
+    home
+    nixos
+    hardware
+{% end %}
+<!-- prettier-ignore-end -->
+
+Interestingly, Valen does not use separate `homeConfigurations` but he incluse
+home manager config into `nixosConfigurations`.
+
+{{ end() }}
+
 # Dream Cell Structure
 
-- TODO: create graph
-- TODO: talk about what are modules, what are cell blocks
-- TODO: say it is experimenting stage and not the recommending
-- TODO: mention not having tried the standalone install yet
+I challenged myself to draw a scheme in principle same as Standard, but from my
+own perspective of what I have included in my NixOS configuration.
+
+In my previous repository I had nixos and user configurations separately defined
+and separately installable. So I wanted to preserve this, not sure if it is more
+correct, but I am just used to it.
+
+Next I wanted to avoid usage of `profiles` and `suites` and choose more
+descriptive names. I came up with the following hierarchy:
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
 flowchart BT
 
-    applications --> homeConfigurations
+    applications ---> homeConfigurations
     devices --> machines
     machines --> nixosConfigurations
     system --> installations
     installations --> nixosConfigurations
-    secrets
 {% end %}
 <!-- prettier-ignore-end -->
 
-Look on the nixosConfigurations side for mentat, wokwok and gg.
+Let's look on how the home system and work system are laid out.
+
+At home I run NixOS on PC and therefore system must have configured hardware
+like mouse, monitor, disks, printer, etc. Also at home I use pure NixOS bare
+metal installation and therefore I need to configure window maanger, sound,
+graphic, etc.
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -1110,6 +1165,7 @@ flowchart BT
       sound
       essentials
       i3
+      docker
     "]:::list
 
     installations["
@@ -1120,7 +1176,7 @@ flowchart BT
 
     nixosConfigurations["
       <b>nixosConfigurations</b>
-      mentat
+      home
     "]:::list
 
     devices --> machines
@@ -1133,6 +1189,11 @@ flowchart BT
 {% end %}
 <!-- prettier-ignore-end -->
 
+At work I run NixOS on WSL therefore the whole machine part is not required,
+because this parts managed and configured by the host windows system. On the
+other hand the installation on WSL requires it's own specific config and setup
+of VNC.
+
 <!-- prettier-ignore-start -->
 {% mermaid() %}
 flowchart BT
@@ -1142,6 +1203,7 @@ flowchart BT
       wsl
       essentials
       vnc
+      docker
     "]:::list
 
     installations["
@@ -1152,7 +1214,7 @@ flowchart BT
 
     nixosConfigurations["
       <b>nixosConfigurations</b>
-      wokwok
+      work
     "]:::list
 
     system --> installations
@@ -1163,52 +1225,23 @@ flowchart BT
 {% end %}
 <!-- prettier-ignore-end -->
 
-also mention that not using agenix, but kept using git-crypt
+At least this is how it should work in the theory. Practically I managed to
+configure only WSL for work, and at home I also settled on WSL configuration
+that allowed me to avoid annoying re-boots each time I want to switch between
+gaming and crafting. Of course it comes its own limitations, but I think this is
+for me currently the lowest energy state.
 
-- **home-manager** - a tool for managing the user environment
-- **wsl** - for my personal use case. I am using NixOS running on WSL. Actually,
-  it's the only tested config I have done with Hive simply because over time I
-  realized that this is the most convenient combination for me - at work, I am
-  forced to use Windows, and at home, I can combine a convenient gaming
-  experience with a handy NixOS environment.
-- **homeConfigurations** - simalarly the block returns list of Home Manager
-  configurations. It is, as well, using the Bee module.
+{{ end() }}
 
-# Critique
+# Outro
 
-{{ nerdy(text="
+Hive is still in its early stages with only a few people involved, and most of
+the work is being done by one person. This person may also lose interest over
+time and shift his focus to other projects. Additionally, the lack of openness,
+such as the absence of documentation, may discourage the few interested
+individuals who come across it. It is possible that Hive could easily fade away
+in the future. This is why I have chosen to write this blog post, to uncover
+what is hidden behind the facade of this "secretly open NixOS-Society" and share
+this idea with a wider audience.
 
-At the end I want to mention, that I am not a big fan of using biology terms to
-name things in programming. I got already use to them, but in the project
-without even a README they make understanding the source code one more step more
-harder.
-
-") }}
-
-{{ curious(text="
-
-Yeah, criticizing is easy, but can you come with better names?
-
-") }}
-
-{{ nerdy(text="
-
-The well know clique applies here - the hardest thing in the programmer life is
-naming things.
-
-- `cell` - `collection`
-- `cellBlock` - ``
-- `growOn` - `setup`
-- `collect` - good one
-- `bee` - `buildConfig`
-- `findLoad` - good one
-
-") }}
-
-# Links
-
-and how to search github for hive projects
-
-https://std.divnix.com/guides/growing-cells.html
-https://std.divnix.com/reference/blocktypes.html
-https://std.divnix.com/glossary.html
+{{ end() }}
