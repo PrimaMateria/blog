@@ -17,7 +17,7 @@ disorganized, and are looking for a new way to restructure their code.
 
 <!-- more -->
 
-In this post, I will describe my own approach of using Hive. It may differ from
+In this post, I will describe my own approach to using Hive. It may differ from
 the prevailing convention of naming things, and it may not utilize the latest
 available Nix tools. I approach my problem as a developer who aims to create a
 convenient and reproducible development environment. I am not an operations
@@ -28,35 +28,35 @@ by my current understanding, and I am open to your comments and opinions.
 
 # Factoids
 
-- Hive is a spiritual successor of Digga.
-- Hive spawns from std.
+- Hive is the spiritual successor of Digga.
+- Hive originates from std (Standard).
 - The author is David Arnold.
-- First commit in the repository is from 29th March 2022.
+- The first commit in the repository is dated 29th March 2022.
 
 {{ end() }}
 
 # Road to Hive
 
-I started with
-[Will T's NixOS series ](https://www.youtube.com/watch?v=QKoQ1gKJY5A&list=PL-saUBvIJzOkjAw_vOac75v-x6EzNzZq-)
-in 2022, copying configs without fully understanding them. But I managed to keep
-it going for a while, and even eventually moved my daily office tasks from
-Ubuntu WSL to NixOS WSL.
+I began with
+[Will T's NixOS series](https://www.youtube.com/watch?v=QKoQ1gKJY5A&list=PL-saUBvIJzOkjAw_vOac75v-x6EzNzZq-)
+in 2022, where I copied configurations without fully comprehending them.
+However, I was able to sustain this practice for some time and eventually
+transitioned my daily office tasks from Ubuntu WSL to NixOS WSL.
 
-After creating the [Neovim flake](@/neovim-nix.md) I got some confidence. Felt
-like I understood much more, and I was ready for the next step. I wanted to redo
-my main NixOS config.
+After creating the [Neovim flake](@/neovim-nix.md), I gained some confidence. I
+felt like I understood much more and was ready for the next step. I wanted to
+redo my main NixOS configuration.
 
-In my first config things got real messy - I mixed flakes, dwelved on the
-old-school `import`, messed with callPackage without understanding what it does,
-and I totally missed the "nix modules boat", even if I used them as copy-pasta
-here and there.
+In my initial configuration, things became quite messy. I mixed flakes, dwelled
+on the old-school `import`, tampered with `callPackage` without comprehending
+its purpose, and I completely overlooked the "nix modules boat", despite using
+them as copy-pasta occasionally.
 
-I didn't have a solid grip on the language and on themodule system, and I needed
-some guidance for how to organize my configs. So I started doing some research
-and I found the [NixOS Guide](https://github.com/mikeroyal/NixOS-Guide), and
-inside link to [Digga](https://github.com/divnix/digga). But the projects was
-already with a deprecation notice.
+I didn't have a solid grasp of the language and the module system, and I needed
+some guidance on how to organize my configurations. So I began researching and
+came across the [NixOS Guide](https://github.com/mikeroyal/NixOS-Guide), which
+included a link to [Digga](https://github.com/divnix/digga). However, I
+discovered that the project had already been deprecated.
 
 {{ nerdy(text="
 
@@ -71,39 +71,46 @@ investigating std, the Hive was
 [mentioned](https://std.divnix.com/#the-standard-nixos-story-in-case-you-wondered)
 in the docs:
 
+The author mentions migration to std, flake-parts, or flake-utils-plus. While
+investigating std, the Hive was mentioned in the documentation:
+
 > _"Once you got fed up with divnix/digga or a disorganized personal
 > configuration, please head straight over to divnix/hive and join the chat,
 > there. It's work in progress. But hey! It means: we can progress together!"_
+>
+> [The Standard NixOS Story (in case you wondered)](https://std.divnix.com/#the-standard-nixos-story-in-case-you-wondered).
 
-And there it was, Hive, a mysterious project with a README ban, with small
-community and with some praise in the matrix chat. I was intrigued.
+And there it was, Hive, a mysterious project with a ban on README, a small
+community, and some praise in the matrix chat. I was intrigued.
 
-But before fully committing, I looked for alternatives.
+However, before fully committing, I searched for alternatives.
 
 {{ resize_image_w(path="hive/flake-parts.png", width=1008) }}
 
-That's from Discord and it's not me asking, but someone with the same dilemma.
+This message is from Discord, and it is not me who is asking, but rather someone
+who is facing the same dilemma.
 
-I have poked around the flake-parts' [documentation](https://flake.parts/), but
-it was too steep for me to fully grok the concept. It felt like I am on the same
-starting line for both Hive and flake-parts. Little what I have observed was
-that the repositories using Hive contained some kind of block types, which gave
-me an impression that it is more opionated framework, and as a newb this was
-something I was looking for.
+I have explored the [documentation of flake-parts](https://flake.parts/), but it
+was too difficult for me to fully understand the concept. It felt like I was
+starting from scratch with both Hive and flake-parts. One thing I noticed was
+that the repositories using Hive had certain block types, which gave me the
+impression that it is a more opinionated framework. As a beginner, this is
+something I was searching for.
 
-I followed [Lord-Valen's repo](https://github.com/Lord-Valen/configuration.nix).
-The rough foundation draft I created by rewriting Valen's flake, and by blindly
-migrating my old configs without even checking if it builds. Once I had my
-"dream structure" in place, I created fresh WSL instance and keep on fixing the
-code until I was able to do the first full build and system switch. From this
-moment I had already good grasp on it and the rest of final detailing was smooth
-sailing.
+I followed
+[Lord-Valen's repository](https://github.com/Lord-Valen/configuration.nix). I
+initially created a rough foundation draft by rewriting Valen's flake and
+migrating my old configurations without checking if they build. Once I had my
+desired structure set up, I created a fresh WSL instance and continued fixing
+the code until I successfully completed the first full build and system switch.
+From that point on, I had a good-enough understanding of it, and the remaining
+final details were easily resolved.
 
 {{ end() }}
 
 # NixOS Module
 
-Before I start describing Hive, I have to mention the NixOS module this is an
+Before I begin describing Hive, I must mention that the NixOS module is an
 essential mechanism.
 
 The usual structure is as follows:
@@ -131,25 +138,26 @@ in {
 }
 ```
 
-There are 3 important sections:
+There are three important sections:
 
-- `imports` - list of other NixOS modules that will get imported
-- `options` - list of options of the current module
-- `config` - the main "body" with default and option-based configuration
+- `imports` - a list of other NixOS modules that will be imported.
+- `options` - a list of options for the current module.
+- `config` - the main "body" containing default and option-based configuration.
 
 {{ nerdy(text="
 
-Usually the docs mention `enable` option, that is common in NixOS and Home
-Manager configurations. In my case I write and import modules that I intend to
-use, so I never use `enable`. Although I can see now the idea of repositories of
-prepared and mantained modules. This also why I got a feedback on my Neovim
-flake tutorial that the prefferred way should be contributing to
+Usually, the documentation mentions the `enable` option, which is common in
+NixOS and Home Manager configurations. In my case, I write and import modules
+that I intend to use, so I never use `enable`. However, I can now understand the
+concept of repositories with prepared and maintained modules. This is also why I
+received feedback on my Neovim flake tutorial, suggesting that the preferred
+approach should be contributing to
 [NixVim](https://github.com/nix-community/nixvim).
 
 ") }}
 
-If modules doesn't have options, then we can omit the config field and place the
-"main body" on top level:
+If modules do not have options or imports, then we can omit the config field and
+place the "main body" at the top level.
 
 ```nix
 { pkgs, ... }: {
@@ -162,40 +170,37 @@ If modules doesn't have options, then we can omit the config field and place the
 
 # Paisano and Haumea
 
-Important to mention are the transitive dependencies **Paisano** and **Haumea**.
-It looks like both tools were created to solve the similar problem - to enable
-using file systems for declaring modules, and to provide a nix function to
-automatically load, or collect these modules into a nix' attribute set.
-Additionally the load functions provide standardized call parameters, which
-allow to easily access other modules from the configuration. Of course, there
-are more advanced technicks like picking, filtering, or hoisting diferent
-attributes, but it's not needed to go into more details with them.
+It is appropriate to mention the transitive dependencies **Paisano** and
+**Haumea**. Both tools appear to have been created to solve a similar problem -
+enabling the use of file systems to declare modules and providing a nix function
+to automatically load or collect these modules into a nix attribute set.
+Additionally, the load functions provide standardized call parameters, making it
+easy to access other modules from the configuration. While there are more
+advanced techniques such as picking, filtering, or hoisting different
+attributes, it is not necessary to delve into further details about them right
+now.
 
 {{ nerdy(text="
 
-[Haumea](https://github.com/nix-community/haumea) exists with
+[Haumea](https://github.com/nix-community/haumea) exists with its
 [initial commit](https://github.com/nix-community/haumea/commit/13c2fcf9e60ac2cd99e25433efd0d35e3b43d14ca)
-from the 1st April 2023, and it's authored by
-[figsoda](https://github.com/figsoda). You can have also look on my brief
-[cheatsheet](@/haumea-cheatsheet.md).
+from the 1st April 2023, and it is authored by
+[figsoda](https://github.com/figsoda). You can also take a look on my brief
+[cheatsheet on Haumea](@/haumea-cheatsheet.md).
 
-[Paisano](https://github.com/paisano-nix/core) was at first a part of the
-Standard platform, and it was extracted as separate tool with a
+[Paisano](https://github.com/paisano-nix/core) was initially a part of the
+Standard platform, but it was extracted as separate tool with a
 [first commit](https://github.com/paisano-nix/core/commit/9b95b00f7b4ea1af1d4eb5e09b33cdf8fdc1db44)
-to it's own repository on 9th February 2023. There is also a short
-[cheatsheet](@/paisano-cheatsheet.md).
+in its own repository on 9th February 2023. There is also a short
+[cheatsheet](@/paisano-cheatsheet.md) available.
 
 ") }}
-
-In the Paisano repository exists a branch where David is trying to use Haumea
-internally, but it is not used yet in Hive (or Standard), although both projects
-are directly using Haumea internally.
 
 {{ end() }}
 
 # The Hive
 
-Hive is using following hierarchy of the building blocks:
+Hive uses the following hierarchy of building blocks:
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -211,12 +216,12 @@ flowchart TB
 {% end %}
 <!-- prettier-ignore-end -->
 
-The blocks will be introduced step by step in the tutorial.
+The blocks will be introduced gradually throughout the tutorial.
 
-Before we begin, also take a look at the following diagram that describes the
-Hive. Don't be intimidated, it may appear complicated. For now, just quickly
-scan it and continue with the tutorial. Once you have completed the tutorial,
-you can return to review the diagram and see if it becomes clearer to you.
+Before we start, please also take a look at the diagram below that explains the
+Hive. Don't worry if it seems complex at first glance. Just give it a quick scan
+for now and proceed with the tutorial. Once you finish the tutorial, you can
+come back to review the diagram and see if it becomes easier to understand.
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -253,17 +258,17 @@ flowchart TB
 # Tutorial
 
 I invite you to try out Hive on your own with the following tutorial. It's very
-simple, just enught to explain the key concept I have learned. Afterwards there
-are few more chapter discussing the whole system organization.
+simple, just enough to explain the key concept I have learned. Afterwards, there
+are a few more chapters discussing the whole system organization.
 
-You can also find the tutorial sources on
-[github:primamateri/blog-hive](https://github.com/PrimaMateria/blog-hive).
+You can also find the tutorial sources at
+[github:PrimaMateria/blog-hive](https://github.com/PrimaMateria/blog-hive).
 
 ## Testing Environment
 
-For testing this tutorial we will be using Nix' built-in functionality to run
-system configuration in the virtual machine. At first define initial flake
-without Hive:
+To test this tutorial, we will utilize Nix's built-in functionality to execute
+system configuration in the virtual machine. Initially, define the initial flake
+without Hive.
 
 ```nix
 {
@@ -294,14 +299,14 @@ without Hive:
 }
 ```
 
-Now test it with:
+Now, test it with the following command.
 
 ```
 nix run '.#nixosConfigurations.experiment.config.system.build.vm'
 ```
 
-The Qemu window will start with a machine that will load the configuration. Log
-in with "foo/foo", and try to run `hello`:
+The Qemu window will start with a machine that loads the configuration. Log in
+using "foo/foo" and try to run the command `hello`.
 
 <div style="margin-top: 24px">
 {{ resize_image_w(path="hive/vm-test.png", width=450) }}
@@ -311,15 +316,15 @@ in with "foo/foo", and try to run `hello`:
 
 ## Hive Flake
 
-Hive is a flake-based configuration. Inputs include:
+Hive is a configuration based on flakes. Inputs include:
 
-- **std** - the Standard - as I understand it, it's a more complex framework
+- **std** - the Standard - as I understand it, it is a more complex framework
   intended for DevOps to declare configurations for building and deploying
-  projects. The Hive was spawned from the Standard with the intention of
+  projects. The Hive was created based on the Standard with the intention of
   focusing on system and home configurations. Personally, I have never used the
   Standard before and probably will never need to.
 - **hive** - I wouldn't say that Hive is an extension of the Standard. It
-  adheres to the same principles and reuses some block types from std, but other
+  follows the same principles and reuses some block types from std, but other
   than that, it seems that there isn't much dependency on it.
 
 ```nix
@@ -353,14 +358,14 @@ Hive is a flake-based configuration. Inputs include:
 }
 ```
 
-Outputs are the result of the `hive.growOn` function. `growOn` is Paisano
-function that takes variable count of parameters. The first one is always a Hive
-config, where the cells source directory and cell block types list are
+The outputs are the result of the `hive.growOn` function. `growOn` is a Paisano
+function that takes a variable count of parameters. The first one is always a
+Hive config, where the cells' source directory and cell block types list are
 specified.
 
-The rest of the parameters, I believe, are called "layers of soil", they are
-recursively merged together to one attribute set that becomes the conventional
-outputs of the flake.
+I believe the remaining parameters are referred to as "layers of soil". These
+layers are recursively combined into one attribute set, which then becomes the
+conventional outputs of the flake.
 
 {{ end() }}
 
@@ -1243,5 +1248,14 @@ individuals who come across it. It is possible that Hive could easily fade away
 in the future. This is why I have chosen to write this blog post, to uncover
 what is hidden behind the facade of this "secretly open NixOS-Society" and share
 this idea with a wider audience.
+
+{{ curious(text="
+
+If you have enjoyed this post, please leave a comment, even if it's just a
+simple kudos. You wouldn't believe how great it feels to see that someone has
+read through the work you spent a long time working on and that it is not
+completely ignored.
+
+") }}
 
 {{ end() }}
