@@ -191,14 +191,7 @@ In the Paisano repository exists a branch where David is trying to use Haumea
 internally, but it is not used yet in Hive (or Standard), although both projects
 are directly using Haumea internally.
 
-- paisano - grow - builds hive cells to outputs
-- hive - collect - collects and transform cell block employing bee module
-- hive - walkPaisano - iterates through cell block instances, executed
-  operations associated with the cell block type and applies renamer. Product of
-  `walkPaisono` is then part of one soil that at the end becomes flake's output.
-
-- hive - findLoad - finds and loads using haumea instances inside one blocka
-- haumea - load
+{{ end() }}
 
 # The Hive
 
@@ -243,6 +236,7 @@ flowchart TB
   walkPaisano -->|applies| transformer
 
   cellBlock -->|calls| findLoad
+  findLoad -->|finds all| cellBlockInstance
   findLoad -->|calls| hamuea-load
   hamuea-load -->|loads| cellBlockInstance
 
@@ -507,10 +501,10 @@ current cell (specified by the `cell` parameter, which will be used later).
 
 # Bee
 
-The Bee module is a configuration of the build process that transforms the
-blocks into flake outputs. It includes a list of target systems and slots for
-passing Home Manager, WSL, Darwin, and, of course, Nix package flakes that will
-be used to build the outputs.
+The Bee module is a configuration used by transformer that transforms the cell
+blocks into transformed system-specific derivatives. It includes a list of
+target systems and slots for passing Home Manager, WSL, Darwin, and, of course,
+Nix package flakes that will be used to produce the transformed blocks.
 
 Once again, declare a new cell block of the type `functions` as the first step.
 This type is the most versatile and does not undergo any special transformations
@@ -615,10 +609,13 @@ in
 
 # Collect
 
-collect already in hive/harvest
+Collect function produces transformed blocks from provided cell block. Based on
+cell block type it selects corresponsing collector and executes it to collect
+and transform cell block instances employing the Bee module. Transformed blocks
+are placed in the soil, that will be processed by `growOn` function to produce
+final flake output.
 
-- TODO: collect in flake and test
-- TODO: test
+Collect `nixosConfigurations` cell block.
 
 ```nix
 {
@@ -654,16 +651,31 @@ collect already in hive/harvest
 }
 ```
 
+If we will look on the output of `nix flake show` it will contain
+
+```
+├───nixosConfigurations
+│   └───experiment-experiment: NixOS configuration
+```
+
+Then name "experiment-experiment" is chosen because the cell is called
+experiment and also the nixos configuration is called experiment. This is little
+confusing, so let's change it in the next step, but before test that the
+experiment nixos can be run in the virtual machine:
+
 ```
 nix run '.#nixosConfigurations.experiment-experiment.config.system.build.vm'
 ```
 
-# Find load
+# findLoad
 
-TODO: explain findLoad
+Function `findLoad` finds all Cell Block Instances of the Cell Block with path
+specified in the `block` attribute. The found instances are loaded using Haumea.
+The loading will be explained in next step.
 
-`findLoad` automatically loads all files in the path provided in the `block`
-attribute.
+Create two Cell Block Instances of nixos configurations - home instance that
+will build nixos used at home, and work instance that will build nixos system
+used in work.
 
 ```
 ├── cells
@@ -675,6 +687,9 @@ attribute.
 │     └── bee.nix
 └── flake.nix
 ```
+
+To keep the tutorial simple, let's say that at work we need to use package
+hello. Implement `work.nix` as follows:
 
 ```nix
 { inputs, cell }:
@@ -695,6 +710,8 @@ in
 }
 ```
 
+And at home we need to use package cowsay. Implement `home.nix` as follows:
+
 ```nix
 { inputs, cell }:
 let
@@ -714,6 +731,9 @@ in
 }
 ```
 
+At last, in the `default.nix` call `findLoad` that will find and load home and
+work nixos configurations.
+
 ```nix
 { inputs, cell }:
 inputs.hive.findLoad {
@@ -722,12 +742,15 @@ inputs.hive.findLoad {
 }
 ```
 
+Now we can test both nixos systems in the virtual machine. Test that we can call
+hello at work system, and cowsay at home system.
+
 ```
 nix run '.#nixosConfigurations.experiment-work.config.system.build.vm'
 nix run '.#nixosConfigurations.experiment-home.config.system.build.vm'
 ```
 
-# Haumea load
+# Haumea Load
 
 The files loaded by `findLoad` are loaded the Haumea way. That is important to
 know when loading a directory instead of one file. Content in the Nix files in
