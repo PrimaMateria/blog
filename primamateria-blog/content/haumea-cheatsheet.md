@@ -155,6 +155,8 @@ still have access to `pig` and `cow`, since the `farm` is scoped.
 }
 ```
 
+{{ end() }}
+
 ## Sub Dir
 
 ```text
@@ -180,6 +182,8 @@ still have access to `pig` and `cow`, since the `farm` is scoped.
   two = { animal = "cow"; fruit = "banana"; vegetables = [ "carrot" ]; };
 }
 ```
+
+{{ end() }}
 
 ## Internal Dir
 
