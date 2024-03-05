@@ -17,6 +17,14 @@ attribute set, eliminating the need for manual imports.
 
 <!-- more -->
 
+{{ update(date="2024-03-05", content="
+
+I have standardized the example inputs to make it easier to identify differences
+between the methods. I have also included two new examples for subdirectories
+and internal directories.
+
+") }}
+
 - [Haumea Docs](https://nix-community.github.io/haumea/intro/introduction.html)
 - [github:nix-community/haumea](https://github.com/nix-community/haumea)
 - [github:primamateria/experiment-haumea](https://github.com/PrimaMateria/experiment-haumea)
@@ -31,20 +39,20 @@ GitHub repository.
 ```text
 ├── examples
 │  └── default
-│     ├── answer.nix
-│     │  └── { lib }: (lib.const 42) { }
-│     └── foo.nix
-│        └── { bar }: { foo = "foo" + bar; }
+│     ├── one.nix
+│     │  └── { farm }: { animal = farm.pig; fruit = "orange"; vegetables = [ "potato" ]; }
+│     └── two.nix
+│        └── { farm }: { animal = farm.cow; fruit = "banana"; vegetables = [ "carrot" ]; }
 └── flake.nix
    └── default = haumea.lib.load {
          src = ./examples/default;
-         inputs = {
-           inherit (nixpkgs) lib;
-           bar = "bar";
-         };
+         inputs = { farm = { cow = "cow"; pig = "pig"; }; };
        };
 
-{ answer = 42; foo = { foo = "foobar"; }; }
+{
+  one = { animal = "pig"; fruit = "orange"; vegetables = [ "potato" ]; };
+  two = { animal = "cow"; fruit = "banana"; vegetables = [ "carrot" ]; };
+}
 ```
 
 {{ end() }}
@@ -54,10 +62,10 @@ GitHub repository.
 ```text
 ├── examples
 │  └── default
-│     ├── answer.nix
-│     │  └── { lib }: (lib.const 42) { }
-│     └── foo.nix
-│        └── { bar }: { foo = "foo" + bar; }
+│     ├── one.nix
+│     │  └── { farm }: { animal = farm.pig; fruit = "orange"; vegetables = [ "potato" ]; }
+│     └── two.nix
+│        └── { farm }: { animal = farm.cow; fruit = "banana"; vegetables = [ "carrot" ]; }
 └── flake.nix
    └── path = haumea.lib.load {
          src = ./examples/default;
@@ -65,8 +73,8 @@ GitHub repository.
        };
 
 {
-  answer = /nix/store/3l8xxh2nw5wdawjmjg0bagfs9vvygwh1-source/examples/default/answer.nix;
-  foo = /nix/store/3l8xxh2nw5wdawjmjg0bagfs9vvygwh1-source/examples/default/foo.nix;
+  one = /nix/store/3dkpf96ycknjszjqq2lwjhh42qmsw6q5-source/examples/default/one.nix;
+  two = /nix/store/3dkpf96ycknjszjqq2lwjhh42qmsw6q5-source/examples/default/two.nix;
 }
 ```
 
@@ -74,19 +82,27 @@ GitHub repository.
 
 ## Scoped
 
+Notice that `one.nix` and `two.nix` do not declare the `farm` parameter, but
+still have access to `pig` and `cow`, since the `farm` is scoped.
+
 ```text
 ├── examples
-│  └── scoped
-│     └── answer.nix
-│        └── {}: lib.id 42
+│  └── default
+│     ├── one.nix
+│     │  └── {}: { animal = farm.pig; fruit = "orange"; vegetables = [ "potato" ]; }
+│     └── two.nix
+│        └── {}: { animal = farm.cow; fruit = "banana"; vegetables = [ "carrot" ]; }
 └── flake.nix
    └── scoped = haumea.lib.load {
          src = ./examples/scoped;
          loader = haumea.lib.loaders.scoped;
-         inputs = { inherit (nixpkgs) lib; };
+         inputs = { farm = { cow = "cow"; pig = "pig"; }; };
        };
 
-{ answer = 42; }
+{
+  one = { animal = "pig"; fruit = "orange"; vegetables = [ "potato" ]; };
+  two = { animal = "cow"; fruit = "banana"; vegetables = [ "carrot" ]; };
+}
 ```
 
 {{ end() }}
@@ -95,21 +111,22 @@ GitHub repository.
 
 ```text
 ├── examples
-│  └── hoistAttrs
-│     ├── answer.nix
-│     │  └── {}: { foo = 42; bar = "not hoisted"; }
-│     └── question.nix
-│        └── {}: { foo = "answer to universe and everything"; bar = "not hoisted"; }
+│  └── scoped
+│     ├── one.nix
+│     │  └── { farm }: { animal = farm.pig; fruit = "orange"; vegetables = [ "potato" ]; }
+│     └── two.nix
+│        └── { farm }: { animal = farm.cow; fruit = "banana"; vegetables = [ "carrot" ]; }
 └── flake.nix
    └── hoistAttrs = haumea.lib.load {
          src = ./examples/hoistAttrs;
-         transformer = haumea.lib.transformers.hoistAttrs "foo" "hitchhiker";
+         inputs = { farm = { cow = "cow"; pig = "pig"; }; };
+         transformer = haumea.lib.transformers.hoistAttrs "fruit" "salad";
        };
 
 {
-  answer = { bar = "not hoisted"; };
-  hitchhiker = { answer = 42; question = "answer to universe and everything"; };
-  question = { bar = "not hoisted"; };
+  one = { animal = "pig"; vegetables = [ "potato" ]; };
+  salad = { one = "orange"; two = "banana"; };
+  two = { animal = "cow"; vegetables = [ "carrot" ]; };
 }
 ```
 
@@ -119,21 +136,91 @@ GitHub repository.
 
 ```text
 ├── examples
-│  └── hoistLists
-│     ├── first.nix
-│     │  └── {}: { foo = [ "universe" ]; }
-│     └── second.nix
-│        └── {}: { foo = [ "everyting" ]; }
+│  └── scoped
+│     ├── one.nix
+│     │  └── { farm }: { fruit = "orange"; vegetable = [ "potato" ]; animal = farm.pig; }
+│     └── two.nix
+│        └── { farm }: { fruit = "banana"; vegetable = [ "carrot" ]; animal = farm.cow; }
 └── flake.nix
    └── hoistLists = haumea.lib.load {
          src = ./examples/hoistLists;
-         transformer = haumea.lib.transformers.hoistLists "foo" "hitchiker.question";
+         inputs = { farm = { cow = "cow"; pig = "pig"; }; };
+         transformer = haumea.lib.transformers.hoistLists "vegetables" "salad";
        };
 
 {
-  first = { };
-  "hitchiker.question" = [ "universe" "everyting" ];
-  second = { };
+  one = { animal = "pig"; fruit = "orange"; };
+  salad = [ "potato" "carrot" ];
+  two = { animal = "cow"; fruit = "banana"; };
+}
+```
+
+## Sub Dir
+
+```text
+├── examples
+│  └── subDir
+│     ├── one
+│     │  ├── animal.nix
+│     │  │  └── { farm }: farm.pig
+│     │  ├── fruit.nix
+│     │  │  └── "orange"
+│     │  └── vegetables.nix
+│     │     └── [ "potato" ]
+│     └── two.nix
+│        └── { farm }: { fruit = "banana"; vegetable = [ "carrot" ]; animal = farm.cow; }
+└── flake.nix
+   └── subDir = haumea.lib.load {
+         src = ./examples/subDir;
+         inputs = { farm = { cow = "cow"; pig = "pig"; }; };
+       };
+
+{
+  one = { animal = "pig"; fruit = "orange"; vegetables = [ "potato" ]; };
+  two = { animal = "cow"; fruit = "banana"; vegetables = [ "carrot" ]; };
+}
+```
+
+## Internal Dir
+
+```text
+├── examples
+│  └── subDir
+│     ├── __internal
+│     │  ├── one.nix
+│     │  │  └── { farm }: { animal = farm.pig; fruit = "orange"; vegetables = [ "potato" ]; }
+│     │  └── two.nix
+│     │     └── { farm }: { animal = farm.cow; fruit = "banana"; vegetables = [ "carrot" ]; }
+│     └── alpha.nix
+│        └── { haumea, farm }: {
+│              beta.gamma = {
+│                delta = haumea.lib.load {
+│                  src = ./__internal;
+│                  inputs = { inherit farm; };
+│                };
+│              };
+│            }
+└── flake.nix
+   └── internalDir = haumea.lib.load {
+         src = ./examples/internalDir;
+         inputs = {
+           inherit haumea;
+           farm = { cow = "cow"; pig = "pig"; };
+         };
+       };
+
+
+{
+  alpha ={
+    beta = {
+      gamma = {
+        delta = {
+          one = { animal = "pig"; fruit = "orange"; vegetables = [ "potato" ]; };
+          two = { animal = "cow"; fruit = "banana"; vegetables = [ "carrot" ]; };
+        };
+      };
+    };
+  };
 }
 ```
 
