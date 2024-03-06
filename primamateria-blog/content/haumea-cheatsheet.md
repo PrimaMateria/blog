@@ -157,6 +157,32 @@ still have access to `pig` and `cow`, since the `farm` is scoped.
 
 {{ end() }}
 
+## Lift Default
+
+```text
+├── examples
+│  └── liftDefault
+│     ├── one.nix
+│     │  └── { farm }: { fruit = "orange"; vegetable = [ "potato" ]; animal = farm.pig; }
+│     └── default.nix
+│        └── { farm }: {
+│              two = { animal = farm.cow; fruit = "banana"; vegetables = [ "carrot" ]; };
+│            }
+└── flake.nix
+   └── liftDefault = haumea.lib.load {
+         src = ./examples/liftDefault;
+         inputs = { farm = { cow = "cow"; pig = "pig"; }; };
+         transformer = haumea.lib.transformers.liftDefault;
+       };
+
+{
+  one = { animal = "pig"; fruit = "orange"; vegetables = [ "potato" ]; };
+  two = { animal = "cow"; fruit = "banana"; vegetables = [ "carrot" ]; };
+}
+```
+
+{{ end() }}
+
 ## Sub Dir
 
 ```text
