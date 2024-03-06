@@ -1,3 +1,17 @@
+* {
+  box-sizing: border-box;
+}
+
+.container, .utterances {
+  max-width: 756px;
+}
+
+article {
+  padding-left: 4px;
+  padding-right: 4px;
+  word-break: break-word;
+}
+
 .update {
   margin-top: 32px;
   margin-bottom: 32px;
@@ -66,8 +80,11 @@ article header h1 a {
 }
 
 pre {
+  max-width: unset;
   text-align: left;
   background-color: #fff;
+  width: calc( (min( 100vw, 756px ) - 8px) + ( 100vw - min( 100vw, 756px ) ) / 2  );
+  position: relative;
 }
 
 code,
