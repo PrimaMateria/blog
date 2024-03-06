@@ -113,6 +113,7 @@ ul ul {
 }
 
 .mermaid {
+  max-width: calc( 756px - 8px );
   display: flex;
   justify-content: space-around;
 }
