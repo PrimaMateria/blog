@@ -25,6 +25,12 @@ and internal directories.
 
 ") }}
 
+{{ update(date="2024-03-06", content="
+
+Add Lift Default example.
+
+") }}
+
 - [Haumea Docs](https://nix-community.github.io/haumea/intro/introduction.html)
 - [github:nix-community/haumea](https://github.com/nix-community/haumea)
 - [github:primamateria/experiment-haumea](https://github.com/PrimaMateria/experiment-haumea)
