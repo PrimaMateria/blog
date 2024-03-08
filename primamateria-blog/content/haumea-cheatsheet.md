@@ -17,20 +17,6 @@ attribute set, eliminating the need for manual imports.
 
 <!-- more -->
 
-{{ update(date="2024-03-05", content="
-
-I have standardized the example inputs to make it easier to identify differences
-between the methods. I have also included two new examples for subdirectories
-and internal directories.
-
-") }}
-
-{{ update(date="2024-03-06", content="
-
-Add Lift Default example.
-
-") }}
-
 - [Haumea Docs](https://nix-community.github.io/haumea/intro/introduction.html)
 - [github:nix-community/haumea](https://github.com/nix-community/haumea)
 - [github:primamateria/experiment-haumea](https://github.com/PrimaMateria/experiment-haumea)
@@ -41,6 +27,10 @@ GitHub repository.
 {{ end() }}
 
 ## Default
+
+The default behavior is to load the content of the `one.nix` and `two.nix` files
+into the attributes `one` and `two`. Notice how we can easily pass the `farm`
+input.
 
 ```text
 ├── examples
@@ -64,6 +54,9 @@ GitHub repository.
 {{ end() }}
 
 ## Path
+
+Specifying the path loader will assign the paths of the files in the Nix store
+to the attributes instead.
 
 ```text
 ├── examples
@@ -115,6 +108,9 @@ still have access to `pig` and `cow`, since the `farm` is scoped.
 
 ## Hoist Attributes
 
+Hoisting attributes named `fruit` from the files' contents and moving them to a
+new attribute called `medley`.
+
 ```text
 ├── examples
 │  └── scoped
@@ -126,12 +122,12 @@ still have access to `pig` and `cow`, since the `farm` is scoped.
    └── hoistAttrs = haumea.lib.load {
          src = ./examples/hoistAttrs;
          inputs = { farm = { cow = "cow"; pig = "pig"; }; };
-         transformer = haumea.lib.transformers.hoistAttrs "fruit" "salad";
+         transformer = haumea.lib.transformers.hoistAttrs "fruit" "medley";
        };
 
 {
   one = { animal = "pig"; vegetables = [ "potato" ]; };
-  salad = { one = "orange"; two = "banana"; };
+  medley = { one = "orange"; two = "banana"; };
   two = { animal = "cow"; vegetables = [ "carrot" ]; };
 }
 ```
@@ -139,6 +135,9 @@ still have access to `pig` and `cow`, since the `farm` is scoped.
 {{ end() }}
 
 ## Hoist Lists
+
+Hoisting lists named `vegetables` and concatenating them into one list assigned
+to the attribute `salad`.
 
 ```text
 ├── examples
@@ -164,6 +163,8 @@ still have access to `pig` and `cow`, since the `farm` is scoped.
 {{ end() }}
 
 ## Lift Default
+
+The contents of the `default.nix` file are included in the resulting set.
 
 ```text
 ├── examples
@@ -191,6 +192,8 @@ still have access to `pig` and `cow`, since the `farm` is scoped.
 
 ## Sub Dir
 
+Module `one` is further divided into its individual leaf attributes modules.
+
 ```text
 ├── examples
 │  └── subDir
@@ -217,47 +220,89 @@ still have access to `pig` and `cow`, since the `farm` is scoped.
 
 {{ end() }}
 
-## Internal Dir
+## Self Super Root
+
+- `self` - the module itself
+- `super` - the directory where the modules is located
+- `root` - whole src directory
+
+Files that start with `_` or `__` are not included in the result set. Files that
+start with `_` are visible to the `root` (entire src directory). Files that
+start with `__` are visible to the nearest `super` (directory). Please take note
+of the commented invalid selectors in the `default.nix` file.
 
 ```text
 ├── examples
-│  └── subDir
-│     ├── __internal
+│  └── selfSuperRoot
+│     ├── alpha
+│     │  ├── __field.nix
+│     │  │  └── { carrot = "carrot"; potato = "potato"; }
+│     │  ├── _orchard.nix
+│     │  │  └── { banana = "banana"; orange = "orange"; }
 │     │  ├── one.nix
-│     │  │  └── { farm }: { animal = farm.pig; fruit = "orange"; vegetables = [ "potato" ]; }
+│     │  │  └── { self, super, root }: {
+│     │  │        id = "${self.animal}-${self.fruit}-${builtins.elemAt self.vegetables 0}";
+│     │  │        animal = root.farm.pig;
+│     │  │        fruit = super.orchard.orange;
+│     │  │        vegetables = [ super.field.potato ];
+│     │  │      }
 │     │  └── two.nix
-│     │     └── { farm }: { animal = farm.cow; fruit = "banana"; vegetables = [ "carrot" ]; }
-│     └── alpha.nix
-│        └── { haumea, farm }: {
-│              beta.gamma = {
-│                delta = haumea.lib.load {
-│                  src = ./__internal;
-│                  inputs = { inherit farm; };
-│                };
-│              };
+│     │     └── { self, super, root }: {
+│     │           id = "${self.animal}-${self.fruit}-${builtins.elemAt self.vegetables 0}";
+│     │           animal = root.farm.cow;
+│     │           fruit = super.orchard.banana;
+│     │           vegetables = [ super.field.carrot ];
+│     │         }
+│     │── _farm.nix
+│     │  └── { cow = "cow"; pig = "pig"; }
+│     └── default.nix
+│        └── { self, super, root }: {
+│              salad = super.alpha.one.vegetables ++ super.alpha.two.vegetables;
+│              medley = [ super.alpha.orchard.banana super.alpha.orchard.orange ];
+│
+│              # inherit (self) alpha; => error: attribute 'alpha' missing
+│              # inherit (super.alpha) field; => error: attribute 'field' missing
 │            }
 └── flake.nix
-   └── internalDir = haumea.lib.load {
-         src = ./examples/internalDir;
-         inputs = {
-           inherit haumea;
-           farm = { cow = "cow"; pig = "pig"; };
-         };
+   └── selfSuperRoot = haumea.lib.load {
+         src = ./examples/selfSuperRoot;
+         transformer = haumea.lib.transformers.liftDefault;
        };
 
-
 {
-  alpha ={
-    beta = {
-      gamma = {
-        delta = {
-          one = { animal = "pig"; fruit = "orange"; vegetables = [ "potato" ]; };
-          two = { animal = "cow"; fruit = "banana"; vegetables = [ "carrot" ]; };
-        };
-      };
-    };
+  alpha = {
+    one = { animal = "pig"; fruit = "orange"; id = "pig-orange-potato"; vegetables = [ "potato" ]; };
+    two = { animal = "cow"; fruit = "banana"; id = "cow-banana-carrot"; vegetables = [ "carrot" ]; };
   };
+  medley = [ "banana" "orange" ];
+  salad = [ "potato" "carrot" ];
 }
 ```
+
+{{ end() }}
+
+## Post Updates
+
+{{ update(date="2024-03-05", content="
+
+I have standardized the example inputs to make it easier to identify differences
+between the methods. I have also included two new examples for subdirectories
+and internal directories.
+
+") }}
+
+{{ update(date="2024-03-06", content='
+
+Added "Lift Default" example.
+
+') }}
+
+{{ update(date="2024-03-09", content='
+
+I replaced the example "Internal Dir" with "Self Super Root" because I realized
+that using "protected" and "private" modules is more elegant than loading the
+internal deal separately. I also added a short description to each example.
+
+') }}
 
 {{ end() }}
