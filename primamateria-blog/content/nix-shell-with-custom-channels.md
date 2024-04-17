@@ -118,7 +118,7 @@ error:
 And this works as well:
 
 ```
-NIX_PATH=nixpkgs=https://github.com/NixOS/nixpkgs/archive/refs/tags/23.11.tar.gz nix-shell -p hello
+$ NIX_PATH=nixpkgs=https://github.com/NixOS/nixpkgs/archive/refs/tags/23.11.tar.gz nix-shell -p prefetch-npm-deps
 ```
 
 ') }}
