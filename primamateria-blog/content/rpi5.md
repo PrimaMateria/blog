@@ -250,5 +250,11 @@ the documentation.
 ") }}
 
 - https://github.com/FreshRSS/FreshRSS/blob/edge/Docker/freshrss/docker-compose-proxy.yml
-
--
+- https://www.ssl.com/how-to/manually-generate-a-certificate-signing-request-csr-using-openssl/
+- I have create Certificate Sign Request and uploaded it to the noip admin
+  interface. After some short time it verified it, and allowed me to download
+  the certifacates. I have updated again the traefik configuration. Now
+  accessing the URL doesn't return the default treafik certificate, but
+  `Error code: SSL_ERROR_UNRECOGNIZED_NAME_ALERT`. Not sure what is wrong. I am
+  little bit hoping that it might take time to propage the certificate and that
+  it will start working later. If not, further investigation will be required.
