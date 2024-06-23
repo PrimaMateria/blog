@@ -258,3 +258,19 @@ the documentation.
   `Error code: SSL_ERROR_UNRECOGNIZED_NAME_ALERT`. Not sure what is wrong. I am
   little bit hoping that it might take time to propage the certificate and that
   it will start working later. If not, further investigation will be required.
+
+- Fixed the the update URL in the Fritzbox settings. It could be find in the
+  fritzbox help pages
+  `https://dynupdate.no-ip.com/nic/update?hostname=<domain>&myip=<ipaddr>,<ip6addr>`.
+- To investigate issue with not working SSL certificate I have enabled traefik
+  logs and found out that the issue was that the private key was protected with
+  password which is not yet supported in traefik. I have copied the private key
+  to the new one without the passphrase. When I was trying to apply the change
+  the pi started to misbehave again.
+- Home manager activation reported some conflict and when I started to look into
+  available space with `df` I encountered segmenation faults. It looks like the
+  SD card is not very reliable medium. Maybe I should think using external disk
+  for storing docker services volumes to avoid constant repetitive setup. After
+  rewriting the SD card with fresh raspbian and going through initial setup I
+  was able to verify that new unlocked private key did the trick and the
+  freshrss is now properly available to public.
