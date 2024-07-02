@@ -274,3 +274,39 @@ the documentation.
   rewriting the SD card with fresh raspbian and going through initial setup I
   was able to verify that new unlocked private key did the trick and the
   freshrss is now properly available to public.
+- Next applications
+
+  - matrix synapse server with bridge to slack, wechat, irc, and whatsapp,
+    element client
+    [tutorial](https://medium.com/@sncr28/deploying-a-matrix-server-with-element-chat-in-docker-compose-with-nginx-reverse-proxy-cc9850fd32f8)
+  - amnezia wire gard
+  - database for shared kodi data
+  - media / file server
+  - home devices manager
+
+- During the initialization of the Synapse service the system threw segmentation
+  fault again. After the restart the boot up didn't succeed. Instead of
+  reinstalling the again the Raspbian I contacted Amazon to try to get
+  replacement micro SD card. Amazon instead offered chargeback for returning the
+  whole Raspberry Pi. Now as I have second chance, I am looking for a x86-64
+  system that would support proper NixOS.
+- [Suggestions from Reddit](https://www.reddit.com/r/NixOS/comments/1dt4yq3/nixos_home_server_hardware_recommendations/?):
+  - DELL Optiplex 5050 with i5-7500/8GB ram/256GB nvme + 2TB 3.5-inch HDD - 11W
+    idle - 80
+  - N100 - Beelink S12 Pros (no HDD)
+  - Thinkcentre
+  - Asrock N100DC
+  - Beelink (10-15W) Max 25W
+  - ASRock Deskmini X300 + Ryzen 5600G
+  - Odriod H3+ (higher consumption)
+
+|                          | Processor                      | RAM       | Disk           | Price   |
+| ------------------------ | ------------------------------ | --------- | -------------- | ------- |
+| Beelink S12 Pro          | Intel Alder Lake - N100 3.4GHz | 16GB DDR4 | 500GB PCIe SSD | 199€    |
+| Dell Optiplex 5050 SFF   | i7-6700                        | 8GB DDR4  | 240GB SSD      | 209€    |
+| Dell Optiplex 7050 USFF  | i5 Quad Core                   | 8GB DDR4  | 256GB          | 149€    |
+| Dell Optiplex 7040       | i5-6400T                       | 8GB DDR4  | 240GB SSD      | 123€    |
+| Lenovo ThinkCentre M900  | i7-6700T 2.8GHz                | 16GB      | 240GB          | 212.50€ |
+| Lenovo ThinkCentre M910q | i5 3.10GHz                     | 8GB       | 256GB          | 159€    |
+| Lenovo ThinkCentre M92   | i5 3.60GHx                     | 8GB       | 512GB          | 129€    |
+| Raspberry Pi 5           | ARMv7 2.4GHz                   | 8GB       | 64GB SD card   | 139€    |
