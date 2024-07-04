@@ -3,7 +3,7 @@ title = "How to create your own Neovim flake"
 date = 2023-03-18
 
 [extra]
-banner = "neovim-banner.png"
+banner = "banner-neovim-flake.png"
 
 [taxonomies]
 tags = ["nixos","neovim"]

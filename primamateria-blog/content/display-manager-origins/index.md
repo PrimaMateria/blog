@@ -3,7 +3,7 @@ title = "Display Manager Origins"
 date = 2023-07-02
 
 [extra]
-banner = "display-manager.png"
+banner = "banner-display-manager.png"
 
 [taxonomies]
 tags = ["X","display manager","history"]

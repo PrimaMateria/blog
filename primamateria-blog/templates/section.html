@@ -79,14 +79,9 @@
         </header>
          
         <main id="main" tabindex="-1">
-            {% block content %}
-                {% if section.title != "Posts" %}
-                  <h1>{{section.title}}</h1>
-                  <div class="article-info">
-                  {{section.content | safe }}
-                  </div>
-                {% endif %}
 
+
+            {% block content %}
                 {% if paginator.pages %}
                 {% for page in paginator.pages %}
                     {{ page_macros::page_listing(page=page) }}
@@ -97,17 +92,9 @@
                     {{ page_macros::page_listing(page=page) }}
                 {% endfor %}
                 {% endif %}
-
-                {% if section.subsections %}
-                <br />
-                <h3>Subs</h3>
-                <ul>
-                {% for subsection in section.subsections %}
-                  {{ page_macros::subsection_listing(subsection=subsection) }}
-                {% endfor %}
-                </ul>
-                {% endif %}
             {% endblock content %}
+
+
         </main>
 
         {% block comments %}

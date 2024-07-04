@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  scrollbar-width: thin;
 }
 
 .container, .utterances {
@@ -29,6 +30,10 @@ article {
   width: 100%;
   margin-top: 32px;
   margin-bottom: 32px;
+
+  @media (min-width: 767px) {
+    margin-left: -70px;
+  }
 
   @media (max-width: 767px) {
     grid-template-columns: 1fr;
@@ -83,8 +88,25 @@ pre {
   max-width: unset;
   text-align: left;
   background-color: #fff;
-  width: calc( (min( 100vw, 756px ) - 8px) + ( 100vw - min( 100vw, 756px ) ) / 2  );
+  width: calc( (min( 100vw, 756px ) - 16px) + ( 100vw - min( 100vw, 756px ) ) / 2  );
   position: relative;
+  padding-left: 0;
+}
+
+.table-wrapper {
+  max-width: unset;
+  text-align: left;
+  background-color: #fff;
+  width: calc( (min( 100vw, 756px ) - 16px) + ( 100vw - min( 100vw, 756px ) ) / 2  );
+  position: relative;
+}
+
+table {
+  white-space:nowrap;
+  font-size: small;
+  @media (max-width: 767px) {
+    font-size: x-small;
+  }
 }
 
 code,
@@ -97,6 +119,35 @@ ul ol,
 ol ol,
 ul ul {
   margin: 0;
+}
+
+ul {
+  @media (min-width: 767px) {
+    margin-left:-40px;
+  }
+  @media (max-width: 767px) {
+    list-style-type: none;
+    padding: 0;
+    p:before {
+      content: '●';
+      padding-right: 8px;
+    }
+  }
+}
+
+li ul {
+  @media (min-width: 767px) {
+    margin-left:-40px;
+  }
+  @media (max-width: 767px) {
+    list-style-type: none;
+    padding: 0;
+    >:before {
+      content: '⚬';
+      padding-left: 12px;
+      padding-right: 8px;
+    }
+  }
 }
 
 .zola-anchor {

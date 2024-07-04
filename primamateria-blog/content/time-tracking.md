@@ -2,6 +2,9 @@
 title = "Time tracking with Watson and Jira"
 date = 2021-12-11
 
+[extra]
+banner = "banner-time-tracking.png"
+
 [taxonomies]
 tags = ["workflow"]
 +++

@@ -3,6 +3,7 @@ title = "Paisano Cheatsheet"
 date = 2023-11-02
 
 [extra]
+banner = "banner-paisano-cheatsheet.png"
 
 [taxonomies]
 tags = ["nixos","paisano","hive"]

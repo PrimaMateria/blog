@@ -2,6 +2,9 @@
 title = "nix-shell with custom nix channel"
 date = 2024-04-17
 
+[extra]
+banner = "banner-nix-shell-custom-channel.png"
+
 
 [taxonomies]
 tags = ["nixos","nix-flakes"]

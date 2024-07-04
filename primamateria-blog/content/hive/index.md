@@ -3,7 +3,7 @@ title = "Hive"
 date = 2024-02-11
 
 [extra]
-banner = "hive.png"
+banner = "banner-hive.png"
 
 [taxonomies]
 tags = ["nixos","hive","paisano","haumea"]

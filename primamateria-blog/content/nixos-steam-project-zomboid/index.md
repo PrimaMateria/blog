@@ -2,6 +2,9 @@
 title = "Running Steam and Project Zomboid on NixOS"
 date = 2022-10-29
 
+[extra]
+banner = "banner-pz-nixos.png"
+
 [taxonomies]
 tags = ["nixos","games"]
 +++

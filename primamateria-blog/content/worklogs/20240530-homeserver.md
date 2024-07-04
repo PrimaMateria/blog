@@ -1,14 +1,20 @@
 +++
-title = "Raspberry PI 5 with Nix"
+title = "Homeserver"
 date = 2024-05-30
+updated = 2024-07-04
 
 [extra]
+banner = "banner-homeserver.png"
 
 [taxonomies]
-tags = ["nix","raspberry pi","hive"]
+tags = ["nix","raspberry pi","hive","nixos"]
 +++
 
-# Worklog
+Setting up headless server that will be publicly accessible.
+
+<!-- more -->
+
+# Raspberry Pi 5 with Nix
 
 - Installed Raspbian on the SD card.
 - Generated new ssh key pair. Assigned IP address of rpi5 to the key.
@@ -164,7 +170,9 @@ the rpi5 config in order to make it work.
     })
   ```
 
-- Installed dowcker with docker's
+# Docker
+
+- Installed docker with docker's
   [convenience script](https://docs.docker.com/engine/install/debian/#install-using-the-convenience-script).
 
 - I tried using arion. First I installed recommeded packages via home manager:
@@ -187,6 +195,8 @@ the rpi5 config in order to make it work.
 
   Having docker compose project define in nix is not such a necessity for me.
   Next I will try to traditional yaml configuration.
+
+# FreshRSS
 
 - I defined docker compose file for FreshRSS inside the nix using
   `nixpkgs.writeTextFile` and `builtins.toJSON`. At first the service was not
@@ -230,6 +240,9 @@ the rpi5 config in order to make it work.
   ```
 
 - https://hometechhacker.com/letsencrypt-certificate-dns-verification-noip/
+
+# Traefik
+
 - Installed [traefik](https://doc.traefik.io/traefik/) and made modifications to
   the freshrss service in the docker compose
 
@@ -249,8 +262,8 @@ the documentation.
 
 ") }}
 
-- https://github.com/FreshRSS/FreshRSS/blob/edge/Docker/freshrss/docker-compose-proxy.yml
-- https://www.ssl.com/how-to/manually-generate-a-certificate-signing-request-csr-using-openssl/
+- [Fresh RSS Docker Compose proxy](https://github.com/FreshRSS/FreshRSS/blob/edge/Docker/freshrss/docker-compose-proxy.yml)
+- [Generate Certificate Signing Request](https://www.ssl.com/how-to/manually-generate-a-certificate-signing-request-csr-using-openssl/)
 - I have create Certificate Sign Request and uploaded it to the noip admin
   interface. After some short time it verified it, and allowed me to download
   the certifacates. I have updated again the traefik configuration. Now
@@ -260,8 +273,12 @@ the documentation.
   it will start working later. If not, further investigation will be required.
 
 - Fixed the the update URL in the Fritzbox settings. It could be find in the
-  fritzbox help pages
-  `https://dynupdate.no-ip.com/nic/update?hostname=<domain>&myip=<ipaddr>,<ip6addr>`.
+  fritzbox help pages.
+
+  ```
+  https://dynupdate.no-ip.com/nic/update?hostname=<domain>&myip=<ipaddr>,<ip6addr>
+  ```
+
 - To investigate issue with not working SSL certificate I have enabled traefik
   logs and found out that the issue was that the private key was protected with
   password which is not yet supported in traefik. I have copied the private key
@@ -274,6 +291,9 @@ the documentation.
   rewriting the SD card with fresh raspbian and going through initial setup I
   was able to verify that new unlocked private key did the trick and the
   freshrss is now properly available to public.
+
+# Planning extenstion
+
 - Next applications
 
   - matrix synapse server with bridge to slack, wechat, irc, and whatsapp,
@@ -283,6 +303,8 @@ the documentation.
   - database for shared kodi data
   - media / file server
   - home devices manager
+
+# Raspberry Pi replacement
 
 - During the initialization of the Synapse service the system threw segmentation
   fault again. After the restart the boot up didn't succeed. Instead of
@@ -300,6 +322,8 @@ the documentation.
   - ASRock Deskmini X300 + Ryzen 5600G
   - Odriod H3+ (higher consumption)
 
+{% table() %}
+
 |                          | Processor                      | RAM       | Disk           | Price   |
 | ------------------------ | ------------------------------ | --------- | -------------- | ------- |
 | Beelink S12 Pro          | Intel Alder Lake - N100 3.4GHz | 16GB DDR4 | 500GB PCIe SSD | 199€    |
@@ -310,3 +334,5 @@ the documentation.
 | Lenovo ThinkCentre M910q | i5 3.10GHz                     | 8GB       | 256GB          | 159€    |
 | Lenovo ThinkCentre M92   | i5 3.60GHx                     | 8GB       | 512GB          | 129€    |
 | Raspberry Pi 5           | ARMv7 2.4GHz                   | 8GB       | 64GB SD card   | 139€    |
+
+{% end %}

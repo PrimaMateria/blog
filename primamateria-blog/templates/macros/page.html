@@ -3,6 +3,11 @@
         {% if page.date %}
         <div class="article-date">{{ page.date | date(format=config.extra.anpu_date_format) }}</div>
         {% endif %}
+
+        {% if page.updated %}
+        <div class="article-date">Last updated on {{ page.updated | date(format=config.extra.anpu_date_format) }}</div>
+        {% endif %}
+
         {% if page.reading_time %}
         <div class="article-reading-time">Reading time: {{ page.reading_time }} min</div>
         {% endif %}
@@ -33,6 +38,12 @@
             </h1>
         </header>
 
+        {% if page.extra.banner %}
+          <div class="banner">
+           <img src="{{ get_url(path=page.extra.banner) }}" />
+          </div>
+        {% endif %}
+
         {% if page.summary %}
         <div class="content post-summary">
             {{ page.summary | markdown | safe }}
@@ -57,3 +68,8 @@
         </div>
     </div>
 {% endmacro page_pagination %}
+
+{% macro subsection_listing(subsection) %}
+{%- set section = get_section(path=subsection) -%}
+      <li> <a href="{{section.permalink}}">{{section.title}}</a></li>
+{% endmacro subsection_listing %}

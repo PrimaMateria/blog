@@ -3,6 +3,7 @@ title = "Haumea Cheatsheet"
 date = 2023-10-22
 
 [extra]
+banner = "banner-haumea-cheatsheet.png"
 
 [taxonomies]
 tags = ["nixos","haumea","hive"]

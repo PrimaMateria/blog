@@ -3,7 +3,7 @@ title = "Solar i3 Workspaces"
 date = 2023-03-07
 
 [extra]
-banner = "banner-solar.gif"
+banner = "banner-i3-solar-workspaces.png"
 
 [taxonomies]
 tags = ["nixos","i3"]

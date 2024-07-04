@@ -3,7 +3,7 @@ title = "Neovim flake Updates"
 date = 2023-06-04
 
 [extra]
-banner = "neovim-update.png"
+banner = "banner-neovim-flake-update.png"
 
 [taxonomies]
 tags = ["nixos","neovim"]
