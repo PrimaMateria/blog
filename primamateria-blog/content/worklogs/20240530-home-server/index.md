@@ -314,6 +314,7 @@ the documentation.
   whole Raspberry Pi. Now as I have second chance, I am looking for a x86-64
   system that would support proper NixOS.
 - [Suggestions from Reddit](https://www.reddit.com/r/NixOS/comments/1dt4yq3/nixos_home_server_hardware_recommendations/?):
+
   - DELL Optiplex 5050 with i5-7500/8GB ram/256GB nvme + 2TB 3.5-inch HDD - 11W
     idle - 80
   - N100 - Beelink S12 Pros (no HDD)
@@ -322,8 +323,6 @@ the documentation.
   - Beelink (10-15W) Max 25W
   - ASRock Deskmini X300 + Ryzen 5600G
   - Odriod H3+ (higher consumption)
-
-{% table() %}
 
 |                          | Processor                      | RAM       | Disk           | Price   |
 | ------------------------ | ------------------------------ | --------- | -------------- | ------- |
@@ -335,5 +334,3 @@ the documentation.
 | Lenovo ThinkCentre M910q | i5 3.10GHz                     | 8GB       | 256GB          | 159€    |
 | Lenovo ThinkCentre M92   | i5 3.60GHx                     | 8GB       | 512GB          | 129€    |
 | Raspberry Pi 5           | ARMv7 2.4GHz                   | 8GB       | 64GB SD card   | 139€    |
-
-{% end %}
