@@ -1,6 +1,7 @@
 +++
 title = "How to create your own Neovim flake"
 date = 2023-03-18
+slug = "neovim-nix"
 
 [extra]
 banner = "banner-neovim-flake.png"
@@ -27,7 +28,7 @@ of the non-functioning `symlinkjoin` has been clarified, and a workaround has
 been found. Sam also assisted me in using `flake-utils`, which enabled me to
 successfully build Neovim on Nix-on-Droid. In order to preserve the integrity of
 the original post, I have described these changes in a follow-up post:
-[Neovim flake Updates](@/neovim-nix-update.md). ") }}
+[Neovim flake Updates](@/20230604-neovim-nix-update/index.md). ") }}
 
 {{ update(date="2023-11-30", content="
 

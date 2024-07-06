@@ -1,6 +1,7 @@
 +++
 title = "Hive"
 date = 2024-02-11
+slug = "hive"
 
 [extra]
 banner = "banner-hive.png"
@@ -43,9 +44,9 @@ in 2022, where I copied configurations without fully comprehending them.
 However, I was able to sustain this practice for some time and eventually
 transitioned my daily office tasks from Ubuntu WSL to NixOS WSL.
 
-After creating the [Neovim flake](@/neovim-nix.md), I gained some confidence. I
-felt like I understood much more and was ready for the next step. I wanted to
-redo my main NixOS configuration.
+After creating the [Neovim flake](@/20230318-neovim-nix/index.md), I gained some
+confidence. I felt like I understood much more and was ready for the next step.
+I wanted to redo my main NixOS configuration.
 
 In my initial configuration, things became quite messy. I mixed flakes, dwelled
 on the old-school `import`, tampered with `callPackage` without comprehending
@@ -186,13 +187,13 @@ now.
 [initial commit](https://github.com/nix-community/haumea/commit/13c2fcf9e60ac2cd99e25433efd0d35e3b43d14ca)
 from the 1st April 2023, and it is authored by
 [figsoda](https://github.com/figsoda). You can also take a look on my brief
-[cheatsheet on Haumea](@/haumea-cheatsheet.md).
+[cheatsheet on Haumea](@/20231022-haumea-cheatsheet/index.md).
 
 [Paisano](https://github.com/paisano-nix/core) was initially a part of the
 Standard platform, but it was extracted as separate tool with a
 [first commit](https://github.com/paisano-nix/core/commit/9b95b00f7b4ea1af1d4eb5e09b33cdf8fdc1db44)
 in its own repository on 9th February 2023. There is also a short
-[cheatsheet](@/paisano-cheatsheet.md) available.
+[cheatsheet](@/20231102-paisano-cheatsheet/index.md) available.
 
 ") }}
 

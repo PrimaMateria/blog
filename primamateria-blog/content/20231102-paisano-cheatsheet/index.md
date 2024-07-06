@@ -1,6 +1,7 @@
 +++
 title = "Paisano Cheatsheet"
 date = 2023-11-02
+slug = "paisano-cheatsheet"
 
 [extra]
 banner = "banner-paisano-cheatsheet.png"

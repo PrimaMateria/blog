@@ -1,6 +1,7 @@
 +++
 title = "AI generated images - Stable Diffusion on NixOS"
 date = 2022-10-08
+slug = "nixos-stable-diffusion"
 
 [extra]
 banner = "banner-ai-generated-images.png"

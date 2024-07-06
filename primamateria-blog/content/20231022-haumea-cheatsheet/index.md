@@ -1,6 +1,7 @@
 +++
 title = "Haumea Cheatsheet"
 date = 2023-10-22
+slug ="haumea-cheatsheet"
 
 [extra]
 banner = "banner-haumea-cheatsheet.png"

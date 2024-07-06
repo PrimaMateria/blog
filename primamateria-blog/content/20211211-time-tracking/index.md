@@ -1,6 +1,7 @@
 +++
 title = "Time tracking with Watson and Jira"
 date = 2021-12-11
+slug = "time-tracking"
 
 [extra]
 banner = "banner-time-tracking.png"

@@ -1,6 +1,7 @@
 +++
 title = "Display Manager Origins"
 date = 2023-07-02
+slug = "display-manager-origins"
 
 [extra]
 banner = "banner-display-manager.png"

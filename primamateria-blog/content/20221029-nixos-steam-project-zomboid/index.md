@@ -1,6 +1,7 @@
 +++
 title = "Running Steam and Project Zomboid on NixOS"
 date = 2022-10-29
+slug = "nixos-steam-project-zomboid"
 
 [extra]
 banner = "banner-pz-nixos.png"

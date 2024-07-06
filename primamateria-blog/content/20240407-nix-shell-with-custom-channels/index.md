@@ -1,6 +1,7 @@
 +++
 title = "nix-shell with custom nix channel"
 date = 2024-04-17
+slug = "nix-shell-with-custom-channels"
 
 [extra]
 banner = "banner-nix-shell-custom-channel.png"

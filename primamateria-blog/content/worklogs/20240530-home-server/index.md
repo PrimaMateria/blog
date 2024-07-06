@@ -1,7 +1,8 @@
 +++
-title = "Homeserver"
+title = "Home Server"
 date = 2024-05-30
 updated = 2024-07-04
+slug = "home-server"
 
 [extra]
 banner = "banner-homeserver.png"

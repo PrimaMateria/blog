@@ -1,6 +1,7 @@
 +++
 title = "Solar i3 Workspaces"
 date = 2023-03-07
+slug = "solar-workspaces"
 
 [extra]
 banner = "banner-i3-solar-workspaces.png"
