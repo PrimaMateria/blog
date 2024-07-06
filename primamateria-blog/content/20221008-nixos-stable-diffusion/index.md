@@ -18,6 +18,7 @@ locally. I also share the steps that I followed to run Stable Diffusion on
 NixOS.
 
 <!-- more -->
+<!-- TOC -->
 
 ## AI generated images
 

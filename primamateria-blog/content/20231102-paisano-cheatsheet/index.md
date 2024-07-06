@@ -14,6 +14,7 @@ Paisano is not only a filesystem-based module system, but also a framework that
 specifies roles such as cell, block, target, or soil.
 
 <!-- more -->
+<!-- TOC -->
 
 In comparison, Haumea is a more abstract system that allows users to load and
 process filesystem-based modules, without specifying what the modules should
@@ -36,8 +37,6 @@ actions, registries, and TUI tools.
 
 The examples below are just excerpts. For the full context, read the code in the
 GitHub repository.
-
-{{ end() }}
 
 ## Grow On
 
@@ -117,8 +116,6 @@ GitHub repository.
 }
 ```
 
-{{ end() }}
-
 ## Harvest block
 
 ```text
@@ -147,8 +144,6 @@ GitHub repository.
 }
 ```
 
-{{ end() }}
-
 ## Harvest block key
 
 ```text
@@ -169,8 +164,6 @@ GitHub repository.
 }
 
 ```
-
-{{ end() }}
 
 ## Pick cell
 
@@ -196,8 +189,6 @@ GitHub repository.
 }
 
 ```
-
-{{ end() }}
 
 ## Winnow block filtering out one key
 
@@ -227,5 +218,3 @@ GitHub repository.
   };
 }
 ```
-
-{{ end() }}

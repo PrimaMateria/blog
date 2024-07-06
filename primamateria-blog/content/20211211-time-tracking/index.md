@@ -20,6 +20,7 @@ Watson's frames and automatically rerun a script, and aliases for issuing Watson
 commands.
 
 <!-- more -->
+<!-- TOC -->
 
 ## Watson
 

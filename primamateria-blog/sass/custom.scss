@@ -2,10 +2,19 @@ $containerWidth: 756px;
 $md: 810px;
 $lg: 900px;
 $xl: 1256px;
+$breather: 260px;
 
 * {
   box-sizing: border-box;
   scrollbar-width: thin;
+}
+
+header {
+  .site-header, nav {
+    text-align: left;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
 }
 
 .container, .utterances {
@@ -138,3 +147,17 @@ ul ul {
   justify-content: space-around;
 }
 
+article {
+  h2, h3,  {
+    margin-top: $breather;
+  }
+} 
+
+article:not(:last-of-type) {
+    border-bottom: none;
+    padding-bottom: 60px;
+}
+
+.utterances {
+    margin-top: 60px;
+}

@@ -18,6 +18,7 @@ found. Sam also assisted me in using `flake-utils`, which enabled me to
 successfully build Neovim on Nix-on-Droid.
 
 <!-- more -->
+<!-- TOC -->
 
 ## Runtime dependencies in one list
 
@@ -82,8 +83,6 @@ pkgs.writeShellApplication {
 As you can see, we end up with a single list of runtime dependencies and less
 code. The crucial part is the implementation of `postBuild`. For a detailed
 example, refer to John's post.
-
-{{ end() }}
 
 ## Using flake-utils to support multiple systems
 
@@ -302,5 +301,3 @@ use it for note-taking or writing blog posts while on the go. The next step
 would be to modify our flake structure to create different apps for different
 workflows - one with heavy dependencies for web development and another with
 lighter dependencies for blogging.
-
-{{ end() }}

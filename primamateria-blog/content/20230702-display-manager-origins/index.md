@@ -15,8 +15,9 @@ causing confusion for many people. The question arises: why is it called a
 Display Manager, and what does the term "Display" refer to in this context?
 
 <!-- more -->
+<!-- TOC -->
 
-# Personal Computer vs Mainframe
+## Personal Computer vs Mainframe
 
 The initial concept that comes to mind is a setup where a single mainframe
 serves multiple user stations or displays. For example like we could see in
@@ -34,9 +35,7 @@ utilizing a remote server for computation.
 Is this the true meaning of "Display" in the Display Manager? Let's dive into
 the world of X.
 
-{{ end() }}
-
-# X Window System
+## X Window System
 
 I have found in the Archive book
 [**X Window System user's guide : for X11 R3 and R4 of the X Window System** by **Quercia, Valerie**; **O'Reilly, Tim**](https://archive.org/details/xwindowsystem03quermiss/page/n31/mode/2up).
@@ -82,5 +81,3 @@ appearance, and Microsoft Windows was still a year away from its initial
 release. The X Window System emerged from the project Athena, which had a strong
 focus on thin clients. You can find more information about Project Athena
 [here](https://en.wikipedia.org/wiki/Project_Athena).
-
-{{ end() }}

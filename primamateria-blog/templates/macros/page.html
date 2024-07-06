@@ -38,6 +38,8 @@
             </h1>
         </header>
 
+        {{ self::page_info(page=page) }}
+
         {% if page.extra.banner %}
           <div class="banner">
            <img src="{{ get_url(path=page.extra.banner) }}" />
@@ -50,7 +52,6 @@
         </div>
         {% endif %}
         
-        {{ self::page_info(page=page) }}
     </article>
 {% endmacro page_listing %}
 

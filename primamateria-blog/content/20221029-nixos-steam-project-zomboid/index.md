@@ -20,6 +20,7 @@ superior gaming platform, the recent announcement of Valve's Steam Deck has made
 me excited to try gaming on Linux once again.
 
 <!-- more -->
+<!-- TOC -->
 
 {{ resize_image(path="20221029-nixos-steam-project-zomboid/tux-zombie-000.png", height=250) }}
 

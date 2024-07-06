@@ -20,6 +20,7 @@ post, you will be able to configure your own development environment in a more
 manageable way.
 
 <!-- more -->
+<!-- TOC -->
 
 {{ update(date="2023-06-04", content="
 
@@ -64,8 +65,6 @@ your plugins and configurations accordingly.
 I prepared a [repository](https://github.com/PrimaMateria/blog-neovim-nix) which
 contains all the code examples introduced in this post. The commits' messages
 correspond to the section titles.
-
-{{ end() }}
 
 ## Initialize the flake
 
@@ -153,8 +152,6 @@ because all files belonging to the flake must be tracked in git repository.
 
 If all goes well, you should be welcomed with the Neovim welcome message and the
 version should correspond to the current stable version.
-
-{{ end() }}
 
 ## Custom Neovim package
 
@@ -256,8 +253,6 @@ your flake with your newly defined `myNeovim`.
 
 You can test by running `nix run`. If done right, Neovim should still start as
 before. Don't forget to track new file in git.
-
-{{ end() }}
 
 ## Add Vim script config
 
@@ -420,8 +415,6 @@ import it.") }}
 After starting your Neovim with `nix run` you should see the column with line
 numbers.
 
-{{ end() }}
-
 ## Add plugin from Nixpkgs
 
 Usually you will find the most popular plugins in Nixpkgs. Plugins can also list
@@ -496,8 +489,6 @@ alias using the command `nix registry add`.") }}
 At this step Neovim should be still runnable, but before you can verify that
 Telescope works, you still need to write a config for it.
 
-{{ end() }}
-
 ## Add Lua script config
 
 Add Lua script to `config/lua` and extend `config/default.nix` to load it the
@@ -560,8 +551,6 @@ luafile /nix/store/z1p9n8cdi4wqhskazxsb2vy1gj2h83mx-nvim-lua-configs/nvim-telesc
 
 Now, if you execute `nix run` and hit space-tab, you should see telescope window
 pop up.
-
-{{ end() }}
 
 ## Add plugin not found in Nixpkgs
 
@@ -679,8 +668,6 @@ vim.api.nvim_set_keymap("n", "<leader><leader>", ":lua require('telescope').exte
 In the current state your Neovim should be runnable, and you should be able to
 test the new `telescope-recent-files` plugin by pressing space-space.
 
-{{ end() }}
-
 ## Add runtime dependency
 
 Have you heard of [mason.nvim](https://github.com/williamboman/mason.nvim)? I
@@ -778,8 +765,6 @@ parameter `foo.txt` must be forwarded to the original unwrapped `nvim`.") }}
 You can test now that in terminal running `typescript-language-server --version`
 will tell you that the command is not recognized. But running the command inside
 Neovim's terminal (`:term`) will work. The same should also apply for `lazygit`.
-
-{{ end() }}
 
 ## Generate Lua config from Nix
 
@@ -932,8 +917,6 @@ const foo: number = "bar";
 
 You should see an error `Type 'string' is not assignable to type 'number'.`
 
-{{ end() }}
-
 ## Package anything else
 
 In this chapter you won't do anything new. You will use already introduced
@@ -967,8 +950,6 @@ pkgs.stdenv.mkDerivation {
 ```
 
 The package with snippets is prepared, and we will use in the next chapter.
-
-{{ end() }}
 
 ## Generate Vim config from Nix
 
@@ -1065,8 +1046,6 @@ and run `:UltisnipsEdit`. It should open the snippet file in the Nix store
 that, but files in Nix store are read-only, so you need to modify the snippet
 file you created in Ultisnips directory.
 
-{{ end() }}
-
 ## Use your Neovim
 
 Create an alias for `nix run` or add your Neovim as a package to your Home
@@ -1092,8 +1071,6 @@ the app directly from remote address.
 nvim = "nix run github:PrimaMateria/neovim-nix --";
 ```
 
-{{ end() }}
-
 ## Updating
 
 Building flake creates `flake.lock` where the inputs are frozen to specific
@@ -1104,8 +1081,6 @@ version. Updating is as simple as `nix flake update`.
 The best thing is that if something goes wrong, and you don't have time to
 investigate, just revert the changes in `flake.lock`, run again, and you are
 back in your previous working version.") }}
-
-{{ end() }}
 
 ## Bonus: Secrets
 
@@ -1197,8 +1172,6 @@ in pkgs.writeShellApplication {
 
 Now space-a-a should open window with openai prompt.
 
-{{ end() }}
-
 ## Support other systems
 
 Maybe you are already aware of
@@ -1214,5 +1187,3 @@ well.
 It would be cool to have your lightweight development environment on the phone.
 Maybe just grab some small keyboard, and you could stay crafty on the road. Even
 if not hardcore programming, then just working on your ideas.
-
-{{ end() }}

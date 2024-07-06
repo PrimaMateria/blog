@@ -18,6 +18,7 @@ the process of importing files by automatically incorporating them into an
 attribute set, eliminating the need for manual imports.
 
 <!-- more -->
+<!-- TOC -->
 
 - [Haumea Docs](https://nix-community.github.io/haumea/intro/introduction.html)
 - [github:nix-community/haumea](https://github.com/nix-community/haumea)
@@ -25,8 +26,6 @@ attribute set, eliminating the need for manual imports.
 
 The examples below are just excerpts. For the full context, read the code in the
 GitHub repository.
-
-{{ end() }}
 
 ## Default
 
@@ -53,8 +52,6 @@ input.
 }
 ```
 
-{{ end() }}
-
 ## Path
 
 Specifying the path loader will assign the paths of the files in the Nix store
@@ -78,8 +75,6 @@ to the attributes instead.
   two = /nix/store/3dkpf96ycknjszjqq2lwjhh42qmsw6q5-source/examples/default/two.nix;
 }
 ```
-
-{{ end() }}
 
 ## Scoped
 
@@ -105,8 +100,6 @@ still have access to `pig` and `cow`, since the `farm` is scoped.
   two = { animal = "cow"; fruit = "banana"; vegetables = [ "carrot" ]; };
 }
 ```
-
-{{ end() }}
 
 ## Hoist Attributes
 
@@ -134,8 +127,6 @@ new attribute called `medley`.
 }
 ```
 
-{{ end() }}
-
 ## Hoist Lists
 
 Hoisting lists named `vegetables` and concatenating them into one list assigned
@@ -162,8 +153,6 @@ to the attribute `salad`.
 }
 ```
 
-{{ end() }}
-
 ## Lift Default
 
 The contents of the `default.nix` file are included in the resulting set.
@@ -189,8 +178,6 @@ The contents of the `default.nix` file are included in the resulting set.
   two = { animal = "cow"; fruit = "banana"; vegetables = [ "carrot" ]; };
 }
 ```
-
-{{ end() }}
 
 ## Sub Dir
 
@@ -219,8 +206,6 @@ Module `one` is further divided into its individual leaf attributes modules.
   two = { animal = "cow"; fruit = "banana"; vegetables = [ "carrot" ]; };
 }
 ```
-
-{{ end() }}
 
 ## Self Super Root
 
@@ -281,8 +266,6 @@ of the commented invalid selectors in the `default.nix` file.
 }
 ```
 
-{{ end() }}
-
 ## Post Updates
 
 {{ update(date="2024-03-05", content="
@@ -306,5 +289,3 @@ that using "protected" and "private" modules is more elegant than loading the
 internal deal separately. I also added a short description to each example.
 
 ') }}
-
-{{ end() }}

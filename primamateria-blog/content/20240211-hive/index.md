@@ -17,6 +17,7 @@ Nix users who are curious and feel that their current configuration is
 disorganized, and are looking for a new way to restructure their code.
 
 <!-- more -->
+<!-- TOC -->
 
 In this post, I will describe my own approach to using Hive. It may differ from
 the prevailing convention of naming things, and it may not utilize the latest
@@ -25,18 +26,14 @@ convenient and reproducible development environment. I am not an operations
 professional who needs to ensure absolute security. Additionally, I am limited
 by my current understanding, and I am open to your comments and opinions.
 
-{{ end() }}
-
-# Factoids
+## Factoids
 
 - Hive is the spiritual successor of Digga.
 - Hive originates from std (Standard).
 - The author is David Arnold.
 - The first commit in the repository is dated 29th March 2022.
 
-{{ end() }}
-
-# Road to Hive
+## Road to Hive
 
 I began with
 [Will T's NixOS series](https://www.youtube.com/watch?v=QKoQ1gKJY5A&list=PL-saUBvIJzOkjAw_vOac75v-x6EzNzZq-)
@@ -107,9 +104,7 @@ the code until I successfully completed the first full build and system switch.
 From that point on, I had a good-enough understanding of it, and the remaining
 final details were easily resolved.
 
-{{ end() }}
-
-# NixOS Module
+## NixOS Module
 
 Before I begin describing Hive, I must mention that the NixOS module is an
 essential mechanism.
@@ -167,9 +162,7 @@ place the "main body" at the top level.
 }
 ```
 
-{{ end() }}
-
-# Paisano and Haumea
+## Paisano and Haumea
 
 It is appropriate to mention the transitive dependencies **Paisano** and
 **Haumea**. Both tools appear to have been created to solve a similar problem -
@@ -197,9 +190,7 @@ in its own repository on 9th February 2023. There is also a short
 
 ") }}
 
-{{ end() }}
-
-# The Hive
+## The Hive
 
 Hive uses the following hierarchy of building blocks:
 
@@ -254,9 +245,7 @@ flowchart TB
 {% end %}
 <!-- prettier-ignore-end -->
 
-{{ end() }}
-
-# Tutorial
+## Tutorial
 
 I invite you to try out Hive on your own with the following tutorial. It's very
 simple, just enough to explain the key concept I have learned. Afterwards, there
@@ -265,7 +254,7 @@ are a few more chapters discussing the whole system organization.
 You can also find the tutorial sources at
 [github:PrimaMateria/blog-hive](https://github.com/PrimaMateria/blog-hive).
 
-## Testing Environment
+### Testing Environment
 
 To test this tutorial, we will utilize Nix's built-in functionality to execute
 system configuration in the virtual machine. Initially, define the initial flake
@@ -313,9 +302,7 @@ using "foo/foo" and try to run the command `hello`.
 {{ resize_image_w(path="20240211-hive/vm-test.png", width=450) }}
 </div>
 
-{{ end() }}
-
-## Hive Flake
+### Hive Flake
 
 Hive is a configuration based on flakes. Inputs include:
 
@@ -368,9 +355,7 @@ I believe the remaining parameters are referred to as "layers of soil". These
 layers are recursively combined into one attribute set, which then becomes the
 conventional outputs of the flake.
 
-{{ end() }}
-
-## Cell
+### Cell
 
 Cells are supposed to be the top-level structure for organizing the
 configuration. Cells are constructed from different types of cell blocks. What I
@@ -431,9 +416,7 @@ and name the directory `cells`.
 
 ") }}
 
-{{ end() }}
-
-## Cell Block
+### Cell Block
 
 Cell blocks are the fundamental components of a cell. They exist in different
 forms, and each form dictates the changes that take place when they are
@@ -518,9 +501,7 @@ Observe how the cell block can access all the inputs of the root flake
 (specified by the `inputs` parameter), as well as all other cell blocks from the
 current cell (specified by the `cell` parameter, which will be used later).
 
-{{ end() }}
-
-## Bee Module
+### Bee Module
 
 The Bee module is a configuration used by the transformer to transform the cell
 blocks into system-specific derivatives. It includes a list of target systems
@@ -628,9 +609,7 @@ in
 }
 ```
 
-{{ end() }}
-
-## Collect
+### Collect
 
 The collect function produces transformed blocks from the provided cell block.
 Depending on the type of cell block, it selects the corresponding collector and
@@ -690,9 +669,7 @@ in the virtual machine.
 nix run '.#nixosConfigurations.experiment-experiment.config.system.build.vm'
 ```
 
-{{ end() }}
-
-## findLoad
+### findLoad
 
 The function `findLoad` collects all instances of the cell block with the
 specified path in the "block" attribute. These instances are then loaded using
@@ -776,9 +753,7 @@ nix run '.#nixosConfigurations.experiment-work.config.system.build.vm'
 nix run '.#nixosConfigurations.experiment-home.config.system.build.vm'
 ```
 
-{{ end() }}
-
-## Haumea Load
+### Haumea Load
 
 Instances that are loaded by `findLoad` are loaded using Haumea. This implies
 that the instance can be divided into separate files, which will then be
@@ -1030,9 +1005,7 @@ nix run '.#nixosConfigurations.experiment-home.config.system.build.vm'
 This tutorial concludes here. In the upcoming chapters, we will discuss cell
 organization.
 
-{{ end() }}
-
-# Standard Cell Structure
+## Standard Cell Structure
 
 Now that we already know how to create cell blocks and how to connect them, a
 question arises regarding the organization of the hive. What does one cell
@@ -1118,9 +1091,7 @@ columns 3
 Interestingly, Valen does not use separate `homeConfigurations`, but instead
 includes the home manager config into `nixosConfigurations`.
 
-{{ end() }}
-
-# Dream Cell Structure
+## Dream Cell Structure
 
 I challenged myself to create a scheme that is essentially the same as Standard,
 but based on my own perspective and the elements I have included in my NixOS
@@ -1245,9 +1216,7 @@ to avoid annoying reboots whenever I want to switch between gaming and crafting.
 Of course, it has its limitations, but I believe this is currently the most
 energy-efficient option for me.
 
-{{ end() }}
-
-# Outro
+## Outro
 
 Hive is still in its early stages with only a few people involved, and most of
 the work is being done by one person. This person may also lose interest over
@@ -1268,5 +1237,3 @@ You wouldn't believe how great it feels to see that someone has read through the
 work you spent a long time working on and that it is not completely ignored.
 
 ") }}
-
-{{ end() }}

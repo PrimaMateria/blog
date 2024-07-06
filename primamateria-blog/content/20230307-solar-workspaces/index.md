@@ -16,6 +16,7 @@ wallpapers for each workspace. In this post, I'll explain how I declared the
 wallpapers in Home Manager and updated the i3 config.
 
 <!-- more -->
+<!-- TOC -->
 
 ## Backstory
 
@@ -46,8 +47,6 @@ Earth, Moon and Sun led me to name workspaces according to the Solar System. I
 must admit I never could very well remember order of the planets. This
 experiment should help with that as well.
 
-{{ end() }}
-
 Until now, I used solid gray color wallpaper. I settled on this mundane solution
 one day while wasting my time in the office searching that one wallpaper that
 would best express my nature, and it would charm my coworkers. I figured this
@@ -75,8 +74,6 @@ the celestial object that it is named after. The Sun and planets cover 9
 workspaces. For the workspace 0, which I usually use as a dump or temp, the
 black hole Messier 87 is a great fit.
 
-{{ end() }}
-
 ## Declaring wallpapers in Home Manager
 
 I copied the wallpapers' directory to a directory in my config repo where I
@@ -91,8 +88,6 @@ i3 config directory.
   };
 }
 ```
-
-{{ end() }}
 
 ## Updating i3 config in Home Manager
 
@@ -150,8 +145,6 @@ to some workspace manually.
 ]
 ```
 
-{{ end() }}
-
 ## Possible enhancements
 
 The action of changing wallpaper is now bound to keybinding, but there are other
@@ -161,8 +154,6 @@ covered. Also, controlling i3 via IPC messages won't trigger wallpaper change.
 For future, probably the IPC protocol is the one that needs to be utilized. Run
 a daemon process and listen to messages and react on change of focused
 workspace.
-
-{{ end() }}
 
 ## Wallpapers
 
@@ -239,5 +230,3 @@ By Event Horizon Telescope - https://www.eso.org/public/images/eso1907a/; JPG
 saved from full size TIFF and converted with maximum quality level 12 in
 Photoshop 2019., CC BY 4.0,
 https://commons.wikimedia.org/w/index.php?curid=77916527
-
-{{ end() }}

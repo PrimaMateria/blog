@@ -14,8 +14,9 @@ tags = ["nix","raspberry pi","hive","nixos"]
 Setting up headless server that will be publicly accessible.
 
 <!-- more -->
+<!-- TOC -->
 
-# Raspberry Pi 5 with Nix
+## Raspberry Pi 5 with Nix
 
 - Installed Raspbian on the SD card.
 - Generated new ssh key pair. Assigned IP address of rpi5 to the key.
@@ -171,7 +172,7 @@ the rpi5 config in order to make it work.
     })
   ```
 
-# Docker
+## Docker
 
 - Installed docker with docker's
   [convenience script](https://docs.docker.com/engine/install/debian/#install-using-the-convenience-script).
@@ -197,7 +198,7 @@ the rpi5 config in order to make it work.
   Having docker compose project define in nix is not such a necessity for me.
   Next I will try to traditional yaml configuration.
 
-# FreshRSS
+## FreshRSS
 
 - I defined docker compose file for FreshRSS inside the nix using
   `nixpkgs.writeTextFile` and `builtins.toJSON`. At first the service was not
@@ -242,7 +243,7 @@ the rpi5 config in order to make it work.
 
 - https://hometechhacker.com/letsencrypt-certificate-dns-verification-noip/
 
-# Traefik
+## Traefik
 
 - Installed [traefik](https://doc.traefik.io/traefik/) and made modifications to
   the freshrss service in the docker compose
@@ -293,7 +294,7 @@ the documentation.
   was able to verify that new unlocked private key did the trick and the
   freshrss is now properly available to public.
 
-# Planning extenstion
+## Planning extenstion
 
 - Next applications
 
@@ -305,7 +306,7 @@ the documentation.
   - media / file server
   - home devices manager
 
-# Raspberry Pi replacement
+## Raspberry Pi replacement
 
 - During the initialization of the Synapse service the system threw segmentation
   fault again. After the restart the boot up didn't succeed. Instead of

@@ -18,6 +18,7 @@ the package could not be found, even though I could find it while searching the
 stable and unstable channels.
 
 <!-- more -->
+<!-- TOC -->
 
 ## Problem
 

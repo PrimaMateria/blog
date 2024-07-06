@@ -19,6 +19,11 @@
       </div>
     {% endif %}
 
+    {% set content = page.content | split(pat="<!-- TOC -->") %}
+    {% if content | length > 1 %}
+    {{ content[0] | safe }}
+    {% endif %}
+
     {% if page.toc %}
     <div>
         <ul>
@@ -40,10 +45,11 @@
     </div>
     {% endif %}
 
-
-    <div class="content">
-        {{ page.content | safe }}
-    </div>
+    {% if content | length > 1 %}
+    {{ content[1] | safe }}
+    {% else %}
+    {{ content[0] | safe }}
+    {% endif %}
 </article>
 
 {% endblock content %}
