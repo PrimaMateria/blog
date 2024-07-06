@@ -1,10 +1,15 @@
+$containerWidth: 756px;
+$md: 810px;
+$lg: 900px;
+$xl: 1256px;
+
 * {
   box-sizing: border-box;
   scrollbar-width: thin;
 }
 
 .container, .utterances {
-  max-width: 756px;
+  max-width: $containerWidth;
 }
 
 article {
@@ -12,6 +17,7 @@ article {
   padding-right: 4px;
   word-break: break-word;
 }
+
 
 .update {
   margin-top: 32px;
@@ -23,27 +29,20 @@ article {
 
 .octopus {
   display: grid;
-  grid-template-columns: 60px 1fr;
   grid-gap: 10px;
-
   min-height: 60px;
   width: 100%;
   margin-top: 32px;
   margin-bottom: 32px;
-
-  @media (min-width: 767px) {
+  grid-template-columns: 1fr;
+  @media (min-width: #{$lg}) {
+    grid-template-columns: 60px 1fr;
     margin-left: -70px;
   }
 
-  @media (max-width: 767px) {
-    grid-template-columns: 1fr;
-  }
-
-  .octopus-icon {
-    img {
-      max-height: 60px;
-      margin: 0;
-    }
+  .octopus-icon img {
+    max-height: 60px;
+    margin: 0;
   }
 
   .octopus-content {
@@ -94,8 +93,12 @@ pre {
 
 table {
   white-space:nowrap;
-  @media (max-width: 767px) {
-    font-size: x-small;
+  font-size: x-small;
+  @media (min-width: #{$md}) {
+    font-size: small;
+  }
+  @media (min-width: #{$xl}) {
+    font-size: initial;
   }
 }
 
@@ -106,7 +109,8 @@ kbd {
 }
 
 ul {
-  @media (min-width: 767px) {
+  margin-left: -20px;
+  @media (min-width: #{$md}) {
     margin-left:-40px;
   }
 }
@@ -115,27 +119,21 @@ ul ol,
 ol ol,
 ul ul {
   margin: 0;
-  @media (min-width: 767px) {
-    margin-left: -20px;
-  }
+  margin-left: -20px;
 }
 
 
 .zola-anchor {
   border: none;
-  margin-left: -28px;
-  margin-right: 8px;
   font-size: 1em;
-}
-
-@media (max-width: 767px) {
-  .zola-anchor {
-    display: none;
+  margin-right: 2px;
+  @media (min-width: #{$md}) {
+    margin-left: -22px;
   }
 }
 
 .mermaid {
-  max-width: calc( 756px - 8px );
+  max-width: calc( #{$containerWidth} - 8px );
   display: flex;
   justify-content: space-around;
 }
