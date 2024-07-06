@@ -2,7 +2,7 @@ $containerWidth: 756px;
 $md: 810px;
 $lg: 900px;
 $xl: 1256px;
-$breather: 260px;
+$breather: 80px;
 
 * {
   box-sizing: border-box;
@@ -160,4 +160,8 @@ article:not(:last-of-type) {
 
 .utterances {
     margin-top: 60px;
+}
+
+article.post header h1 {
+  font-size: 2.5em;
 }
