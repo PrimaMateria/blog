@@ -28,7 +28,7 @@ and rich clients. However, at their core, they all adhere to the same principle:
 utilizing a remote server for computation.
 
 <br />
-{{ resize_image(path="display-manager-origins/Thin_clients.png", height=200) }}
+{{ resize_image(path="20230702-display-manager-origins/Thin_clients.png", height=200) }}
 <br />
 
 Is this the true meaning of "Display" in the Display Manager? Let's dive into
@@ -41,7 +41,7 @@ the world of X.
 I have found in the Archive book
 [**X Window System user's guide : for X11 R3 and R4 of the X Window System** by **Quercia, Valerie**; **O'Reilly, Tim**](https://archive.org/details/xwindowsystem03quermiss/page/n31/mode/2up).
 
-> {{ resize_image(path="display-manager-origins/x-window-system-configuration.png", height=500) }}
+> {{ resize_image(path="20230702-display-manager-origins/x-window-system-configuration.png", height=500) }}
 
 > The display server may run on the same computer as a client or on an entirely
 > different machine. Servers are available for PCs, workstations, and even for

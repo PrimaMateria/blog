@@ -21,7 +21,7 @@ me excited to try gaming on Linux once again.
 
 <!-- more -->
 
-{{ resize_image(path="nixos-steam-project-zomboid/tux-zombie-000.png", height=250) }}
+{{ resize_image(path="20221029-nixos-steam-project-zomboid/tux-zombie-000.png", height=250) }}
 
 Over three years ago I made a decision to switch completely from Windows to
 Linux. Full disk format and single boot to KDE Manjaro (which quickly became
@@ -36,7 +36,7 @@ decision. Windows is still in my opinion superior gaming platform. But here I am
 again, going to setup Steam and run, as first, Project Zomboid on NixOS. What
 was the dealbreaker? The Valve's courage behind Steam Deck.
 
-{{ resize_image(path="nixos-steam-project-zomboid/tux-zombie-001.png", height=250) }}
+{{ resize_image(path="20221029-nixos-steam-project-zomboid/tux-zombie-001.png", height=250) }}
 
 ## Declaring Steam
 
@@ -57,7 +57,7 @@ I kept `remotePlay` and `dedicatedServer` set to `true`. After applying this
 changes I was able to run steam. First run update the Steam client, and after
 authentication I was able to see my library.
 
-{{ resize_image(path="nixos-steam-project-zomboid/tux-zombie-002.png", height=250) }}
+{{ resize_image(path="20221029-nixos-steam-project-zomboid/tux-zombie-002.png", height=250) }}
 
 ## Declaring Steam games
 
@@ -69,7 +69,7 @@ It has already some games predefined, and it also provides a guide how to add
 your own games. I will keep this option parked for the case I would start gaming
 big on Linux (I doubt that now).
 
-{{ resize_image(path="nixos-steam-project-zomboid/tux-zombie-003.png", height=250) }}
+{{ resize_image(path="20221029-nixos-steam-project-zomboid/tux-zombie-003.png", height=250) }}
 
 ## Installing Project Zomboid
 
@@ -98,7 +98,7 @@ point was writable.
 I started the game and loaded my latest save. Everything worked correctly. Later
 I have verified in Windows that the saves produced on Linux are usable as well.
 
-{{ resize_image(path="nixos-steam-project-zomboid/tux-zombie-004.png", height=250) }}
+{{ resize_image(path="20221029-nixos-steam-project-zomboid/tux-zombie-004.png", height=250) }}
 
 ## Mouse support
 
@@ -146,7 +146,7 @@ And added new i3 shortcut:
 "${mod}+s" = "exec --no-startup-id ${steamRun}/bin/steamRun";
 ```
 
-{{ resize_image(path="nixos-steam-project-zomboid/tux-zombie-005.png", height=250) }}
+{{ resize_image(path="20221029-nixos-steam-project-zomboid/tux-zombie-005.png", height=250) }}
 
 ## Another discovered ideas and packages
 

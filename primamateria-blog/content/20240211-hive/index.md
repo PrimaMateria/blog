@@ -86,7 +86,7 @@ community, and some praise in the matrix chat. I was intrigued.
 
 However, before fully committing, I searched for alternatives.
 
-{{ resize_image_w(path="hive/flake-parts.png", width=1008) }}
+{{ resize_image_w(path="20240211-hive/flake-parts.png", width=1008) }}
 
 This message is from Discord, and it is not me who is asking, but rather someone
 who is facing the same dilemma.
@@ -310,7 +310,7 @@ The Qemu window will start with a machine that loads the configuration. Log in
 using "foo/foo" and try to run the command `hello`.
 
 <div style="margin-top: 24px">
-{{ resize_image_w(path="hive/vm-test.png", width=450) }}
+{{ resize_image_w(path="20240211-hive/vm-test.png", width=450) }}
 </div>
 
 {{ end() }}
@@ -1016,7 +1016,7 @@ nix run '.#nixosConfigurations.experiment-work.config.system.build.vm'
 ```
 
 <div style="margin-top: 24px">
-{{ resize_image_w(path="hive/vm-test-work.png", width=450) }}
+{{ resize_image_w(path="20240211-hive/vm-test-work.png", width=450) }}
 </div>
 
 ```
@@ -1024,7 +1024,7 @@ nix run '.#nixosConfigurations.experiment-home.config.system.build.vm'
 ```
 
 <div style="margin-top: 24px">
-{{ resize_image_w(path="hive/vm-test-home.png", width=450) }}
+{{ resize_image_w(path="20240211-hive/vm-test-home.png", width=450) }}
 </div>
 
 This tutorial concludes here. In the upcoming chapters, we will discuss cell

@@ -34,17 +34,17 @@ software, but to the human "author".
 My path of discovery started with [Craiyon](https://www.craiyon.com/). The first
 image I chose from the generated batch was this one:
 
-{{ resize_image(path="nixos-stable-diffusion/primamateria-craiyon.jpg", height=200) }}
+{{ resize_image(path="20221008-nixos-stable-diffusion/primamateria-craiyon.jpg", height=200) }}
 
 At the same day I have found
 [DALL·E 2 subreddit](https://www.reddit.com/r/dalle2/) with fresh post that the
 DALL·E 2 registration doesn't require special invite from wishlist anymore, and
 it goes fully public. So I jumped in, and generated some new octopuses:
 
-{{ resize_image(path="nixos-stable-diffusion/primamateria-dalle-octopus1.png", height=200) }}
-{{ resize_image(path="nixos-stable-diffusion/primamateria-dalle-octopus2.png", height=200) }}
-{{ resize_image(path="nixos-stable-diffusion/primamateria-dalle-octopus3.png", height=200) }}
-{{ resize_image(path="nixos-stable-diffusion/primamateria-dalle-octopus4.png", height=200) }}
+{{ resize_image(path="20221008-nixos-stable-diffusion/primamateria-dalle-octopus1.png", height=200) }}
+{{ resize_image(path="20221008-nixos-stable-diffusion/primamateria-dalle-octopus2.png", height=200) }}
+{{ resize_image(path="20221008-nixos-stable-diffusion/primamateria-dalle-octopus3.png", height=200) }}
+{{ resize_image(path="20221008-nixos-stable-diffusion/primamateria-dalle-octopus4.png", height=200) }}
 
 How gorgeous! But bitter realization followed. Each run requires credits. Some
 free
@@ -66,8 +66,8 @@ a prompt and new image will be generated with the same style. For example the
 image on the left I draw long time ago, and the image on the right is the one
 generated via Dream Studio.
 
-{{ resize_image(path="nixos-stable-diffusion/castaneda-origin.png", height=350) }}
-{{ resize_image(path="nixos-stable-diffusion/castaneda-dreamstudio.png", height=350) }}
+{{ resize_image(path="20221008-nixos-stable-diffusion/castaneda-origin.png", height=350) }}
+{{ resize_image(path="20221008-nixos-stable-diffusion/castaneda-dreamstudio.png", height=350) }}
 
 And the credits again. Ah, no problem anymore, we can run it locally and forget
 the whole credit nightmare ~ if we have super duped GPU with
@@ -140,10 +140,10 @@ image4.save(prompt + "4.png")
 And here are some images I have generated for the prompt "Octopus symmetry
 geometry math":
 
-{{ resize_image(path="nixos-stable-diffusion/octopus-sd1.png", height=200) }}
-{{ resize_image(path="nixos-stable-diffusion/octopus-sd2.png", height=200) }}
-{{ resize_image(path="nixos-stable-diffusion/octopus-sd3.png", height=200) }}
-{{ resize_image(path="nixos-stable-diffusion/octopus-sd4.png", height=200) }}
+{{ resize_image(path="20221008-nixos-stable-diffusion/octopus-sd1.png", height=200) }}
+{{ resize_image(path="20221008-nixos-stable-diffusion/octopus-sd2.png", height=200) }}
+{{ resize_image(path="20221008-nixos-stable-diffusion/octopus-sd3.png", height=200) }}
+{{ resize_image(path="20221008-nixos-stable-diffusion/octopus-sd4.png", height=200) }}
 
 Update: Created repo
 [github:PrimaMateria/stable-diffusion](https://github.com/PrimaMateria/stabble-diffusion).

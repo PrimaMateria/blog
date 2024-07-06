@@ -170,29 +170,29 @@ All the wallpapers I found on the Wikimedia.
 
 ### Sun
 
-{{ resize_image_w(path="solar-workspaces/sun.jpg", width=1008) }} By NASA/SDO
-(AIA) -
+{{ resize_image_w(path="20230307-solar-workspaces/sun.jpg", width=1008) }} By
+NASA/SDO (AIA) -
 http://sdo.gsfc.nasa.gov/assets/img/browse/2010/08/19/20100819_003221_4096_0304.jpg,
 Public Domain, https://commons.wikimedia.org/w/index.php?curid=11348381
 
 ### Mercury
 
-{{ resize_image_w(path="solar-workspaces/mercury.jpg", width=1008) }} By
-NASA/Johns Hopkins University Applied Physics Laboratory/Arizona State
+{{ resize_image_w(path="20230307-solar-workspaces/mercury.jpg", width=1008) }}
+By NASA/Johns Hopkins University Applied Physics Laboratory/Arizona State
 University/Carnegie Institution of Washington -
 https://photojournal.jpl.nasa.gov/catalog/PIA11364, Public Domain,
 https://commons.wikimedia.org/w/index.php?curid=83618472
 
 ### Venus
 
-{{ resize_image_w(path="solar-workspaces/venus.jpg", width=1008) }} By
+{{ resize_image_w(path="20230307-solar-workspaces/venus.jpg", width=1008) }} By
 NASA/JPL-Caltech -
 https://solarsystem.nasa.gov/resources/2524/newly-processed-views-of-venus-from-mariner-10/,
 Public Domain, https://commons.wikimedia.org/w/index.php?curid=105847882
 
 ### Earth
 
-{{ resize_image_w(path="solar-workspaces/earth.jpg", width=1008) }} By
+{{ resize_image_w(path="20230307-solar-workspaces/earth.jpg", width=1008) }} By
 NASA/Apollo 17 crew; taken by either Harrison Schmitt or Ron Evans -
 http://tothemoon.ser.asu.edu/gallery/Apollo/17/Hasselblad%20500EL%2070%20mm
 https://www.flickr.com/photos/projectapolloarchive/21081863984/, Public Domain,
@@ -200,21 +200,21 @@ https://commons.wikimedia.org/w/index.php?curid=114976945
 
 ### Mars
 
-{{ resize_image_w(path="solar-workspaces/mars.jpg", width=1008) }} By ESA & MPS
-for OSIRIS Team MPS/UPD/LAM/IAA/RSSD/INTA/UPM/DASP/IDA, CC BY-SA IGO 3.0, CC
-BY-SA 3.0 igo, https://commons.wikimedia.org/w/index.php?curid=56489423
+{{ resize_image_w(path="20230307-solar-workspaces/mars.jpg", width=1008) }} By
+ESA & MPS for OSIRIS Team MPS/UPD/LAM/IAA/RSSD/INTA/UPM/DASP/IDA, CC BY-SA IGO
+3.0, CC BY-SA 3.0 igo, https://commons.wikimedia.org/w/index.php?curid=56489423
 
 ### Jupiter
 
-{{ resize_image_w(path="solar-workspaces/jupiter.jpg", width=1008) }} By
-NASA/JPL-Caltech/SwRI/MSSS/Kevin M. Gill -
+{{ resize_image_w(path="20230307-solar-workspaces/jupiter.jpg", width=1008) }}
+By NASA/JPL-Caltech/SwRI/MSSS/Kevin M. Gill -
 jpl.nasa.gov/spaceimages/details.php?id=PIA22946, Public Domain,
 https://commons.wikimedia.org/w/index.php?curid=77494805
 
 ### Saturn
 
-{{ resize_image_w(path="solar-workspaces/saturn.jpg", width=1008) }} By NASA /
-JPL / Space Science Institute -
+{{ resize_image_w(path="20230307-solar-workspaces/saturn.jpg", width=1008) }} By
+NASA / JPL / Space Science Institute -
 http://www.ciclops.org/view/5155/Saturn-Four-Years-On
 http://www.nasa.gov/images/content/365640main_PIA11141_full.jpg
 http://photojournal.jpl.nasa.gov/catalog/PIA11141, Public Domain,
@@ -222,21 +222,22 @@ https://commons.wikimedia.org/w/index.php?curid=7228953
 
 ### Uranus
 
-{{ resize_image_w(path="solar-workspaces/uranus.jpg", width=1008) }} By NASA -
-http://photojournal.jpl.nasa.gov/catalog/PIA18182, Public Domain,
+{{ resize_image_w(path="20230307-solar-workspaces/uranus.jpg", width=1008) }} By
+NASA - http://photojournal.jpl.nasa.gov/catalog/PIA18182, Public Domain,
 https://commons.wikimedia.org/w/index.php?curid=121128532
 
 ### Neptune
 
-{{ resize_image_w(path="solar-workspaces/neptune.jpg", width=1008) }} By
-NASA/JPL - http://photojournal.jpl.nasa.gov/catalog/PIA00046, Public Domain,
+{{ resize_image_w(path="20230307-solar-workspaces/neptune.jpg", width=1008) }}
+By NASA/JPL - http://photojournal.jpl.nasa.gov/catalog/PIA00046, Public Domain,
 https://commons.wikimedia.org/w/index.php?curid=31789
 
 ### Messier 87
 
-{{ resize_image_w(path="solar-workspaces/messier87.jpg", width=1008) }} By Event
-Horizon Telescope - https://www.eso.org/public/images/eso1907a/; JPG saved from
-full size TIFF and converted with maximum quality level 12 in Photoshop 2019.,
-CC BY 4.0, https://commons.wikimedia.org/w/index.php?curid=77916527
+{{ resize_image_w(path="20230307-solar-workspaces/messier87.jpg", width=1008) }}
+By Event Horizon Telescope - https://www.eso.org/public/images/eso1907a/; JPG
+saved from full size TIFF and converted with maximum quality level 12 in
+Photoshop 2019., CC BY 4.0,
+https://commons.wikimedia.org/w/index.php?curid=77916527
 
 {{ end() }}
