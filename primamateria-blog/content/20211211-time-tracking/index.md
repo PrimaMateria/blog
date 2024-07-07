@@ -5,6 +5,7 @@ slug = "time-tracking"
 
 [extra]
 banner = "banner-time-tracking.png"
+bannerAlt = "Mobius comic book style. White rabbit from the Alice in the Wonderland. Proper organization of his table."
 
 [taxonomies]
 tags = ["workflow"]

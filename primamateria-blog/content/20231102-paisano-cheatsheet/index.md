@@ -5,6 +5,7 @@ slug = "paisano-cheatsheet"
 
 [extra]
 banner = "banner-paisano-cheatsheet.png"
+bannerAlt = "Mobius comic book style. Paisano riding donkey through the desert."
 
 [taxonomies]
 tags = ["nixos","paisano","hive"]

@@ -5,6 +5,7 @@ slug = "display-manager-origins"
 
 [extra]
 banner = "banner-display-manager.png"
+bannerAlt = "Mobius comic book style. Spaceship control room full of monitors. Crew is busy. Retro look."
 
 [taxonomies]
 tags = ["X","display manager","history"]

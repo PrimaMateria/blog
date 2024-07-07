@@ -5,6 +5,7 @@ slug = "solar-workspaces"
 
 [extra]
 banner = "banner-i3-solar-workspaces.png"
+bannerAlt = "Mobius comic book style. Galaxy"
 
 [taxonomies]
 tags = ["nixos","i3"]

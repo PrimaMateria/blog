@@ -5,7 +5,7 @@ slug = "nix-shell-with-custom-channels"
 
 [extra]
 banner = "banner-nix-shell-custom-channel.png"
-
+bannerAlt = "Mobius comics style. Post-apocalyptic frozen river with abandoned military ships, smoking ruins in the background. Dominated with white snow blizzard. Flakes visible."
 
 [taxonomies]
 tags = ["nixos","nix-flakes"]

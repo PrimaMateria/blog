@@ -5,6 +5,7 @@ slug ="haumea-cheatsheet"
 
 [extra]
 banner = "banner-haumea-cheatsheet.png"
+bannerAlt = "Mobius comic book style. Hawain goddess Haumea. Magically transforming to youth. Big island scenery."
 
 [taxonomies]
 tags = ["nixos","haumea","hive"]

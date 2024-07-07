@@ -5,6 +5,7 @@ slug = "hive"
 
 [extra]
 banner = "banner-hive.png"
+bannerAlt = "Mobius comic book style. Cosmic nebula landscape bee hive cells. Honeycomb. Pastel honey color."
 
 [taxonomies]
 tags = ["nixos","hive","paisano","haumea"]

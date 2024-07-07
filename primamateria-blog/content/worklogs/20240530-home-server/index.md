@@ -6,6 +6,7 @@ slug = "home-server"
 
 [extra]
 banner = "banner-homeserver.png"
+bannerAlt = "Mobius comics style. Cabin in the woods inside the deep forest. Lot of trees around. Window radiate yellow light. Satellite dish on the roof. Night sky full of stars and Milky Way. Science fiction"
 
 [taxonomies]
 tags = ["nix","raspberry pi","hive","nixos"]

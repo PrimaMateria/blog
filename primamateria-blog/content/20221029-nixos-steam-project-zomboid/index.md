@@ -5,6 +5,7 @@ slug = "nixos-steam-project-zomboid"
 
 [extra]
 banner = "banner-pz-nixos.png"
+bannerAlt = "Mobius comic book style. Zombie apocalypse. Scenic view."
 
 [taxonomies]
 tags = ["nixos","games"]

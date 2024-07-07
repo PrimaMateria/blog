@@ -30,6 +30,27 @@
     </div>
 {% endmacro page_info %}
 
+{% macro banner(page) %}
+<div class="banner">
+  {% if page.extra.banner %}
+  {% set image748 = resize_image(path=page.extra.banner, width=748, op='fit_width') %}
+  {% set image600 = resize_image(path=page.extra.banner, width=600, op='fit_width') %}
+  {% set image450 = resize_image(path=page.extra.banner, width=450, op='fit_width') %}
+  {% set image300 = resize_image(path=page.extra.banner, width=300, op='fit_width') %}
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="{{image300.url}}">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="{{image450.url}}">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="{{image600.url}}">
+    {% if page.extra.bannerAlt %}
+    <img src="{{image748.url}}" alt="{{page.extra.bannerAlt}}">
+    {% else %}
+    <img src="{{image748.url}}">
+    {% endif %}
+  </picture> 
+</div>
+{% endif %}
+{% endmacro page_listing %}
+
 {% macro page_listing(page) %}
     <article class="post-list">
         <header> 
@@ -40,11 +61,7 @@
 
         {{ self::page_info(page=page) }}
 
-        {% if page.extra.banner %}
-          <div class="banner">
-           <img src="{{ get_url(path=page.extra.banner) }}" />
-          </div>
-        {% endif %}
+        {{ self::banner(page=page) }}
 
         {% if page.summary %}
         <div class="content post-summary">
@@ -74,3 +91,4 @@
 {%- set section = get_section(path=subsection) -%}
       <li> <a href="{{section.permalink}}">{{section.title}}</a></li>
 {% endmacro subsection_listing %}
+

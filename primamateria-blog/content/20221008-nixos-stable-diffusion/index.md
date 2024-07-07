@@ -5,6 +5,7 @@ slug = "nixos-stable-diffusion"
 
 [extra]
 banner = "banner-ai-generated-images.png"
+bannerAlt = "Mobius comic book style. Stories of Carlos Castaneda. Indian old man in had walking in the desert land. The sky is full of big dark red clouds."
 
 [taxonomies]
 tags = ["nixos","ai"]

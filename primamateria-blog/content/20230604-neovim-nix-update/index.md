@@ -5,6 +5,7 @@ slug = "neovim-nix-update"
 
 [extra]
 banner = "banner-neovim-flake-update.png"
+bannerAlt = "Mobius comic book style. Jungle treetops scenery flyover. Dark green pastel. Neovim logo embedded."
 
 [taxonomies]
 tags = ["nixos","neovim"]
