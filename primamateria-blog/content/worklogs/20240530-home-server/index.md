@@ -336,3 +336,59 @@ the documentation.
 | Lenovo ThinkCentre M910q | i5 3.10GHz                     | 8GB       | 256GB          | 159€    |
 | Lenovo ThinkCentre M92   | i5 3.60GHx                     | 8GB       | 512GB          | 129€    |
 | Raspberry Pi 5           | ARMv7 2.4GHz                   | 8GB       | 64GB SD card   | 139€    |
+
+## Beelink
+
+<div style="margin-top: 24px">
+{{ resize_image_w(path="worklogs/20240530-home-server/beelink.webp", width=748) }}
+</div>
+
+- I decided to purchase the
+  [Beelink EQ13](https://www.bee-link.com/en-de/collections/mini-pc/products/beelink-eq13-n100?variant=46197263073522)
+  with an Intel Alder Lake N100 Processor, 4C/4T, max 25W TDP, max turbo
+  frequency of 3.4 GHz, 16GB RAM, and 500GB SSD for approximately 200€. The
+  Beelink came with Windows 11 preinstalled. I found information on a random
+  Microsoft forum stating that it is not necessary to export the license key. If
+  I decide to boot Windows again, simply installing the same version should be
+  sufficient, as the machine signature should already be remembered in some kind
+  of Microsoft registry.
+- Next, I installed NixOS. I downloaded the latest NixOS iso file and uploaded
+  it to my existing [Ventoy](https://www.ventoy.net/en/index.html) USB key. The
+  installation was not without problems. Initially, the HDMI monitor did not
+  work unless I booted to the live ISO with `nomodeset`, essentially loading
+  without graphics drivers. Then, during the installation, I encountered issues
+  with formatting the disk. The swap partition failed to be created, or at one
+  point, something with calibria was holding onto mount points and not allowing
+  them to be unmounted without a full restart. Originally, I had planned to try
+  with a 2GB swap since the 16GB of RAM seemed sufficient for the start.
+  However, due to these issues, I ended up proceeding without any swap. I can
+  address this later if needed. I checked the `btop` and saw that there is
+  plenty of free memory, so there is no need to worry.
+- I installed the operating system without a desktop environment. However, the
+  HDMI was not working again until I added `nomodeset` when booting (by pressing
+  `e` in the boot menu and appending it as the last parameter). Despite some
+  initial difficulties, I managed to enable SSH, integrate Beelink and
+  HomeServer into the existing Hive configuration, and successfully run Traefik
+  and FreshRSS as Docker services. Although I could use Nix services, I
+  currently prefer Traefik, so I will continue using it.
+
+{{ nerdy(text="
+
+I have to mention the build speed. Beelink builds as fast as I am accustomed to.
+There was no need to reduce the configuration to a minimum. I confidently
+enabled the full shell capabilities along with my full-blown neovim. Now,
+instead of editing the config and syncing it to the rpi, I am running my own
+tmux server and neovim and editing directly on the beelink. It is much easier to
+work with the beelink, and even though the price was higher, I still believe
+that the price-to-performance ratio is much better compared to the rpi.
+Additionally, the included 500GB SSD provides plenty of opportunities for
+upcoming experiments.
+
+") }}
+
+{{ curious(text="
+
+And don't forget to mention that it is x86-64 instead of the Raspberry Pi's ARM
+architecture! Also it is very quiet.
+
+") }}
