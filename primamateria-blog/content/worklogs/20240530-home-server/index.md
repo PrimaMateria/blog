@@ -392,3 +392,51 @@ And don't forget to mention that it is x86-64 instead of the Raspberry Pi's ARM
 architecture! Also it is very quiet.
 
 ") }}
+
+## Matrix
+
+- Picked up where I the configuration on rpi. I am still not sure if I can run
+  the synapse on subdir `https://primamateria.ddns.net/synapse`. It seems that
+  it will be possible, but looks like everything is harder with subdir than
+  subdomains. Then I check the current SSL certificate I bought on noip would
+  cost 150$ per year. Still other option might be a switch to Let's encrypt.
+- Today I finished working on synapse configuration and docker compose. When
+  trying to run into an issue when generating signing key:
+  [https://github.com/element-hq/synapse/issues/16824a](https://github.com/element-hq/synapse/issues/16824).
+  The issue is marked as closed. I tried to use docker image with `develop` tag
+  but it fails as well. I generated the config and signing key to new separate
+  volume and copied only the signing key with correct permission. Then the next
+  error was permission denied for `/data/media`. Rather than creating it again
+  by hand I should look for the core issue. At the end the most right solution
+  seemed for me to manual `chown`
+  docker`s volumes `\_data`directories to`991:991` to match the UID and GID with
+  which the synapse is run in the container.
+- Now the synapse is running, and reporting being healthy. But I can't see it on
+  the traefik dashboard. It is very confusing because all the examples use
+  subdomain like matrix.example.com. And also based on the
+  [nginx docs](https://element-hq.github.io/synapse/latest/reverse_proxy.html#nginx),
+  it seems, that matrix exposes ports 443 and 8448. 443 is general SSL port.
+  Does it mean that it will take over all the root 443 requests? Or maybe the
+  requests will come with path `/_matrix` and `/_synapse/client`, so at the end
+  443 is a subpath.
+
+<!-- prettier-ignore-start -->
+{% mermaid() %}
+flowchart TD
+    nixpkgs["<b>Nixpkgs</b><br/>neovim (stable)"]
+    neovim["Neovim"]
+    overlay1["Overlay Flake Inputs"]
+    nixpkgs2["<b>Nixpkgs</b><br/>neovim (flake)"]
+    overlay2["Overlay My Neovim"]
+    myneovim["My Neovim"]
+    nixpkgs3["<b>Nixpkgs</b><br/>neovim (flake)<br/>myNeovim"]
+    
+    nixpkgs -->|prev| overlay1
+    neovim --> overlay1
+    overlay1 -->|final| nixpkgs2
+    
+    nixpkgs2 -->|prev| overlay2
+    myneovim --> overlay2
+    overlay2 -->|final| nixpkgs3
+{% end %}
+<!-- prettier-ignore-end -->
