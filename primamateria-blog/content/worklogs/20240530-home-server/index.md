@@ -419,24 +419,33 @@ architecture! Also it is very quiet.
   Does it mean that it will take over all the root 443 requests? Or maybe the
   requests will come with path `/_matrix` and `/_synapse/client`, so at the end
   443 is a subpath.
+- Previously Traefik was not picking up synapse because I had typo in the
+  labels. Checking Traefik logs inisde the container helped to find the issue.
+  Afterwards I was trying to configure following proxy:
 
 <!-- prettier-ignore-start -->
-{% mermaid() %}
-flowchart TD
-    nixpkgs["<b>Nixpkgs</b><br/>neovim (stable)"]
-    neovim["Neovim"]
-    overlay1["Overlay Flake Inputs"]
-    nixpkgs2["<b>Nixpkgs</b><br/>neovim (flake)"]
-    overlay2["Overlay My Neovim"]
-    myneovim["My Neovim"]
-    nixpkgs3["<b>Nixpkgs</b><br/>neovim (flake)<br/>myNeovim"]
-    
-    nixpkgs -->|prev| overlay1
-    neovim --> overlay1
-    overlay1 -->|final| nixpkgs2
-    
-    nixpkgs2 -->|prev| overlay2
-    myneovim --> overlay2
-    overlay2 -->|final| nixpkgs3
-{% end %}
+  {% mermaid() %}
+  flowchart TD
+      federation
+      client
+
+      subgraph homeServer
+
+          subgraph traefik
+              traefik443["443"]
+          end
+
+          subgraph synapse
+              synapse8008["8008"]
+          end
+      end
+
+      federation -->|/_matrix| traefik443
+      client -->|/_synapse/client| traefik443
+      traefik443 -->|/_synapse/client| synapse8008
+      traefik443 -->|/_matrix| synapse8008
+
+  {% end %}
 <!-- prettier-ignore-end -->
+
+- Next, I will try to setup also Element to and then start testing it together.
