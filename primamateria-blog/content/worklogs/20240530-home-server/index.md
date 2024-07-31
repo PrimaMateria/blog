@@ -449,3 +449,7 @@ architecture! Also it is very quiet.
 <!-- prettier-ignore-end -->
 
 - Next, I will try to setup also Element to and then start testing it together.
+- https://github.com/element-hq/element-web/issues/17459
+- Element served on subpath is trying to fetch relative resources from root path
+  which fails. These subpaths are getting really annoying. Next I have to set up
+  subdomains.
