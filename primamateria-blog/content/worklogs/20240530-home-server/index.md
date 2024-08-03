@@ -460,3 +460,10 @@ architecture! Also it is very quiet.
   method of creating CSR and uploading pem files to server. Now with enabled
   subdomains it was really easy to complete the element and synapse setup. I
   have migrated also the freshrss to the subdomain.
+- I encountered
+  [issue with regenerated signing key](https://github.com/matrix-org/synapse/issues/7574).
+  It was because when changing to subdomain I have deleted the previous docker
+  volumes. User in the room for matrix.org susgested just to give a time until
+  the cache expires.
+- Meanwhile I move to setting up the bridges. As first I take wechat:
+  [https://github.com/wechaty/matrix-appservice](https://github.com/wechaty/matrix-appservice).
