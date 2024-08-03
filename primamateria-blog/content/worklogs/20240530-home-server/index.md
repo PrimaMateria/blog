@@ -408,9 +408,9 @@ architecture! Also it is very quiet.
   volume and copied only the signing key with correct permission. Then the next
   error was permission denied for `/data/media`. Rather than creating it again
   by hand I should look for the core issue. At the end the most right solution
-  seemed for me to manual `chown`
-  docker`s volumes `\_data`directories to`991:991` to match the UID and GID with
-  which the synapse is run in the container.
+  seemed for me to manual `chown` docker's volumes `\_data`directories
+  to`991:991` to match the UID and GID with which the synapse is run in the
+  container.
 - Now the synapse is running, and reporting being healthy. But I can't see it on
   the traefik dashboard. It is very confusing because all the examples use
   subdomain like matrix.example.com. And also based on the
@@ -450,6 +450,13 @@ architecture! Also it is very quiet.
 
 - Next, I will try to setup also Element to and then start testing it together.
 - https://github.com/element-hq/element-web/issues/17459
+- https://goneuland.de/matrix-chattplattform-mittels-traefik-und-docker-installieren/
 - Element served on subpath is trying to fetch relative resources from root path
   which fails. These subpaths are getting really annoying. Next I have to set up
   subdomains.
+- I tried to set up let's encrypt wildcard ssl and it was really easy. It might
+  be that before I felt intimidated by all the new information, and confused
+  about setting up certbot. But Let's encrypt is even easier than the previous
+  method of creating CSR and uploading pem files to server. Now with enabled
+  subdomains it was really easy to complete the element and synapse setup. I
+  have migrated also the freshrss to the subdomain.
