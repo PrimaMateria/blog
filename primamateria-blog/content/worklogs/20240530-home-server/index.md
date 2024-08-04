@@ -479,3 +479,11 @@ architecture! Also it is very quiet.
   that also did not work. I tried searching for the Wechaty space on Discord
   itself, but to no avail. This frustration led me to consider trying the
   alternative Go bridge as the next step.
+- I didn't let it go. At the end I was able to join the Discord server and post
+  [my question about the pricing](https://discord.com/channels/916984413944967180/916984414557323346/1269770505909571744a).
+- [Chinese blog post](https://duo-github-io.translate.goog/posts/matrix-qq-wechat/?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=de)
+  explaing the use of wechat bridge that is based on the mautrix-go. As far as I
+  can see right now, it also depends on external agent. But in this case it is
+  windows program run in wine in the docker with questionable stability. Until
+  now, I still didn't get any answer on the wechaty discord, and, btw,
+  matrix.org is still refusing my new signing key with 401s.
