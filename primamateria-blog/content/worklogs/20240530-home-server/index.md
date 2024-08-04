@@ -467,3 +467,15 @@ architecture! Also it is very quiet.
   the cache expires.
 - Meanwhile I move to setting up the bridges. As first I take wechat:
   [https://github.com/wechaty/matrix-appservice](https://github.com/wechaty/matrix-appservice).
+- I am investigating Wechaty, but it is very confusing. Initially, I thought it
+  was a paid service because it required a token. I did not appreciate
+  discovering this after following the steps, rather than it being clearly
+  stated in the README introduction. However, I am not certain if the paid token
+  is truly necessary or if I am simply confused. This uncertainty leads to my
+  second dissatisfaction. On their documentation page, there is a QR code to
+  join the Wechat group. When scanned, it opens a webview with a Discord invite.
+  Unfortunately, clicking the button did not work for me, even though I have
+  Discord installed on my phone. I attempted to copy the link to Firefox, but
+  that also did not work. I tried searching for the Wechaty space on Discord
+  itself, but to no avail. This frustration led me to consider trying the
+  alternative Go bridge as the next step.
