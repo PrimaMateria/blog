@@ -461,6 +461,14 @@ architecture! Also it is very quiet.
   subdomains it was really easy to complete the element and synapse setup. I
   have migrated also the freshrss to the subdomain.
 
+{{ curious(text="
+
+This is a great moment! I was able to unlock the subdomains without having to
+pay over a hundred dollars for the yearly subscription. I was worried that there
+might be a catch waiting for me down the line, but there wasn't.
+
+") }}
+
 <div style="margin-top: 24px">
 {{ resize_image_w(path="worklogs/20240530-home-server/matrix-primamateria-ddns-net.webp", width=748) }}
 </div>
