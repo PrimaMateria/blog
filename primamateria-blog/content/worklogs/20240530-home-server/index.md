@@ -504,3 +504,9 @@ might be a catch waiting for me down the line, but there wasn't.
   it to synapse's 8008. This is the port through which the federation tries to
   reach the synapse. Now I can search the rooms, but when I try to join some it
   never fetches the message or users list.
+
+<div style="margin-top: 24px">
+{{ resize_image_w(path="worklogs/20240530-home-server/matrix-primamateria-ddns-net2.webp", width=748) }}
+</div>
+
+- After some time, the messages and users got fetched and now it all works.
