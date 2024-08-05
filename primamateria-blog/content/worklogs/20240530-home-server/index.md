@@ -500,3 +500,7 @@ might be a catch waiting for me down the line, but there wasn't.
   windows program run in wine in the docker with questionable stability. Until
   now, I still didn't get any answer on the wechaty discord, and, btw,
   matrix.org is still refusing my new signing key with 401s.
+- The issue was not with cached signing key. I opened port 8448 and redirected
+  it to synapse's 8008. This is the port through which the federation tries to
+  reach the synapse. Now I can search the rooms, but when I try to join some it
+  never fetches the message or users list.
