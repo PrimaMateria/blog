@@ -12,6 +12,16 @@
     </header>
 
     {{ page_macros::page_info(page=page) }}
+
+    {% if page.components is containing("worklogs") %}
+    <div class="article-info">
+      🚧
+      This is a work log. In the work log, I record my steps, including mistakes
+      or wrong decisions that I would not recommend. Hopefully, this work log
+      will one day be distilled into a helpful blog post.
+    </div>
+    {% endif %}
+
     
     {{ page_macros::banner(page=page) }}
 
