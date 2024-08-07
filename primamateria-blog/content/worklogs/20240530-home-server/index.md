@@ -524,3 +524,21 @@ might be a catch waiting for me down the line, but there wasn't.
   more like
   ["Too weird to live, and too rare to die."](https://www.goodreads.com/quotes/1319753-there-he-goes-one-of-god-s-own-prototypes-a-high-powered)
   case.
+- I am following the
+  [translated guide](https://duo.github.io/posts/matrix-qq-wechat/). I have
+  added the shared secret authenticator and successfuly restarted the synapse
+  service with the new module loaded. One thing to be aware there was to set the
+  correct python version where the python module is mapped via the docker
+  volumes.
+- The next steps are bit cumbersome, because I am converthing the yaml configs
+  to nix. The generated configuration is really extensive, but luckily only with
+  few fields that need to be adjusted. And the generation happens in two steps.
+  I wasted time by porting the first step result to nix config, and then
+  realizing that the second step still requires updated yaml and it will again
+  write something back to it. It made me think if the porting all these yamls to
+  nix is worth the effort. I concluded that yes, it is. Yaml files should
+  usually be privately contained on some server. When server explodes, files are
+  gone. My nix config will be comitted to public repository. Also the pure yaml
+  files could be committed, but the secrets in them would be as well. Having
+  these configs in nix using hive's secrets encrypted with git-crypt solves it -
+  public and reproducible, but still secure.
