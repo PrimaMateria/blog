@@ -516,12 +516,12 @@ might be a catch waiting for me down the line, but there wasn't.
   matrix rooms are bonus. I started to work on the matrix-wechat bridge, since
   some random user replied to my query that it is know for it to be stable
   despite the disclaimer about wine stability in their readme.
-- Also I briefly looked onto the IRC bridge. I took IRC bridge to be the
-  self-evident, so it was quite a shock to find announcment about discontinued
-  support between Libera IRC network and Matrix. I really thought these two
-  worlds will be close together. Somehow this another disappoitment uncovered
-  after diving in, and now Matrix doesn't look anymore as modern savior, but
-  more like
+- Also I briefly looked onto the IRC bridge. I took IRC bridge existence to be
+  the self-evident, so it was quite a shock to finda
+  [an announcment about discontinued support between Libera IRC network and Matrix](https://matrix.org/blog/2023/07/deportalling-libera-chat/).
+  I really thought these two worlds will be close together. Somehow this another
+  disappoitment uncovered after diving in, and now Matrix doesn't look anymore
+  as modern savior, but more like
   ["Too weird to live, and too rare to die."](https://www.goodreads.com/quotes/1319753-there-he-goes-one-of-god-s-own-prototypes-a-high-powered)
   case.
 - I am following the
