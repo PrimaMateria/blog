@@ -542,3 +542,13 @@ might be a catch waiting for me down the line, but there wasn't.
   files could be committed, but the secrets in them would be as well. Having
   these configs in nix using hive's secrets encrypted with git-crypt solves it -
   public and reproducible, but still secure.
+- The matrix-weChat service, after starting, attempts to write something to the
+  config file. However, this does not work because the files now come from the
+  Nix store. Additionally, the config file and registration file must be located
+  inside the container's `/data` directory. I am unsure how to map Nix store
+  files into it while keeping the entire directory as a Docker volume. Other
+  services allow for custom config file placement by passing an environment
+  variable or parameter pointing to it. It is crucial that other services access
+  these files in a read-only manner. I will revert the Nix configs back to YAML
+  and store them inside a secret folder. And I will manually copy them to the
+  Docker volume.
