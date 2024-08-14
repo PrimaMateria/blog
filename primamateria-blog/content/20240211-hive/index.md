@@ -583,6 +583,10 @@ that this will not work and that overlays need to be already defined in `pkgs`
 provided by the bee. I don't have an example for it because, so far, I have
 always been able to meet my requirements without an overlay.
 
+Update:
+[an example how to set up overlays](https://matrix.to/#/!PGCGaLTNODVQNScOEp:matrix.org/$J0cTd9sMmmtUCQc4Jcp2zdCKXWvz8xG6P1ZepAAkcFk?via=matrix.org&via=hackliberty.org&via=mozilla.org).
+I didn't try this yet.
+
 ") }}
 
 Finally, assign the bee to the main module of the experiment's NixOS
