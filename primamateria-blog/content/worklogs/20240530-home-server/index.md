@@ -552,3 +552,18 @@ might be a catch waiting for me down the line, but there wasn't.
   these files in a read-only manner. I will revert the Nix configs back to YAML
   and store them inside a secret folder. And I will manually copy them to the
   Docker volume.
+- I continue to work on getting the WeChat bridge to function properly. I am
+  still working with the Nix configurations. As I resolved issues one by one, I
+  reached a point where there are no errors when starting the bridge. Therefore,
+  the read-only configurations may actually work. It is possible that previous
+  write errors were caused by configuration mistakes, but when everything is
+  correct, no writing takes place.
+- Reached the point where the bridge is attempting to call the synapse server
+  but is receiving an error stating that the @wechatbot user does not exist and
+  is being responded to with a 403 error.
+
+  ```
+  2024-08-14 20:53:33,959 - synapse.config.appservice - 96 - INFO - main - Loaded application service: ApplicationService: {'token': '<redacted>', 'url': 'http://matrix-wechat:17778', 'hs_token': '<redacted>', 'sender': '@tcMC6UH6RL0XgI6u5ONiCZL1w0C2KQY5:matrix.primamateria.ddns.net', 'namespaces': {'users': [Namespace(exclusive=True, regex=re.compile('^@wechatbot:primamateria.ddns.net$')), Namespace(exclusive=True, regex=re.compile('^@_wechat_.*:primamateria.ddns.net$'))], 'aliases': [], 'rooms': []}, 'id': 'wechat', 'ip_range_whitelist': None, 'supports_ephemeral': True, 'msc3202_transaction_extensions': False, 'protocols': set(), 'rate_limited': False}
+  2024-08-14 20:53:47,942 - synapse.http.server - 130 - INFO - GET-2 - <XForwardedForRequest at 0x7f5226547610 method='GET' uri='/_matrix/client/versions?user_id=%40wechatbot%3Aprimamateria.ddns.net' clientproto='HTTP/1.1' site='8008'> SynapseError: 403 - Application service has not registered this user (@wechatbot:primamateria.ddns.net)
+
+  ```
