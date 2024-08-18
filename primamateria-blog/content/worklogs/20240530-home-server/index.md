@@ -567,3 +567,37 @@ might be a catch waiting for me down the line, but there wasn't.
   2024-08-14 20:53:47,942 - synapse.http.server - 130 - INFO - GET-2 - <XForwardedForRequest at 0x7f5226547610 method='GET' uri='/_matrix/client/versions?user_id=%40wechatbot%3Aprimamateria.ddns.net' clientproto='HTTP/1.1' site='8008'> SynapseError: 403 - Application service has not registered this user (@wechatbot:primamateria.ddns.net)
 
   ```
+
+- I found wrongly set homeserver domain. It was `primamateria.ddns.net` instead
+  of `matrix.primamateria.ddns.net`. Also in the double puppeting I used
+  registration shared key instead of the authenticator key. Even after fixing
+  these, the issue with unregistered user still prevails.
+- I noticed that in the tutorial the synapse doesn't have forbidden
+  registrations with `enabled_registrations = false`. So, I tried to register
+  the wechatbot by myself but got another conflict:
+
+  ```
+  root@5a1b41a9d80e:/# register_new_matrix_user -c /etc/synapse/synapse.yaml http://localhost:8008
+  New user localpart [root]: wechatbot
+  Password:
+  Confirm password:
+  Make admin [no]:
+  Sending registration request...
+  ERROR! Received 400 Bad Request
+  This user ID is reserved by an application service.
+  ```
+
+- I tried to call the same URL from the bridge's container and it worked:
+
+  ```
+  /data # wget http://synapse:8008/_matrix/client/versions?user_id=%40wechatbot%3Amatrix.primamateria.ddns.net
+  Connecting to synapse:8008 (172.19.0.4:8008)
+  saving to 'versions?user_id=%40wechatbot%3Amatrix.primamateria.ddns.net'
+  versions?user_id=%40 100% |***************************************************************************************************************************************************************************************************************************************************************************************************************************|  1001  0:00:00 ETA
+  'versions?user_id=%40wechatbot%3Amatrix.primamateria.ddns.net' saved
+  /data # cat versions\?user_id=%40wechatbot%3Amatrix.primamateria.ddns.net
+  {"versions":["r0.0.1","r0.1.0","r0.2.0","r0.3.0","r0.4.0","r0.5.0","r0.6.0","r0.6.1","v1.1","v1.2","v1.3","v1.4","v1.5","v1.6","v1.7","v1.8","v1.9","v1.10","v1.11"],"unstable_features":{"org.matrix.label_based_filtering":true,"org.matrix.e2e_cross_signing":true,"org.matrix.msc2432":true,"uk.half-shot.msc2666.query_mutual_rooms":true,"io.element.e2ee_forced.public":false,"io.element.e2ee_forced.private":false,"io.element.e2ee_forced.trusted_private":false,"org.matrix.msc3026.busy_presence":false,"org.matrix.msc2285.stable":true,"org.matrix.msc3827.stable":true,"org.matrix.msc3440.stable":true,"org.matrix.msc3771":true,"org.matrix.msc3773":false,"fi.mau.msc2815":false,"fi.mau.msc2659.stable":true,"org.matrix.msc3882":false,"org.matrix.msc3881":false,"org.matrix.msc3874":false,"org.matrix.msc3886":false,"org.matrix.msc3912":false,"org.matrix.msc3981":true,"org.matrix.msc3391":false,"org.matrix.msc4069":false,"org.matrix.msc4028":false,"org.matrix.msc4108":false,"org.matrix.msc4151":false}}
+  ```
+
+  But so does also call to version endpoint without any `userId` works. So this
+  might not be any indicator. Maybe I should try install `curl`.
