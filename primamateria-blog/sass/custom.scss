@@ -15,7 +15,6 @@ $breather: 130px;
   text-align: left;
   white-space: wrap;
   margin: 0;
-  margin-top: 32px;
   margin-bottom: 32px;
 
   font-family: "Anton SC", sans-serif;
@@ -48,15 +47,8 @@ $breather: 130px;
   }
 }
 
-
 .article-info {
   margin-top: 0;
-}
-
-footer {
-   nav a {
-     padding-right: 16px;
-  }
 }
 
 .container, .utterances {
@@ -214,11 +206,30 @@ article {
 
 article:not(:last-of-type) {
     border-bottom: none;
-    // padding-bottom: $breather;
     padding-bottom: 64px;
 }
+
+main {
+  margin-bottom: $breather;
+}
+
+footer {
+  margin: 0;
+}
+
 
 .utterances {
     margin-top: 60px;
 }
 
+.quick-nav {
+  padding: 8px;
+  display: flex;
+  gap: 16px;
+  // justify-content: flex-end;
+  
+  a {
+    font-size: 16px;
+    color: #555;
+  }
+}

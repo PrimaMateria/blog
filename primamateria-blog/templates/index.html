@@ -23,6 +23,14 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ get_url(path="favicon_io/favicon-16x16.png", trailing_slash=false) }}">
     <link rel="manifest" href="/favicon_io/site.webmanifest">
 
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+   />
+
     <script type="module">
       import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
       mermaid.initialize({
@@ -81,6 +89,7 @@
                 <a href="{{ config.base_url }}">{{ config.title }}</a>
             </h1>
         </header>
+
          
         <main id="main" tabindex="-1">
             {% block content %}
@@ -102,22 +111,25 @@
                 {% endfor %}
                 {% endif %}
 
-                {% if section.subsections %}
-                <br />
-                <h3>Subs</h3>
-                <ul>
-                {% for subsection in section.subsections %}
-                  {{ page_macros::subsection_listing(subsection=subsection) }}
-                {% endfor %}
-                </ul>
-                {% endif %}
             {% endblock content %}
         </main>
 
         {% block comments %}
         {% endblock comments %}
 
-        <footer>
+        <nav class="quick-nav">
+            <a href="{{ config.base_url }}/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="{{ config.base_url }}/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
             <p>
                 © {{ config.extra.author }} {{ now() | date(format="%Y") }}<br>
                 Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
@@ -126,14 +138,6 @@
                 {% block footer %}
                 {% endblock footer %}
             </p>
-            <nav>
-                {% block sidebar_nav %}
-                {% for menu_link in config.extra.anpu_menu_links %}
-                {% set link_url = menu_link.url | replace(from="$BASE_URL", to=config.base_url) %}
-                <a {% if current_url and current_url == link_url %}class="active"{% endif %} href="{{ link_url }}">{{menu_link.name}}</a>
-                {% endfor %}
-                {% endblock sidebar_nav %}
-            </nav>
         </footer>
     </div>
 </body>
