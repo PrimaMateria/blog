@@ -2,18 +2,60 @@ $containerWidth: 756px;
 $md: 810px;
 $lg: 900px;
 $xl: 1256px;
-$breather: 80px;
+$breather: 130px;
 
 * {
   box-sizing: border-box;
   scrollbar-width: thin;
 }
 
-header {
-  .site-header, nav {
-    text-align: left;
-    padding-left: 4px;
-    padding-right: 4px;
+.site-header {
+  padding-left: 4px;
+  padding-right: 4px;
+  text-align: left;
+  white-space: wrap;
+  margin: 0;
+  margin-top: 32px;
+  margin-bottom: 32px;
+
+  font-family: "Anton SC", sans-serif;
+  font-size: 36px;
+  line-height: normal;
+
+  @media (min-width: 358px) {
+    font-size: 54px;
+  }
+  @media (min-width: 473px) {
+    font-size: 72px;
+  }
+  @media (min-width: 588px) {
+    font-size: 90px;
+  }
+
+  a {
+    @media (min-width: 358px) {
+      display: inline-block;
+      height: 72px;
+    }
+    @media (min-width: 473px) {
+      display: inline-block;
+      height: 92px;
+    }
+    @media (min-width: 588px) {
+      display: inline-block;
+      height: 120px;
+    }
+  }
+}
+
+
+.article-info {
+  margin-top: 0;
+}
+
+footer {
+   nav a {
+     padding-right: 16px;
   }
 }
 
@@ -84,14 +126,28 @@ article {
   margin-bottom: 16px;
 }
 
-a {
+a, article header h1 a {
   border-bottom: 1px dotted rgb(51, 51, 51);
 }
 
-article header h1 a {
-  border-bottom: 1px dotted rgb(51, 51, 51);
-  font-size: 1.8em;
-  line-height: 1.1em;
+
+h1 {
+  font-family: "Rubik", sans-serif;
+  font-size: 24px;
+  line-height: 20px;
+  font-optical-sizing: auto;
+  @media (min-width: 330px) {
+    font-size: 32px;
+    line-height: 34px;
+  }
+  @media (min-width: 455px) {
+    font-size: 36px;
+    line-height: 38px;
+  }
+  @media (min-width: 570px) {
+    font-size: 42px;
+    line-height: 48px;
+  }
 }
 
 pre {
@@ -152,19 +208,17 @@ ul ul {
 article {
   h2, h3,  {
     margin-top: $breather;
+    font-family: "Rubik", sans-serif;
   }
 } 
 
 article:not(:last-of-type) {
     border-bottom: none;
-    padding-bottom: 60px;
+    // padding-bottom: $breather;
+    padding-bottom: 64px;
 }
 
 .utterances {
     margin-top: 60px;
 }
 
-article.post header h1 {
-  font-size: 4.0em;
-  line-height: 0.9em;
-}

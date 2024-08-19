@@ -13,6 +13,10 @@
 
     <link rel="stylesheet" href="{{ get_url(path="main.css", trailing_slash=false) }}">
     <link rel="stylesheet" href="{{ get_url(path="custom.css", trailing_slash=false) | safe }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
 
     <link rel="apple-touch-icon" sizes="180x180" href="{{ get_url(path="favicon_io/apple-touch-icon.png", trailing_slash=false) }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ get_url(path="favicon_io/favicon-32x32.png", trailing_slash=false) }}">
@@ -56,6 +60,7 @@
     {% endblock extra_head %}
 
     <script src="{{ get_url(path="main.js") }}"></script>
+
 </head>
 
 <!-- Google tag (gtag.js) -->
@@ -75,14 +80,6 @@
             <h1 class="site-header">
                 <a href="{{ config.base_url }}">{{ config.title }}</a>
             </h1>
-            <nav>
-                {% block sidebar_nav %}
-                {% for menu_link in config.extra.anpu_menu_links %}
-                {% set link_url = menu_link.url | replace(from="$BASE_URL", to=config.base_url) %}
-                <a {% if current_url and current_url == link_url %}class="active"{% endif %} href="{{ link_url }}">{{menu_link.name}}</a>
-                {% endfor %}
-                {% endblock sidebar_nav %}
-            </nav>
         </header>
          
         <main id="main" tabindex="-1">
@@ -129,6 +126,14 @@
                 {% block footer %}
                 {% endblock footer %}
             </p>
+            <nav>
+                {% block sidebar_nav %}
+                {% for menu_link in config.extra.anpu_menu_links %}
+                {% set link_url = menu_link.url | replace(from="$BASE_URL", to=config.base_url) %}
+                <a {% if current_url and current_url == link_url %}class="active"{% endif %} href="{{ link_url }}">{{menu_link.name}}</a>
+                {% endfor %}
+                {% endblock sidebar_nav %}
+            </nav>
         </footer>
     </div>
 </body>
