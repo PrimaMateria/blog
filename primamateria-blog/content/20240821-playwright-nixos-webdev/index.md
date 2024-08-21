@@ -11,60 +11,59 @@ bannerAlt = "todo"
 tags = ["nixos","webdev"]
 +++
 
-In this post I explain how to run playwright test on NixOS. Playwright is a
-framework for running automated tests of web pages in real browser. The
-recommeded way of installing the browsers doesn't work due to NixOS nature. This
-post provides an example how to setup flake on vite project to be able to run
-Playwright version of your choosing.
+In this post, I will explain how to run Playwright tests on NixOS. Playwright is
+a framework for running automated tests on web pages in real browsers. However,
+the recommended method of installing browsers doesn't work on NixOS due to its
+unique nature. This post will demonstrate how to set up a flake for a Vite
+project to run the Playwright version of your choice.
 
 <!-- more -->
 <!-- TOC -->
 
 ## Introduction
 
-Nixpkgs also provides
-[playwright-driver](https://search.nixos.org/packages?channel=24.05&from=0&size=50&sort=relevance&type=packages&query=playwright-driver).
-This package is building and installing playwright executable. In my case, I
-don't need it because I install and run the playwright via npm. Only thing that
-I need is a playwright browser, because recommended `npx playwright install`
-fails on NixOS.
+Nixpkgs also provides the
+[playwright-driver](https://search.nixos.org/packages?channel=24.05&from=0&size=50&sort=relevance&type=packages&query=playwright-driver)
+package. This package builds and installs the Playwright executable. However, in
+my case, I don't need it because I install and run Playwright via npm. The only
+thing I need is a Playwright browser since the recommended
+`npx playwright install` fails on NixOS.
 
-Also the playwright is quite fast releasing new versions, and until the PR wiht
-version update en nixpkgs gets merged, there are usually already another new
-Playwright versions out. Sometimes I also require not only the latest version,
-but some project are stuck on older ones.
+Playwright releases new versions frequently, and often by the time a pull
+request (PR) to update the version in Nixpkgs is merged, a newer Playwright
+version has already been released. Sometimes, I also need specific older
+versions for certain projects.
 
-So I need solution with freedom to choose any playwright version. And I was not
-able to figure out how to somehow to just override nixpkgs package and make just
-install the version I want.
+I needed a solution that allows me the flexibility to choose any Playwright
+version. However, I couldn't figure out how to override the Nixpkgs package to
+install the specific version I wanted.
 
-What playwright basically needs a chromium in some specific directory with a
-version in the name. So this is how the playwright driver provides the browser -
+What Playwright essentially needs is a Chromium browser in a specific directory
+with a versioned name. Here’s how the Playwright driver provides the browser:
 
-first it downloads `browser.json` from playwright repo on the specific veriosn
-where it is recorded which browser version are used. It parses the browser
-version, creates derivation with such structure that matches playwright's
-expectations, and places nixpkgs chromium into it. Then
-`PLAYWRIGHT_BROWSERS_PATH` env variable is set to make playwright to look to nix
-store instead of default directory in home.
+First, it downloads `browser.json` from the Playwright repository for the
+specified version, which records the required browser versions. It then parses
+the browser version, creates a derivation with a structure that matches
+Playwright's expectations, and places Nixpkgs Chromium into it. Finally, the
+`PLAYWRIGHT_BROWSERS_PATH` environment variable is set so that Playwright looks
+in the Nix store instead of the default directory in the home folder.
 
-This is bit of cheating because the version of the chromium is not exactly as
-the version that playwright specifies. But it usually works, so better that
-nothing.
+This approach is a bit of a workaround because the Chromium version isn't
+exactly the one specified by Playwright. But it usually works, which is better
+than nothing.
 
-What I did is that I copied only that chunk of code that deals only with the
-browser for linux from nixpkgs and created around it local package that allows
-me to change the version.
+What I did was copy the relevant code from Nixpkgs that handles only the browser
+for Linux, and I created a local package that allows me to change the version as
+needed.
 
-The usage is demonstrated in the following tutorial. The sources you can find
-also on
-[github:PrimaMateria/blog-playwright-nixos-webdev](https://github.com/PrimaMateria/blog-playwright-nixos-webdev).
+The usage is demonstrated in the following tutorial. The sources can also be
+found on
+[GitHub: PrimaMateria/blog-playwright-nixos-webdev](https://github.com/PrimaMateria/blog-playwright-nixos-webdev).
 
 ## Init flake and direnv
 
-k am using playwright in web development for functional tests in projects
-written in typescript. To simulate this conditions lets generate new vite
-project.
+I use Playwright in web development for functional tests in TypeScript projects.
+To simulate these conditions, let's generate a new Vite project.
 
 Start with project's `flake.nix`.
 
@@ -120,8 +119,8 @@ Start with project's `flake.nix`.
 }
 ```
 
-I will be using my own dev toolkit to prepare node and npm. I prepared Hamuea
-and flake utils for good practice.
+I'll be using my own development toolkit to set up Node and npm. I've prepared
+Hamuea and flake-utils for best practices.
 
 ```
 #.envrc
@@ -132,7 +131,7 @@ Create direnv's config and enable it with `direnv allow`. Add `.direnv` to
 `.gitignore`. Try if node is ready.
 
 ```
- ~/dev/blog-playwright-nixos-webdev$ node --version
+~/dev/blog-playwright-nixos-webdev$ node --version
 v18.20.4
 ```
 
@@ -141,7 +140,7 @@ v18.20.4
 Create typescript react vite project.
 
 ```
- ~/dev/blog-playwright-nixos-webdev$ npm create vite@latest
+~/dev/blog-playwright-nixos-webdev$ npm create vite@latest
 Need to install the following packages:
 create-vite@5.5.2
 Ok to proceed? (y) y
@@ -195,7 +194,7 @@ running.
 Initialize Playwright without browsers and without system dependencies.
 
 ```
- ~/dev/blog-playwright-nixos-webdev$ npm init playwright@latest
+~/dev/blog-playwright-nixos-webdev$ npm init playwright@latest
 Need to install the following packages:
 create-playwright@1.17.133
 Ok to proceed? (y) y
@@ -252,7 +251,7 @@ Error: Command failed: npx playwright install --with-deps
 
 ## Installing chromium browser
 
-Create version agnostic base package:
+Create paramterized base package:
 
 ```nix
 #.nix/_playwright-browsers-base.nix
@@ -300,7 +299,7 @@ in
   ''
 ```
 
-I have extracted it from
+This part I have extracted from
 [github:kalekseev PR](https://github.com/NixOS/nixpkgs/pull/302759).
 
 Create version specific package:
@@ -318,15 +317,15 @@ Create version specific package:
 
 {{ nerdy(text="
 
-If you will need diferent version, just change the version to match a tag on
-Playwrights' repository and change `sha256` to empty string. Running it first
-time will trigger error about not matching hashes. Take the expected hash from
-the error message and paste it instead of the empty string.
+If you need a different version, simply change the version to match a tag in the
+Playwright repository and set sha256 to an empty string. When you run it for the
+first time, an error will occur due to the mismatched hashes. Copy the expected
+hash from the error message and replace the empty string with it.
 
 ") }}
 
-Extend the dev shell with extra package and extra shell hook. Use Haumea to get
-the newly create package with specified version.
+Extend the dev shell with an extra package and an additional shell hook. Use
+Haumea to include the newly created package.
 
 ```nix
 #flake.nix
@@ -387,8 +386,8 @@ the newly create package with specified version.
 }
 ```
 
-Disable firefox and webkit that are enabled by default after Playwright init.
-Keep only chromium in the `projects` lis:
+Disable Firefox and WebKit, which are enabled by default after running
+Playwright init. Keep only Chromium in the projects list.
 
 ```ts
 //playwright.config.ts
@@ -409,7 +408,7 @@ export default defineConfig({
 Verify that tests are running:
 
 ```
- ~/dev/blog-playwright-nixos-webdev$ npx playwright test
+~/dev/blog-playwright-nixos-webdev$ npx playwright test
 
 Running 2 tests using 2 workers
 [chromium] › example.spec.ts:10:1 › get started link
@@ -425,13 +424,13 @@ To open last HTML report run:
 
 {{ curious(text="
 
-The same way playwright is defined also in my dev toolkit in the profile
-`'playwright'`. Maybe it was better to not mix here the dev toolkit at all,
-because it is not some generic nix tool, but a personal toolkit I use and break
-not considering if others might use it. But I realized it at the end and I was
-lazy to redo it the tutorial. I bet you will be able to replace it by yourself
-with your own packages and shell hook for node installation. Node profile
+Playwright is defined in my development toolkit under the profile
+`'playwright'`. In hindsight, it might have been better not to include the dev
+toolkit here, as it's a personal tool that I often modify without considering
+others who might use it. However, I realized this late and didn't want to redo
+the tutorial. I'm confident you can replace it with your own packages and shell
+hook for Node installation. The Node profile
 [definition](https://github.com/PrimaMateria/dev-toolkit-nix/blob/main/src/profileDefinitions/node.nix)
-is simple.
+is straightforward.
 
 ") }}
