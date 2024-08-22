@@ -4,8 +4,8 @@ date = 2024-08-21
 slug ="playwright-nixos-webdev"
 
 [extra]
-banner = "banner-haumea-cheatsheet.png"
-bannerAlt = "todo"
+banner = "banner-playwright-nixos-webdev.png"
+bannerAlt = "Mobius comic book style. Playwright walking in the futuristic sci-fi city looking around on tall high-tech buildings."
 
 [taxonomies]
 tags = ["nixos","webdev"]
