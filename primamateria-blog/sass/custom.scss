@@ -197,7 +197,7 @@ ul ul {
   justify-content: space-around;
 }
 
-article {
+article, .comments {
   h2, h3,  {
     margin-top: $breather;
     font-family: "Rubik", sans-serif;
@@ -217,9 +217,7 @@ footer {
   margin: 0;
 }
 
-
 .utterances {
-    margin-top: 60px;
 }
 
 .quick-nav {
@@ -233,3 +231,33 @@ footer {
     color: #555;
   }
 }
+
+.reddit-embed {
+  margin-left: 4px;
+  margin-right: 4px;
+  .comment .comment-body {
+    color: #333;
+    font-size: small;
+  }
+  pre {
+    background: none !important;
+  }
+  code, pre code {
+    line-height: 1 !important;
+    font-size: small !important;
+  }
+}
+
+.comment-section-icon {
+  margin-right: 8px;
+  margin-left: 4px;
+  @media (min-width: #{$lg}) {
+    margin-left: -32px;
+  }
+}
+
+.reddit-link {
+  margin-left: 4px;
+  margin-right: 4px;
+  font-size: small;
+} 

@@ -56,12 +56,28 @@
     {% else %}
     {{ content[0] | safe }}
     {% endif %}
+     
 </article>
 
 {% endblock content %}
 
 {% block comments %}
+<div class="comments">
 
+{% if page.extra.reddithref %}
+
+
+<h2><i class="fa-brands fa-reddit-alien comment-section-icon"></i> Reddit comments</h2>
+
+<a class="reddit-link" href={{page.extra.reddithref}}>See on Reddit</a>
+<div class="reddit-embed"
+     red-href="{{page.extra.reddithref}}" 
+     red-opts='{"show_loading_animation": false, "show_post": true, "show_post_title": false, "show_post_body": false, "show_comments_section_header": false}'
+>
+</div>
+{% endif %}
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
 <script src="https://utteranc.es/client.js"
         repo="PrimaMateria/blog"
         issue-term="title"
@@ -71,5 +87,6 @@
         async>
 </script>
 
+</div>
 {% endblock comments %}
 

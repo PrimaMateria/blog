@@ -6,6 +6,7 @@ slug ="playwright-nixos-webdev"
 [extra]
 banner = "banner-playwright-nixos-webdev.png"
 bannerAlt = "Mobius comic book style. Playwright walking in the futuristic sci-fi city looking around on tall high-tech buildings."
+reddithref = "https://www.reddit.com/r/NixOS/comments/1eyenzf/playwright_on_nixos_for_webdev/"
 
 [taxonomies]
 tags = ["nixos","webdev"]

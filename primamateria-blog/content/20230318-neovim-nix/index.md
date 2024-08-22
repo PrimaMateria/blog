@@ -6,6 +6,7 @@ slug = "neovim-nix"
 [extra]
 banner = "banner-neovim-flake.png"
 bannerAlt = "Mobius comic book style. Scenery of planetary scifi city. Plants growing on the walls. Neovim logo embedded"
+reddithref = "https://www.reddit.com/r/NixOS/comments/120yk3a/how_to_create_your_own_neovim_flake/"
 
 [taxonomies]
 tags = ["nixos","neovim"]

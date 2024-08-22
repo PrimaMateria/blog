@@ -12,7 +12,6 @@
     <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
 
     <link rel="stylesheet" href="{{ get_url(path="main.css", trailing_slash=false) }}">
-    <link rel="stylesheet" href="{{ get_url(path="custom.css", trailing_slash=false) | safe }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
@@ -29,13 +28,21 @@
      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
      crossorigin="anonymous"
      referrerpolicy="no-referrer"
-   />
+    />
 
     <script type="module">
       import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
       mermaid.initialize({
         theme: 'neutral',
       });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
     </script>
 
     <!-- Open Graph Tags -->
@@ -67,6 +74,7 @@
     {% block extra_head %}
     {% endblock extra_head %}
 
+    <link rel="stylesheet" href="{{ get_url(path="custom.css", trailing_slash=false) | safe }}">
     <script src="{{ get_url(path="main.js") }}"></script>
 
 </head>
