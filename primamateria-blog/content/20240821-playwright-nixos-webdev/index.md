@@ -30,9 +30,9 @@ thing I need is a Playwright browser since the recommended
 `npx playwright install` fails on NixOS.
 
 Playwright releases new versions frequently, and often by the time a pull
-request (PR) to update the version in Nixpkgs is merged, a newer Playwright
-version has already been released. Sometimes, I also need specific older
-versions for certain projects.
+request to update the version in Nixpkgs is merged, a newer Playwright version
+has already been released. Sometimes, I also need specific older versions for
+certain projects.
 
 I needed a solution that allows me the flexibility to choose any Playwright
 version. However, I couldn't figure out how to override the Nixpkgs package to
@@ -120,7 +120,8 @@ Start with project's `flake.nix`.
 ```
 
 I'll be using my own development toolkit to set up Node and npm. I've prepared
-Hamuea and flake-utils for best practices.
+[Hamuea](@/20231022-haumea-cheatsheet/index.md) and flake-utils for best
+practices.
 
 ```
 #.envrc
@@ -137,7 +138,7 @@ v18.20.4
 
 ## Generate vite project
 
-Create typescript react vite project.
+Create typescript react [vite](https://vitejs.dev/guide/) project.
 
 ```
 ~/dev/blog-playwright-nixos-webdev$ npm create vite@latest
@@ -191,7 +192,8 @@ running.
 
 ## Install Playwright
 
-Initialize Playwright without browsers and without system dependencies.
+Initialize [Playwright](https://playwright.dev/docs/intro) without browsers and
+without system dependencies.
 
 ```
 ~/dev/blog-playwright-nixos-webdev$ npm init playwright@latest
@@ -300,11 +302,13 @@ in
 ```
 
 This part I have extracted from
-[github:kalekseev PR](https://github.com/NixOS/nixpkgs/pull/302759).
+[github:kalekseev's PR](https://github.com/NixOS/nixpkgs/pull/302759). I used
+only the linux browsers, but the mac browsers should be possible to extract in
+similar way.
 
 Create version specific package:
 
-```
+```nix
 #.nix/playwright-browsers-1_46_1.nix
 {
   pkgs,
@@ -434,3 +438,10 @@ hook for Node installation. The Node profile
 is straightforward.
 
 ") }}
+
+## Links
+
+- [Playwright docs](https://playwright.dev/docs/intro)
+- [Vite docs](https://vitejs.dev/guide/)
+- [Nixpkgs Playwright driver](https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/web/playwright/driver.nix)
+- [Nixpkgs PR to build playwright with buildNpmPackage](https://github.com/NixOS/nixpkgs/pull/302759)
