@@ -337,6 +337,8 @@ the documentation.
 | Lenovo ThinkCentre M92   | i5 3.60GHx                     | 8GB       | 512GB          | 129€    |
 | Raspberry Pi 5           | ARMv7 2.4GHz                   | 8GB       | 64GB SD card   | 139€    |
 
+- [https://lowcostminipcs.com/](https://lowcostminipcs.com/)
+
 ## Beelink
 
 <div style="margin-top: 24px">
