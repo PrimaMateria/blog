@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Neovim flake Updates</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="Neovim flake Updates">
+    <meta property="og:url" content="https://primamateria.github.io/blog/neovim-nix-update">
+    
+    <meta property="og:description" content="This is a follow-up post to
+How to create your own Neovim flake. Thanks to
+the help of Sam Willis, the mystery of the
+non-functioning symlinkjoin has been clarified, and a workaround has been
+found. Sam also assisted me in using flake-utils, which enabled me to
+successfully build Neovim on Nix-on-Droid.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-neovim-flake-update.c3344e41c8a2b970.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2023-06-04">
+    
+    
+    
+    <meta property="article:tags" content="nixos"><meta property="article:tags" content="neovim">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>Neovim flake Updates</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Sunday 04 June 2023</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 5 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/neovim/">#neovim</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake-update.b889d342f7c50971.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake-update.e39a2bdfa0cb51f8.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake-update.e1f0471c806ff929.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake-update.a9ad9e7a420b239f.png" alt="Mobius comic book style. Jungle treetops scenery flyover. Dark green pastel. Neovim logo embedded.">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>This is a follow-up post to
+<a href="https://primamateria.github.io/blog/neovim-nix/">How to create your own Neovim flake</a>. Thanks to
+the help of <a href="https://github.com/samjwillis97">Sam Willis</a>, the mystery of the
+non-functioning <code>symlinkjoin</code> has been clarified, and a workaround has been
+found. Sam also assisted me in using <code>flake-utils</code>, which enabled me to
+successfully build Neovim on Nix-on-Droid.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix-update/#runtime-dependencies-in-one-list">Runtime dependencies in one list</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix-update/#using-flake-utils-to-support-multiple-systems">Using flake-utils to support multiple systems</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<h2 id="runtime-dependencies-in-one-list"><a class="zola-anchor" href="#runtime-dependencies-in-one-list" aria-label="Anchor link for: runtime-dependencies-in-one-list"
+  >§</a
+>
+Runtime dependencies in one list</h2>
+<p>In my previous post, I described an issue I encountered while trying to create a
+package using <code>symlinkJoin</code>. The problem was that it couldn't combine common
+packages with node packages. However, Sam found an
+<a href="https://ertt.ca/blog/2022/01-12-nix-symlinkJoin-nodePackages/">article by John Sangster</a>
+that explains this issue and offers a workaround.</p>
+<p>To apply this fix to your flake, first update the <code>runtimeDeps.nix</code> file:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span>; [
+</span><span>  </span><span style="color:#f5871f;">lazygit
+</span><span>  </span><span style="color:#999999;"># packages with results in /lib/node_modules/.bin must come at the end
+</span><span>  </span><span style="color:#f5871f;">nodePackages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">typescript
+</span><span>  </span><span style="color:#f5871f;">nodePackages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">typescript-language-server
+</span><span>]
+</span></code></pre>
+<p>The order of the packages in the list is important. If the node packages are
+placed first, only they will be included in the resulting package. Therefore,
+place them at the end of the list.</p>
+<p>Next, update the <code>myNeovim.nix</code> package.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#c82829;">customRC </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../config </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span>  </span><span style="color:#c82829;">secrets </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../.secrets/secrets.nix</span><span>;
+</span><span>  </span><span style="color:#c82829;">plugins </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../plugins.nix </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span>  </span><span style="color:#c82829;">runtimeDeps </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../runtimeDeps.nix </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span>  </span><span style="color:#c82829;">neovimRuntimeDependencies </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">symlinkJoin </span><span>{
+</span><span>    </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;neovimRuntimeDependencies&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">paths </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">runtimeDeps</span><span>;
+</span><span>    </span><span style="color:#999999;"># see: https://ertt.ca/blog/2022/01-12-nix-symlinkJoin-nodePackages/
+</span><span>    </span><span style="color:#c82829;">postBuild </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">      for f in $out/lib/node_modules/.bin/*; do
+</span><span style="color:#718c00;">         path=&quot;$(readlink --canonicalize-missing &quot;$f&quot;)&quot;
+</span><span style="color:#718c00;">         ln -s &quot;$path&quot; &quot;$out/bin/$(basename $f)&quot;
+</span><span style="color:#718c00;">      done
+</span><span style="color:#718c00;">    &#39;&#39;</span><span>;
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">myNeovimUnwrapped </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">wrapNeovim pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">neovim </span><span>{
+</span><span>    </span><span style="color:#c82829;">configure </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">customRC</span><span>;
+</span><span>      </span><span style="color:#c82829;">packages</span><span>.</span><span style="color:#c82829;">all</span><span>.</span><span style="color:#c82829;">start </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">plugins</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span style="color:#8959a8;">in
+</span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">writeShellApplication </span><span>{
+</span><span>  </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nvim&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">runtimeInputs </span><span style="color:#3e999f;">= </span><span>[ </span><span style="color:#f5871f;">neovimRuntimeDependencies </span><span>];
+</span><span>  </span><span style="color:#c82829;">text </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">    OPENAI_API_KEY=</span><span style="color:#f5871f;">${secrets</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">openai-api-key} ${myNeovimUnwrapped}</span><span style="color:#718c00;">/bin/nvim &quot;$@&quot;
+</span><span style="color:#718c00;">  &#39;&#39;</span><span>;
+</span><span>}
+</span></code></pre>
+<p>As you can see, we end up with a single list of runtime dependencies and less
+code. The crucial part is the implementation of <code>postBuild</code>. For a detailed
+example, refer to John's post.</p>
+<h2 id="using-flake-utils-to-support-multiple-systems"><a class="zola-anchor" href="#using-flake-utils-to-support-multiple-systems" aria-label="Anchor link for: using-flake-utils-to-support-multiple-systems"
+  >§</a
+>
+Using flake-utils to support multiple systems</h2>
+<p>As mentioned in my previous post,
+<a href="https://github.com/numtide/flake-utils">numtide/flake-utils</a> is a popular Nix
+helper that allows us to easily prepare our Neovim package for different
+architectures. Sam has successfully made modifications to our <code>flake.nix</code> and
+shared the changes with me.</p>
+<p>Let's briefly discuss the history of flake-utils. The first commit was made on
+April 11, 2020, by Jonas Chevalier (GitHub username
+<a href="https://github.com/zimbatm">zimbatm</a>). A search on GitHub reveals an impressive
+count of 13.3k code usages, highlighting its widespread adoption.</p>
+<p>Now, here are the required changes in <code>flake.nix</code> file.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">description </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;My own Neovim flake&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:NixOS/nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>    </span><span style="color:#c82829;">neovim </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:neovim/neovim/stable?dir=contrib&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>    </span><span style="color:#c82829;">telescope-recent-files-src </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:smartpde/telescope-recent-files&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">flake </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">false</span><span>;
+</span><span>    };
+</span><span>    </span><span style="color:#c82829;">flake-utils </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:numtide/flake-utils&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#f5871f;">self</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">neovim</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">telescope-recent-files-src</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">flake-utils </span><span>}:
+</span><span>    </span><span style="color:#f5871f;">flake-utils</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">eachDefaultSystem </span><span>(</span><span style="color:#f5871f;">system</span><span>:
+</span><span>      </span><span style="color:#8959a8;">let
+</span><span>        </span><span style="color:#c82829;">overlayFlakeInputs </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">prev</span><span>: </span><span style="color:#f5871f;">final</span><span>: {
+</span><span>          </span><span style="color:#c82829;">neovim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">neovim</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">packages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">${prev</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">system}</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">neovim</span><span>;
+</span><span>
+</span><span>          </span><span style="color:#c82829;">vimPlugins </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">final</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">vimPlugins </span><span style="color:#3e999f;">// </span><span>{
+</span><span>            </span><span style="color:#c82829;">telescope-recent-files </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">./packages/vimPlugins/telescopeRecentFiles.nix </span><span>{
+</span><span>              </span><span style="color:#c82829;">src </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">telescope-recent-files-src</span><span>;
+</span><span>              </span><span style="color:#c82829;">pkgs </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">prev</span><span>;
+</span><span>            };
+</span><span>          };
+</span><span>        };
+</span><span>
+</span><span>
+</span><span>        </span><span style="color:#c82829;">overlayMyNeovim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">prev</span><span>: </span><span style="color:#f5871f;">final</span><span>: {
+</span><span>          </span><span style="color:#c82829;">myNeovim </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">./packages/myNeovim.nix </span><span>{
+</span><span>            </span><span style="color:#c82829;">pkgs </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">prev</span><span>;
+</span><span>          };
+</span><span>        };
+</span><span>
+</span><span>        </span><span style="color:#c82829;">pkgs </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#f5871f;">nixpkgs </span><span>{
+</span><span>          </span><span style="color:#c82829;">system </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">system</span><span>;
+</span><span>          </span><span style="color:#c82829;">overlays </span><span style="color:#3e999f;">= </span><span>[ </span><span style="color:#f5871f;">overlayFlakeInputs overlayMyNeovim </span><span>];
+</span><span>        };
+</span><span>
+</span><span>      </span><span style="color:#8959a8;">in
+</span><span>      {
+</span><span>        </span><span style="color:#c82829;">packages </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">rec </span><span>{
+</span><span>          </span><span style="color:#c82829;">nvim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">myNeovim</span><span>;
+</span><span>          </span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">nvim</span><span>;
+</span><span>        };
+</span><span>
+</span><span>        </span><span style="color:#c82829;">apps </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">rec </span><span>{
+</span><span>          </span><span style="color:#c82829;">nvim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">flake-utils</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">mkApp </span><span>{ </span><span style="color:#c82829;">drv </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">self</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">packages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">${system}</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">nvim</span><span>; };
+</span><span>          </span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">nvim</span><span>;
+</span><span>        };
+</span><span>      });
+</span><span>}
+</span></code></pre>
+<p>First, we added <code>flake-utils</code> as a new input and included it as an argument in
+our <code>outputs</code> function.</p>
+<p>The flake's <code>outputs</code> is a set with keys <code>packages</code> and <code>apps</code>. Instead of
+directly defining the set, we will use <code>flake-utils.lib.eachDefaultSystem()</code>.
+This function requires a callback function as an argument, which provides the
+variable <code>system</code>.</p>
+<p>The default systems are:</p>
+<ul>
+<li>aarch64-linux</li>
+<li>aarch64-darwin</li>
+<li>x86_64-darwin</li>
+<li>x86_64-linux</li>
+</ul>
+<div class="tip octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Octopus giving a tip
+    or explaining something"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>It is possible to select additional systems by using the
+<code>flake-utils.lib.eachSystem [ &lt;systems&gt; ] &lt;callback&gt;</code> function, where
+<code>[ &lt;systems&gt; ]</code> is a list of values from the
+<a href="https://github.com/numtide/flake-utils/blob/main/allSystems.nix">all systems</a>
+list. However, it's important to note that building Neovim, plugins, and their
+dependencies for exotic systems may not be widely supported or feasible. I
+examined Neovim's flake, and it also provides outputs only for default systems.</p>
+</div>
+  </div>
+</div>
+<p>For each of these default systems, the callback function will be executed. The
+body of the callback includes our previous outputs set with slight
+modifications.</p>
+<p>The first modification is in the initialization of <code>pkgs</code>, where we specify
+using the set of packages defined for the iterated system. This set of packages
+will be provided to our overlays as the <code>prev</code> argument.</p>
+<p>In the <code>overlayFlakeInputs</code>, we previously hardcoded the Neovim package to be
+for the system <code>x86_64-linux</code>. Now, instead, we use <code>${prev.system}</code>, which
+corresponds to the system that is set for <code>pkgs</code>.</p>
+<div class="tip octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Octopus giving a tip
+    or explaining something"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>In the <code>overlayMyNeovim</code>, I also corrected the packages that are passed to the
+module from <code>final</code> to <code>prev</code>. Both ways would work, but logically it makes more
+sense to pass the previous (original) set of packages as input for the build.</p>
+</div>
+  </div>
+</div>
+<p>The remaining magic is handled by flake-utils. It will reduce the list of
+outputs returned from the callback for each system to a single set of outputs.
+During this reduction operation, the system will be appended to each key of the
+output.</p>
+<p>Therefore, this implementation of the callback</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">packages </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">rec </span><span>{
+</span><span>    </span><span style="color:#c82829;">nvim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">myNeovim</span><span>;
+</span><span>    </span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">nvim</span><span>;
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>will produce</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">packages</span><span>.</span><span style="color:#c82829;">x86_64-linux </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">rec </span><span>{
+</span><span>    </span><span style="color:#c82829;">nvim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">myNeovim</span><span>; </span><span style="color:#999999;"># your neovim built with pkgs with system x86_64-linux
+</span><span>    </span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">nvim</span><span>;
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">packages</span><span>.</span><span style="color:#c82829;">x86_64-darwin </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">rec </span><span>{
+</span><span>    </span><span style="color:#c82829;">nvim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">myNeovim</span><span>; </span><span style="color:#999999;"># your neovim built with pkgs with system x86_64-darwin
+</span><span>    </span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">nvim</span><span>;
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">packages</span><span>.</span><span style="color:#c82829;">aarch64-linux </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">rec </span><span>{
+</span><span>    </span><span style="color:#c82829;">nvim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">myNeovim</span><span>; </span><span style="color:#999999;"># your neovim built with pkgs with system aarch64-linux
+</span><span>    </span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">nvim</span><span>;
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">packages</span><span>.</span><span style="color:#c82829;">aarch64-darwin </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">rec </span><span>{
+</span><span>    </span><span style="color:#c82829;">nvim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">myNeovim</span><span>; </span><span style="color:#999999;"># your neovim built with pkgs with system aarch64-darwin
+</span><span>    </span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">nvim</span><span>;
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>And, of course, the same will happen to the <code>apps</code> as well.</p>
+<p>Now we can compare the output of the <code>nix flake show</code> command between the
+previous and updated versions.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span># previous
+</span><span>├───apps
+</span><span>│   └───x86_64-linux
+</span><span>│       └───default: app
+</span><span>└───packages
+</span><span>    └───x86_64-linux
+</span><span>        └───default: package &#39;nvim&#39;
+</span><span>
+</span><span># updated
+</span><span>├───apps
+</span><span>│   ├───aarch64-darwin
+</span><span>│   │   ├───default: app
+</span><span>│   │   └───nvim: app
+</span><span>│   ├───aarch64-linux
+</span><span>│   │   ├───default: app
+</span><span>│   │   └───nvim: app
+</span><span>│   ├───x86_64-darwin
+</span><span>│   │   ├───default: app
+</span><span>│   │   └───nvim: app
+</span><span>│   └───x86_64-linux
+</span><span>│       ├───default: app
+</span><span>│       └───nvim: app
+</span><span>└───packages
+</span><span>    ├───aarch64-darwin
+</span><span>    │   ├───default: package &#39;nvim&#39;
+</span><span>    │   └───nvim: package &#39;nvim&#39;
+</span><span>    ├───aarch64-linux
+</span><span>    │   ├───default: package &#39;nvim&#39;
+</span><span>    │   └───nvim: package &#39;nvim&#39;
+</span><span>    ├───x86_64-darwin
+</span><span>    │   ├───default: package &#39;nvim&#39;
+</span><span>    │   └───nvim: package &#39;nvim&#39;
+</span><span>    └───x86_64-linux
+</span><span>        ├───default: package &#39;nvim&#39;
+</span><span>        └───nvim: package &#39;nvim&#39;
+</span></code></pre>
+<div class="tip octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Octopus giving a tip
+    or explaining something"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>I will not explain what the <code>flake-utils.lib.mkApp</code> does, as I will leave it as
+an exercise for you to explore on your own.</p>
+</div>
+  </div>
+</div>
+<p>With these changes in place, I was able to run my Neovim flake on Nix-on-Droid.
+It took some time to build, but in the end, everything worked just like on my
+machine running NixOS. My customized Neovim took up over 3GB, and the entire
+Nix-on-Droid now occupies 5.68GB of storage on my phone.</p>
+<p>I don't think I will ever do web development on my phone. Instead, I intend to
+use it for note-taking or writing blog posts while on the go. The next step
+would be to modify our flake structure to create different apps for different
+workflows - one with heavy dependencies for web development and another with
+lighter dependencies for blogging.</p>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+
+<h2><i class="fa-brands fa-reddit-alien comment-section-icon"></i> Reddit comments</h2>
+
+<a class="reddit-link" href=https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;NixOS&#x2F;comments&#x2F;140fwx1&#x2F;neovim_flake_updates&#x2F;>See on Reddit</a>
+<div class="reddit-embed"
+     red-href="https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;NixOS&#x2F;comments&#x2F;140fwx1&#x2F;neovim_flake_updates&#x2F;" 
+     red-opts='{"show_loading_animation": false, "show_post": true, "show_post_title": false, "show_post_body": false, "show_comments_section_header": false}'
+>
+</div>
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2024<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

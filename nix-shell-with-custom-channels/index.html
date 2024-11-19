@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>nix-shell with custom nix channel</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="nix-shell with custom nix channel">
+    <meta property="og:url" content="https://primamateria.github.io/blog/nix-shell-with-custom-channels">
+    
+    <meta property="og:description" content="In NixOS, there is an old world of Nix channels, environments, and paths, and a
+new world of Nix flakes, inputs, and outputs. Today, after a long time, I needed
+to run nix-shell -p foo again, but it kept failing with an error stating that
+the package could not be found, even though I could find it while searching the
+stable and unstable channels.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-nix-shell-custom-channel.7291d131567c3d3a.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2024-04-17">
+    
+    
+    
+    <meta property="article:tags" content="nixos"><meta property="article:tags" content="nix-flakes">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>nix-shell with custom nix channel</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Wednesday 17 April 2024</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 2 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nix-flakes/">#nix-flakes</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-nix-shell-custom-channel.f88c95d46b58dfe3.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-nix-shell-custom-channel.4da974b54c80418d.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-nix-shell-custom-channel.f2740073010c5e47.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-nix-shell-custom-channel.75abba573e55e9b4.png" alt="Mobius comics style. Post-apocalyptic frozen river with abandoned military ships, smoking ruins in the background. Dominated with white snow blizzard. Flakes visible.">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>In NixOS, there is an old world of Nix channels, environments, and paths, and a
+new world of Nix flakes, inputs, and outputs. Today, after a long time, I needed
+to run <code>nix-shell -p foo</code> again, but it kept failing with an error stating that
+the package could not be found, even though I could find it while searching the
+stable and unstable channels.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/nix-shell-with-custom-channels/#problem">Problem</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/nix-shell-with-custom-channels/#investigation">Investigation</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/nix-shell-with-custom-channels/#solution">Solution</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/nix-shell-with-custom-channels/#oddity">Oddity</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<h2 id="problem"><a class="zola-anchor" href="#problem" aria-label="Anchor link for: problem"
+  >§</a
+>
+Problem</h2>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>$ nix-shell -p prefetch-npm-deps
+</span><span>error:
+</span><span>       … while calling the &#39;derivationStrict&#39; builtin
+</span><span>
+</span><span>         at /builtin/derivation.nix:9:12: (source not available)
+</span><span>
+</span><span>       … while evaluating derivation &#39;shell&#39;
+</span><span>         whose name attribute is located at /nix/var/nix/profiles/per-user/root/channels/nixos/pkgs/stdenv/generic/make-derivation.nix:278:7
+</span><span>
+</span><span>       … while evaluating attribute &#39;buildInputs&#39; of derivation &#39;shell&#39;
+</span><span>
+</span><span>         at /nix/var/nix/profiles/per-user/root/channels/nixos/pkgs/stdenv/generic/make-derivation.nix:322:7:
+</span><span>
+</span><span>          321|       depsHostHost                = lib.elemAt (lib.elemAt dependencies 1) 0;
+</span><span>          322|       buildInputs                 = lib.elemAt (lib.elemAt dependencies 1) 1;
+</span><span>             |       ^
+</span><span>          323|       depsTargetTarget            = lib.elemAt (lib.elemAt dependencies 2) 0;
+</span><span>
+</span><span>       error: undefined variable &#39;prefetch-npm-deps&#39;
+</span><span>
+</span><span>       at «string»:1:107:
+</span><span>
+</span><span>            1| {...}@args: with import &lt;nixpkgs&gt; args; (pkgs.runCommandCC or pkgs.runCommand) &quot;shell&quot; { buildInputs = [ (prefetch-npm-deps) ]; } &quot;&quot;
+</span><span>             |                                                                                                           ^
+</span></code></pre>
+<h2 id="investigation"><a class="zola-anchor" href="#investigation" aria-label="Anchor link for: investigation"
+  >§</a
+>
+Investigation</h2>
+<p>If I understand correctly, nix-shell is searching in <code>&lt;nixpkgs&gt;</code>. This is
+resolved from the <code>$NIX_PATH</code>.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>$ echo $NIX_PATH
+</span><span>nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos:nixos-config=/etc/nixos/configuration.nix:/nix/var/nix/profiles/per-user/root/channels
+</span></code></pre>
+<p><code>nixos</code> channel details were:</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>$ sudo nix-channel --list
+</span><span>nixos https://nixos.org/channels/nixos-22.05
+</span></code></pre>
+<p>I was fetching from version 22.05, while the
+<a href="https://search.nixos.org/packages?channel=23.11&amp;from=0&amp;size=50&amp;sort=relevance&amp;type=packages&amp;query=prefetch-npm-deps">NixOS Search</a>
+was browsing version 23.11.</p>
+<h2 id="solution"><a class="zola-anchor" href="#solution" aria-label="Anchor link for: solution"
+  >§</a
+>
+Solution</h2>
+<p>One option is to update the channel, and the other is to directly override the
+nixpkgs path when invoking the nix-shell.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/refs/tags/23.11.tar.gz -p prefetch-npm-deps
+</span></code></pre>
+<p>The tar.gz you can find as an asset in
+<a href="https://github.com/NixOS/nixpkgs/tags">GitHub tags page</a>.</p>
+<h2 id="oddity"><a class="zola-anchor" href="#oddity" aria-label="Anchor link for: oddity"
+  >§</a
+>
+Oddity</h2>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>There is something about <code>~/.nix-defexpr</code> and how nix-env does not actually
+respect the <code>NIX_PATH</code>. I did not understand that, so here are just some links
+for further investigation.</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/40532798/loading-dependencies-from-nixpkgs-unstable-with-nix-shell">https://stackoverflow.com/questions/40532798/loading-dependencies-from-nixpkgs-unstable-with-nix-shell</a></li>
+<li><a href="https://lethalman.blogspot.com/2014/09/nix-pill-15-nix-search-paths.html">https://lethalman.blogspot.com/2014/09/nix-pill-15-nix-search-paths.html</a></li>
+</ul>
+</div>
+  </div>
+</div>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>I tried following:</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>$ NIX_PATH= nix-shell -p hello
+</span><span>error:
+</span><span>       … &lt;borked&gt;
+</span><span>
+</span><span>         at «none»:0: (source not available)
+</span><span>
+</span><span>       … while calling the import builtin
+</span><span>
+</span><span>         at «string»:1:18:
+</span><span>
+</span><span>            1| {...}@args: with import &lt;nixpkgs&gt; args; (pkgs.runCommandCC or pkgs.runCommand) &quot;shell&quot; { buildInputs = [ (hello) ]; } &quot;&quot;
+</span><span>             |                  ^
+</span><span>
+</span><span>       (stack trace truncated; use --show-trace to show the full trace)
+</span><span>
+</span><span>       error: file nixpkgs was not found in the Nix search path (add it using $NIX_PATH or -I)
+</span><span>
+</span><span>       at «none»:0: (source not available)
+</span></code></pre>
+<p>And this works as well:</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>$ NIX_PATH=nixpkgs=https://github.com/NixOS/nixpkgs/archive/refs/tags/23.11.tar.gz nix-shell -p prefetch-npm-deps
+</span></code></pre>
+</div>
+  </div>
+</div>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>This means that nix-shell actually reads the NIX_PATH, so the nix-env oddity may
+not be related to nix-shell.</p>
+</div>
+  </div>
+</div>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2024<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

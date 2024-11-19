@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Home Server</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="Home Server">
+    <meta property="og:url" content="https://primamateria.github.io/blog/worklogs/home-server">
+    
+    <meta property="og:description" content="Setting up headless server that will be publicly accessible.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-homeserver.7555bcdc1b344870.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2024-05-30">
+    <meta property="article:modified_time" content="2024-07-04">
+    
+    
+    <meta property="article:tags" content="nix"><meta property="article:tags" content="raspberry pi"><meta property="article:tags" content="hive"><meta property="article:tags" content="nixos">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>Home Server</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Thursday 30 May 2024</div>
+        
+
+        
+        <div class="article-date">Last updated on Thursday 04 July 2024</div>
+        
+
+        
+        <div class="article-reading-time">Reading time: 19 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nix/">#nix</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/raspberry-pi/">#raspberry pi</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/hive/">#hive</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+    <div class="article-info">
+      🚧
+      This is a work log. In the work log, I record my steps, including mistakes
+      or wrong decisions that I would not recommend. Hopefully, this work log
+      will one day be distilled into a helpful blog post.
+    </div>
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-homeserver.a801d0d1ce38e01a.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-homeserver.93fe79b3a84a9e37.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-homeserver.a7efc05992720dcf.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-homeserver.c2af96be9a6896a4.png" alt="Mobius comics style. Cabin in the woods inside the deep forest. Lot of trees around. Window radiate yellow light. Satellite dish on the roof. Night sky full of stars and Milky Way. Science fiction">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>Setting up headless server that will be publicly accessible.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/worklogs/home-server/#raspberry-pi-5-with-nix">Raspberry Pi 5 with Nix</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/worklogs/home-server/#docker">Docker</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/worklogs/home-server/#freshrss">FreshRSS</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/worklogs/home-server/#traefik">Traefik</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/worklogs/home-server/#planning-extenstion">Planning extenstion</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/worklogs/home-server/#raspberry-pi-replacement">Raspberry Pi replacement</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/worklogs/home-server/#beelink">Beelink</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/worklogs/home-server/#matrix">Matrix</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<h2 id="raspberry-pi-5-with-nix"><a class="zola-anchor" href="#raspberry-pi-5-with-nix" aria-label="Anchor link for: raspberry-pi-5-with-nix"
+  >§</a
+>
+Raspberry Pi 5 with Nix</h2>
+<ul>
+<li>
+<p>Installed Raspbian on the SD card.</p>
+</li>
+<li>
+<p>Generated new ssh key pair. Assigned IP address of rpi5 to the key.</p>
+</li>
+<li>
+<p>Copied public key to rpi5:
+<code>ssh-copy-id -i ./rpi5.pub primamateria@192.168.178.61</code></p>
+</li>
+<li>
+<p>Setup rpi5 hostname. On WSL it required to set
+<code>wsl.wslConf.network.generateHosts = false;</code></p>
+</li>
+<li>
+<p>Make sure nvim can edit files over scp. Recommended config of nvim-tree
+disables netrw that allows editing files over scp. See <code>:h nvim-tree-netrw</code></p>
+</li>
+<li>
+<p>Installed nix on Raspbian with <code>curl -L https://nixos.org/nix/install | sh</code>
+(see <a href="https://nixos.wiki/wiki/Nix_on_ARM">https://nixos.wiki/wiki/Nix_on_ARM</a>)</p>
+</li>
+<li>
+<p>Editing single files will be cumbersome. I decided to edit <code>nixos-hive</code>
+directory locally and <code>rsync</code> it to rpi5. Added following shell application:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>  (</span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">writeShellApplication </span><span>{
+</span><span>    </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;hive-rpi5-sync&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">runtimeInputs </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">rsync</span><span>];
+</span><span>    </span><span style="color:#c82829;">text </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">      rsync -a &quot;$HOME/dev/nixos-hive&quot; &quot;rpi5:/home/primamateria/&quot;
+</span><span style="color:#718c00;">    &#39;&#39;</span><span>;
+</span><span>  })
+</span></code></pre>
+</li>
+<li>
+<p>Created new rpi5 home configurations inside the hive.</p>
+</li>
+<li>
+<p>Created nix-shell with <code>git-crypt</code> and unlocked the <code>nixos-hive</code> repository on
+rpi5.</p>
+</li>
+<li>
+<p>Executed the first build.</p>
+<pre data-lang="sh" style="background-color:#ffffff;color:#4d4d4c;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#c82829;">nix</span><span style="color:#4271ae;"> build .#homeConfigurations.primamateria-$</span><span style="color:#c82829;">HOSTNAME</span><span style="color:#4271ae;">.activationPackage</span><span style="color:#f5871f;"> --extra-experimental-features</span><span style="color:#4271ae;"> nix-command</span><span style="color:#f5871f;"> --extra-experimental-features</span><span style="color:#4271ae;"> flakes
+</span></code></pre>
+</li>
+</ul>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p><strong>The build took the entire evening!</strong> The minimum quality of shell-life tools
+needs to be determined. The same will apply later for the neovim flake.
+Everything must be streamlined to reduce build time. Additionally, I should
+investigate if proper cachix configuration would be beneficial.</p>
+</div>
+  </div>
+</div>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p><code>aarch64-linux</code> is in the official nixpkgs cachix, so there is no need for extra
+configuration.</p>
+</div>
+  </div>
+</div>
+<ul>
+<li>After running <code>result/activate</code> programs are not found. When sourced
+<code>~/.nix-profile/etc/profile.d/nix.sh</code> then it started to work.</li>
+</ul>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>What does <code>activate.sh</code> actually do? Does it just create links? The backed up
+original <code>.profile</code> has some nix magic at the end. Maybe it needs to be added to
+the rpi5 config in order to make it work.</p>
+</div>
+  </div>
+</div>
+<ul>
+<li>
+<p>Created very minimal set of cli tools. Opted out tools like <code>eza</code> or <code>bat</code> in
+favor simpler <code>ls</code> and <code>cat</code>.</p>
+</li>
+<li>
+<p>Added following to make sure that nix is activated when terminal session is
+created:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#999999;">#...
+</span><span>  </span><span style="color:#c82829;">programs</span><span>.</span><span style="color:#c82829;">bash</span><span>.</span><span style="color:#c82829;">profileExtra </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">    if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+</span><span style="color:#718c00;">  &#39;&#39;</span><span>;
+</span><span>}
+</span></code></pre>
+</li>
+<li>
+<p>Suddenly strange error started to appear while trying to activate built home
+manager result.</p>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>Starting Home Manager activation
+</span><span>Inconsistency detected by ld.so: dl-setup_hash.c: 36: _dl_setup_hash: Assertion `(bitmask_nwords &amp; (bitmask_nwords - 1)) == 0&#39; failed!
+</span></code></pre>
+<p>Debug reveals some issue with <code>libaws-c-cal.so.1.0.0</code></p>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>  $ LD_DEBUG=all result/activate
+</span><span>  ...
+</span><span>  219860:     file=libaws-c-cal.so.1.0.0 [0];  generating link map
+</span><span>  219860:       dynamic: 0x00007ffef049f840  base: 0x00007ffef0470000   size: 0x0000000000030578
+</span><span>  219860:         entry: 0x00007ffef0470000  phdr: 0x00007ffef0470040  phnum:                  6
+</span></code></pre>
+<p>I am not interested in further investigation. My next step is to reflash the
+SD card with fresh raspbian.</p>
+</li>
+<li>
+<p>Reflashing raspbian dealt with the ld problem.</p>
+</li>
+<li>
+<p>Generate <code>nix.conf</code> that dealt with error about missing experimental feautes
+when trying to call <code>hive-home-reload</code>.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#999999;">#...
+</span><span>  </span><span style="color:#c82829;">nix </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">package </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">nix</span><span>;
+</span><span>    </span><span style="color:#c82829;">settings </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">extra-experimental-features </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#718c00;">&quot;nix-command&quot; &quot;flakes&quot;</span><span>];
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+</li>
+<li>
+<p>Deactivating leds is achieved by passing <code>dtparam</code> configurations to the
+<code>/boot/firmware/config.txt</code>. Instead of directly updating this file I have
+prepared separated xdg config file.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#999999;">#...
+</span><span>  </span><span style="color:#c82829;">xdg</span><span>.</span><span style="color:#c82829;">configFile</span><span>.</span><span style="color:#718c00;">&quot;rpi-boot-extract-config.txt&quot;</span><span>.</span><span style="color:#c82829;">text </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">    # disable leds
+</span><span style="color:#718c00;">    dtparam=pwr_led_trigger=default-on
+</span><span style="color:#718c00;">    dtparam=pwr_led_activelow=off
+</span><span style="color:#718c00;">    dtparam=act_led_trigger=none
+</span><span style="color:#718c00;">    dtparam=act_led_activelow=off
+</span><span style="color:#718c00;">    dtparam=eth_led0=4
+</span><span style="color:#718c00;">    dtparam=eth_led1=4
+</span><span style="color:#718c00;">  &#39;&#39;</span><span>;
+</span><span>}
+</span></code></pre>
+<p>And added following line the origina <code>/boot/firmware/config.txt</code>:</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>include /home/primamateria/.config/rpi-boot-extract-config.txt
+</span></code></pre>
+<p>It didn't work, LEDs are still on. Writing the params directly to <code>config.txt</code>
+did the trick. So something is not working with the include statement. It
+looks like that referencing file not under <code>/boot</code> won't work
+(<a href="https://raspberrypi.stackexchange.com/questions/78577/import-settings-from-other-file-into-config-txt">source</a>).</p>
+<p>I made config script that will copy <code>config.txt</code> defined in the hive and
+stored in nix store to the boot volume:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>(</span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">writeShellApplication
+</span><span>  {
+</span><span>    </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;rpi5-configure&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">text </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">      # Backup original /boot/firmware/config.txt
+</span><span style="color:#718c00;">      sudo cp /boot/firmware/config.txt /boot/firmware/config.backup.txt
+</span><span style="color:#718c00;">      # Copy custom config from the nix store
+</span><span style="color:#718c00;">      sudo cp </span><span style="color:#f5871f;">${boot-firmware-config}</span><span style="color:#718c00;"> /boot/firmware/config.txt
+</span><span style="color:#718c00;">    &#39;&#39;</span><span>;
+</span><span>  })
+</span></code></pre>
+</li>
+</ul>
+<h2 id="docker"><a class="zola-anchor" href="#docker" aria-label="Anchor link for: docker"
+  >§</a
+>
+Docker</h2>
+<ul>
+<li>
+<p>Installed docker with docker's
+<a href="https://docs.docker.com/engine/install/debian/#install-using-the-convenience-script">convenience script</a>.</p>
+</li>
+<li>
+<p>I tried using arion. First I installed recommeded packages via home manager:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#999999;">#...
+</span><span>  </span><span style="color:#c82829;">home</span><span>.</span><span style="color:#c82829;">packages </span><span style="color:#3e999f;">= </span><span>[
+</span><span>    </span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">arion
+</span><span>    </span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">docker-client
+</span><span>  ];
+</span><span>}
+</span></code></pre>
+<p>Then I added my user to the docker group and create simple arion project. When
+I tried to run <code>arion up</code> it failed with
+<a href="https://stackoverflow.com/questions/77641240/getting-docker-compose-typeerror-kwargs-from-env-got-an-unexpected-keyword-ar">error</a>.
+The issue is the new <code>docker compose</code> that replaced older <code>docker-compose</code>
+while it looks like arion relies on the old version.</p>
+<p>Having docker compose project define in nix is not such a necessity for me.
+Next I will try to traditional yaml configuration.</p>
+</li>
+</ul>
+<h2 id="freshrss"><a class="zola-anchor" href="#freshrss" aria-label="Anchor link for: freshrss"
+  >§</a
+>
+FreshRSS</h2>
+<ul>
+<li>
+<p>I defined docker compose file for FreshRSS inside the nix using
+<code>nixpkgs.writeTextFile</code> and <code>builtins.toJSON</code>. At first the service was not
+working, but later I found the issue was (probably) in permission settings or
+user creation. Running recommended commands that were shown after the first
+FreshRSS run that installed the service fixed the issue and now the service is
+accessible through local network.</p>
+</li>
+<li>
+<p>I wanted to expose the service to public. Hastily I bought domain on
+Squarespace just later to find that they don't offer Dynamic DNS service. The
+right for the full refund is limited to 5 days, which should be fine. Next I
+come across <a href="https://www.noip.com">noip.com</a> that offers free domain with
+DDNS. I found a
+<a href="https://raspberrytips.com/install-no-ip-raspberry-pi/">tutorial</a> that
+suggests installing noip client directly on raspberry. Other option worh to
+investigate is to leverage
+<a href="https://www.noip.com/support/knowledgebase/configuring-ddns-fritzbox">fritzbox (home router) settings to connect to DDNS service</a>.</p>
+</li>
+<li>
+<p>Updated the fritzbox and verified that the FreshRSS is reachable on the noip
+domain.</p>
+</li>
+<li>
+<p>Tried to install <code>certbot</code> to obtain SSL certificate from "Let's encrypt"
+using the nix-shell but it gives an error:</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>   error:
+</span><span>     … while evaluating a branch condition
+</span><span>       at /nix/store/r0f9gw57riyd2wqybqp8s494v1zngm68-nixpkgs/nixpkgs/pkgs/stdenv/booter.nix:99:7:
+</span><span>         98|     thisStage =
+</span><span>         99|       if args.__raw or false
+</span><span>           |       ^
+</span><span>        100|       then args&#39;
+</span><span>
+</span><span>     … in the right operand of the update (//) operator
+</span><span>       at /nix/store/r0f9gw57riyd2wqybqp8s494v1zngm68-nixpkgs/nixpkgs/pkgs/stdenv/booter.nix:84:7:
+</span><span>         83|       { allowCustomOverrides = index == 1; }
+</span><span>         84|       // (stageFun prevStage))
+</span><span>           |       ^
+</span><span>         85|     (lib.lists.reverseList stageFuns);
+</span><span>
+</span><span>     (stack trace truncated; use &#39;--show-trace&#39; to show the full, detailed trace)
+</span><span>
+</span><span>     error: getting status of &#39;/nix/store/r0f9gw57riyd2wqybqp8s494v1zngm68-nixpkgs/nixpkgs/pkgs/by-name/bm&#39;: Structure needs cleaning
+</span></code></pre>
+</li>
+<li>
+<p>https://hometechhacker.com/letsencrypt-certificate-dns-verification-noip/</p>
+</li>
+</ul>
+<h2 id="traefik"><a class="zola-anchor" href="#traefik" aria-label="Anchor link for: traefik"
+  >§</a
+>
+Traefik</h2>
+<ul>
+<li>
+<p>Installed <a href="https://doc.traefik.io/traefik/">traefik</a> and made modifications to
+the freshrss service in the docker compose</p>
+<ul>
+<li>removed port mapping to the host</li>
+<li>added traefik related labels that configure path prefix router <code>/freshrss</code></li>
+<li>added middleware that strips the prefix from the requests</li>
+</ul>
+<p>At last, I have updated the base URL in the docker compose, but because
+freshrss was already installed, it was required to directly update
+<code>config.php</code> in the data volume. After restarting the docker, the freshrss is
+now available on <a href="http://rpi5/freshrss">http://rpi5/freshrss</a>.</p>
+</li>
+</ul>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Treefik is much easier to work with than I had feared when initially looking at
+the documentation.</p>
+</div>
+  </div>
+</div>
+<ul>
+<li>
+<p><a href="https://github.com/FreshRSS/FreshRSS/blob/edge/Docker/freshrss/docker-compose-proxy.yml">Fresh RSS Docker Compose proxy</a></p>
+</li>
+<li>
+<p><a href="https://www.ssl.com/how-to/manually-generate-a-certificate-signing-request-csr-using-openssl/">Generate Certificate Signing Request</a></p>
+</li>
+<li>
+<p>I have create Certificate Sign Request and uploaded it to the noip admin
+interface. After some short time it verified it, and allowed me to download
+the certifacates. I have updated again the traefik configuration. Now
+accessing the URL doesn't return the default treafik certificate, but
+<code>Error code: SSL_ERROR_UNRECOGNIZED_NAME_ALERT</code>. Not sure what is wrong. I am
+little bit hoping that it might take time to propage the certificate and that
+it will start working later. If not, further investigation will be required.</p>
+</li>
+<li>
+<p>Fixed the the update URL in the Fritzbox settings. It could be find in the
+fritzbox help pages.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>https://dynupdate.no-ip.com/nic/update?hostname=&lt;domain&gt;&amp;myip=&lt;ipaddr&gt;,&lt;ip6addr&gt;
+</span></code></pre>
+</li>
+<li>
+<p>To investigate issue with not working SSL certificate I have enabled traefik
+logs and found out that the issue was that the private key was protected with
+password which is not yet supported in traefik. I have copied the private key
+to the new one without the passphrase. When I was trying to apply the change
+the pi started to misbehave again.</p>
+</li>
+<li>
+<p>Home manager activation reported some conflict and when I started to look into
+available space with <code>df</code> I encountered segmenation faults. It looks like the
+SD card is not very reliable medium. Maybe I should think using external disk
+for storing docker services volumes to avoid constant repetitive setup. After
+rewriting the SD card with fresh raspbian and going through initial setup I
+was able to verify that new unlocked private key did the trick and the
+freshrss is now properly available to public.</p>
+</li>
+</ul>
+<h2 id="planning-extenstion"><a class="zola-anchor" href="#planning-extenstion" aria-label="Anchor link for: planning-extenstion"
+  >§</a
+>
+Planning extenstion</h2>
+<ul>
+<li>
+<p>Next applications</p>
+<ul>
+<li>matrix synapse server with bridge to slack, wechat, irc, and whatsapp,
+element client
+<a href="https://medium.com/@sncr28/deploying-a-matrix-server-with-element-chat-in-docker-compose-with-nginx-reverse-proxy-cc9850fd32f8">tutorial</a></li>
+<li>amnezia wire gard</li>
+<li>database for shared kodi data</li>
+<li>media / file server</li>
+<li>home devices manager</li>
+</ul>
+</li>
+</ul>
+<h2 id="raspberry-pi-replacement"><a class="zola-anchor" href="#raspberry-pi-replacement" aria-label="Anchor link for: raspberry-pi-replacement"
+  >§</a
+>
+Raspberry Pi replacement</h2>
+<ul>
+<li>
+<p>During the initialization of the Synapse service the system threw segmentation
+fault again. After the restart the boot up didn't succeed. Instead of
+reinstalling the again the Raspbian I contacted Amazon to try to get
+replacement micro SD card. Amazon instead offered chargeback for returning the
+whole Raspberry Pi. Now as I have second chance, I am looking for a x86-64
+system that would support proper NixOS.</p>
+</li>
+<li>
+<p><a href="https://www.reddit.com/r/NixOS/comments/1dt4yq3/nixos_home_server_hardware_recommendations/?">Suggestions from Reddit</a>:</p>
+<ul>
+<li>DELL Optiplex 5050 with i5-7500/8GB ram/256GB nvme + 2TB 3.5-inch HDD - 11W
+idle - 80</li>
+<li>N100 - Beelink S12 Pros (no HDD)</li>
+<li>Thinkcentre</li>
+<li>Asrock N100DC</li>
+<li>Beelink (10-15W) Max 25W</li>
+<li>ASRock Deskmini X300 + Ryzen 5600G</li>
+<li>Odriod H3+ (higher consumption)</li>
+</ul>
+</li>
+</ul>
+<table><thead><tr><th></th><th>Processor</th><th>RAM</th><th>Disk</th><th>Price</th></tr></thead><tbody>
+<tr><td>Beelink S12 Pro</td><td>Intel Alder Lake - N100 3.4GHz</td><td>16GB DDR4</td><td>500GB PCIe SSD</td><td>199€</td></tr>
+<tr><td>Dell Optiplex 5050 SFF</td><td>i7-6700</td><td>8GB DDR4</td><td>240GB SSD</td><td>209€</td></tr>
+<tr><td>Dell Optiplex 7050 USFF</td><td>i5 Quad Core</td><td>8GB DDR4</td><td>256GB</td><td>149€</td></tr>
+<tr><td>Dell Optiplex 7040</td><td>i5-6400T</td><td>8GB DDR4</td><td>240GB SSD</td><td>123€</td></tr>
+<tr><td>Lenovo ThinkCentre M900</td><td>i7-6700T 2.8GHz</td><td>16GB</td><td>240GB</td><td>212.50€</td></tr>
+<tr><td>Lenovo ThinkCentre M910q</td><td>i5 3.10GHz</td><td>8GB</td><td>256GB</td><td>159€</td></tr>
+<tr><td>Lenovo ThinkCentre M92</td><td>i5 3.60GHx</td><td>8GB</td><td>512GB</td><td>129€</td></tr>
+<tr><td>Raspberry Pi 5</td><td>ARMv7 2.4GHz</td><td>8GB</td><td>64GB SD card</td><td>139€</td></tr>
+</tbody></table>
+<ul>
+<li><a href="https://lowcostminipcs.com/">https://lowcostminipcs.com/</a></li>
+</ul>
+<h2 id="beelink"><a class="zola-anchor" href="#beelink" aria-label="Anchor link for: beelink"
+  >§</a
+>
+Beelink</h2>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;beelink.c5c2629269bb779d.jpg" />
+
+</div>
+<ul>
+<li>I decided to purchase the
+<a href="https://www.bee-link.com/en-de/collections/mini-pc/products/beelink-eq13-n100?variant=46197263073522">Beelink EQ13</a>
+with an Intel Alder Lake N100 Processor, 4C/4T, max 25W TDP, max turbo
+frequency of 3.4 GHz, 16GB RAM, and 500GB SSD for approximately 200€. The
+Beelink came with Windows 11 preinstalled. I found information on a random
+Microsoft forum stating that it is not necessary to export the license key. If
+I decide to boot Windows again, simply installing the same version should be
+sufficient, as the machine signature should already be remembered in some kind
+of Microsoft registry.</li>
+<li>Next, I installed NixOS. I downloaded the latest NixOS iso file and uploaded
+it to my existing <a href="https://www.ventoy.net/en/index.html">Ventoy</a> USB key. The
+installation was not without problems. Initially, the HDMI monitor did not
+work unless I booted to the live ISO with <code>nomodeset</code>, essentially loading
+without graphics drivers. Then, during the installation, I encountered issues
+with formatting the disk. The swap partition failed to be created, or at one
+point, something with calibria was holding onto mount points and not allowing
+them to be unmounted without a full restart. Originally, I had planned to try
+with a 2GB swap since the 16GB of RAM seemed sufficient for the start.
+However, due to these issues, I ended up proceeding without any swap. I can
+address this later if needed. I checked the <code>btop</code> and saw that there is
+plenty of free memory, so there is no need to worry.</li>
+<li>I installed the operating system without a desktop environment. However, the
+HDMI was not working again until I added <code>nomodeset</code> when booting (by pressing
+<code>e</code> in the boot menu and appending it as the last parameter). Despite some
+initial difficulties, I managed to enable SSH, integrate Beelink and
+HomeServer into the existing Hive configuration, and successfully run Traefik
+and FreshRSS as Docker services. Although I could use Nix services, I
+currently prefer Traefik, so I will continue using it.</li>
+</ul>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>I have to mention the build speed. Beelink builds as fast as I am accustomed to.
+There was no need to reduce the configuration to a minimum. I confidently
+enabled the full shell capabilities along with my full-blown neovim. Now,
+instead of editing the config and syncing it to the rpi, I am running my own
+tmux server and neovim and editing directly on the beelink. It is much easier to
+work with the beelink, and even though the price was higher, I still believe
+that the price-to-performance ratio is much better compared to the rpi.
+Additionally, the included 500GB SSD provides plenty of opportunities for
+upcoming experiments.</p>
+</div>
+  </div>
+</div>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>And don't forget to mention that it is x86-64 instead of the Raspberry Pi's ARM
+architecture! Also it is very quiet.</p>
+</div>
+  </div>
+</div>
+<h2 id="matrix"><a class="zola-anchor" href="#matrix" aria-label="Anchor link for: matrix"
+  >§</a
+>
+Matrix</h2>
+<ul>
+<li>Picked up where I the configuration on rpi. I am still not sure if I can run
+the synapse on subdir <code>https://primamateria.ddns.net/synapse</code>. It seems that
+it will be possible, but looks like everything is harder with subdir than
+subdomains. Then I check the current SSL certificate I bought on noip would
+cost 150$ per year. Still other option might be a switch to Let's encrypt.</li>
+<li>Today I finished working on synapse configuration and docker compose. When
+trying to run into an issue when generating signing key:
+<a href="https://github.com/element-hq/synapse/issues/16824">https://github.com/element-hq/synapse/issues/16824a</a>.
+The issue is marked as closed. I tried to use docker image with <code>develop</code> tag
+but it fails as well. I generated the config and signing key to new separate
+volume and copied only the signing key with correct permission. Then the next
+error was permission denied for <code>/data/media</code>. Rather than creating it again
+by hand I should look for the core issue. At the end the most right solution
+seemed for me to manual <code>chown</code> docker's volumes <code>\_data</code>directories
+to<code>991:991</code> to match the UID and GID with which the synapse is run in the
+container.</li>
+<li>Now the synapse is running, and reporting being healthy. But I can't see it on
+the traefik dashboard. It is very confusing because all the examples use
+subdomain like matrix.example.com. And also based on the
+<a href="https://element-hq.github.io/synapse/latest/reverse_proxy.html#nginx">nginx docs</a>,
+it seems, that matrix exposes ports 443 and 8448. 443 is general SSL port.
+Does it mean that it will take over all the root 443 requests? Or maybe the
+requests will come with path <code>/_matrix</code> and <code>/_synapse/client</code>, so at the end
+443 is a subpath.</li>
+<li>Previously Traefik was not picking up synapse because I had typo in the
+labels. Checking Traefik logs inisde the container helped to find the issue.
+Afterwards I was trying to configure following proxy:</li>
+</ul>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+flowchart TD
+      federation
+      client
+
+      subgraph homeServer
+
+          subgraph traefik
+              traefik443[&quot;443&quot;]
+          end
+
+          subgraph synapse
+              synapse8008[&quot;8008&quot;]
+          end
+      end
+
+      federation --&gt;|&#x2F;_matrix| traefik443
+      client --&gt;|&#x2F;_synapse&#x2F;client| traefik443
+      traefik443 --&gt;|&#x2F;_synapse&#x2F;client| synapse8008
+      traefik443 --&gt;|&#x2F;_matrix| synapse8008
+</pre>
+<!-- prettier-ignore-end -->
+<ul>
+<li>Next, I will try to setup also Element to and then start testing it together.</li>
+<li>https://github.com/element-hq/element-web/issues/17459</li>
+<li>https://goneuland.de/matrix-chattplattform-mittels-traefik-und-docker-installieren/</li>
+<li>Element served on subpath is trying to fetch relative resources from root path
+which fails. These subpaths are getting really annoying. Next I have to set up
+subdomains.</li>
+<li>I tried to set up let's encrypt wildcard ssl and it was really easy. It might
+be that before I felt intimidated by all the new information, and confused
+about setting up certbot. But Let's encrypt is even easier than the previous
+method of creating CSR and uploading pem files to server. Now with enabled
+subdomains it was really easy to complete the element and synapse setup. I
+have migrated also the freshrss to the subdomain.</li>
+</ul>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>This is a great moment! I was able to unlock the subdomains without having to
+pay over a hundred dollars for the yearly subscription. I was worried that there
+might be a catch waiting for me down the line, but there wasn't.</p>
+</div>
+  </div>
+</div>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;matrix-primamateria-ddns-net.ecc8a96b3f89968c.jpg" />
+
+</div>
+<ul>
+<li>I encountered
+<a href="https://github.com/matrix-org/synapse/issues/7574">issue with regenerated signing key</a>.
+It was because when changing to subdomain I have deleted the previous docker
+volumes. User in the room for matrix.org susgested just to give a time until
+the cache expires.</li>
+<li>Meanwhile I move to setting up the bridges. As first I take wechat:
+<a href="https://github.com/wechaty/matrix-appservice">https://github.com/wechaty/matrix-appservice</a>.</li>
+<li>I am investigating Wechaty, but it is very confusing. Initially, I thought it
+was a paid service because it required a token. I did not appreciate
+discovering this after following the steps, rather than it being clearly
+stated in the README introduction. However, I am not certain if the paid token
+is truly necessary or if I am simply confused. This uncertainty leads to my
+second dissatisfaction. On their documentation page, there is a QR code to
+join the Wechat group. When scanned, it opens a webview with a Discord invite.
+Unfortunately, clicking the button did not work for me, even though I have
+Discord installed on my phone. I attempted to copy the link to Firefox, but
+that also did not work. I tried searching for the Wechaty space on Discord
+itself, but to no avail. This frustration led me to consider trying the
+alternative Go bridge as the next step.</li>
+<li>I didn't let it go. At the end I was able to join the Discord server and post
+<a href="https://discord.com/channels/916984413944967180/916984414557323346/1269770505909571744a">my question about the pricing</a>.</li>
+<li><a href="https://duo-github-io.translate.goog/posts/matrix-qq-wechat/?_x_tr_sl=auto&amp;_x_tr_tl=en&amp;_x_tr_hl=de">Chinese blog post</a>
+explaing the use of wechat bridge that is based on the mautrix-go. As far as I
+can see right now, it also depends on external agent. But in this case it is
+windows program run in wine in the docker with questionable stability. Until
+now, I still didn't get any answer on the wechaty discord, and, btw,
+matrix.org is still refusing my new signing key with 401s.</li>
+<li>The issue was not with cached signing key. I opened port 8448 and redirected
+it to synapse's 8008. This is the port through which the federation tries to
+reach the synapse. Now I can search the rooms, but when I try to join some it
+never fetches the message or users list.</li>
+</ul>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;matrix-primamateria-ddns-net2.e488fbddd0182c26.jpg" />
+
+</div>
+<ul>
+<li>
+<p>After some time, the messages and users got fetched and now it all works.</p>
+</li>
+<li>
+<p>After few days of enjoying working matrix home server I came to conclusion
+that with exception of some few popular rooms matrix looks quite empty.
+Anyway, my main goal is to unify whatsapp and wechat into one application and
+matrix rooms are bonus. I started to work on the matrix-wechat bridge, since
+some random user replied to my query that it is know for it to be stable
+despite the disclaimer about wine stability in their readme.</p>
+</li>
+<li>
+<p>Also I briefly looked onto the IRC bridge. I took IRC bridge existence to be
+the self-evident, so it was quite a shock to finda
+<a href="https://matrix.org/blog/2023/07/deportalling-libera-chat/">an announcment about discontinued support between Libera IRC network and Matrix</a>.
+I really thought these two worlds will be close together. Somehow this another
+disappoitment uncovered after diving in, and now Matrix doesn't look anymore
+as modern savior, but more like
+<a href="https://www.goodreads.com/quotes/1319753-there-he-goes-one-of-god-s-own-prototypes-a-high-powered">"Too weird to live, and too rare to die."</a>
+case.</p>
+</li>
+<li>
+<p>I am following the
+<a href="https://duo.github.io/posts/matrix-qq-wechat/">translated guide</a>. I have
+added the shared secret authenticator and successfuly restarted the synapse
+service with the new module loaded. One thing to be aware there was to set the
+correct python version where the python module is mapped via the docker
+volumes.</p>
+</li>
+<li>
+<p>The next steps are bit cumbersome, because I am converthing the yaml configs
+to nix. The generated configuration is really extensive, but luckily only with
+few fields that need to be adjusted. And the generation happens in two steps.
+I wasted time by porting the first step result to nix config, and then
+realizing that the second step still requires updated yaml and it will again
+write something back to it. It made me think if the porting all these yamls to
+nix is worth the effort. I concluded that yes, it is. Yaml files should
+usually be privately contained on some server. When server explodes, files are
+gone. My nix config will be comitted to public repository. Also the pure yaml
+files could be committed, but the secrets in them would be as well. Having
+these configs in nix using hive's secrets encrypted with git-crypt solves it -
+public and reproducible, but still secure.</p>
+</li>
+<li>
+<p>The matrix-weChat service, after starting, attempts to write something to the
+config file. However, this does not work because the files now come from the
+Nix store. Additionally, the config file and registration file must be located
+inside the container's <code>/data</code> directory. I am unsure how to map Nix store
+files into it while keeping the entire directory as a Docker volume. Other
+services allow for custom config file placement by passing an environment
+variable or parameter pointing to it. It is crucial that other services access
+these files in a read-only manner. I will revert the Nix configs back to YAML
+and store them inside a secret folder. And I will manually copy them to the
+Docker volume.</p>
+</li>
+<li>
+<p>I continue to work on getting the WeChat bridge to function properly. I am
+still working with the Nix configurations. As I resolved issues one by one, I
+reached a point where there are no errors when starting the bridge. Therefore,
+the read-only configurations may actually work. It is possible that previous
+write errors were caused by configuration mistakes, but when everything is
+correct, no writing takes place.</p>
+</li>
+<li>
+<p>Reached the point where the bridge is attempting to call the synapse server
+but is receiving an error stating that the @wechatbot user does not exist and
+is being responded to with a 403 error.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>2024-08-14 20:53:33,959 - synapse.config.appservice - 96 - INFO - main - Loaded application service: ApplicationService: {&#39;token&#39;: &#39;&lt;redacted&gt;&#39;, &#39;url&#39;: &#39;http://matrix-wechat:17778&#39;, &#39;hs_token&#39;: &#39;&lt;redacted&gt;&#39;, &#39;sender&#39;: &#39;@tcMC6UH6RL0XgI6u5ONiCZL1w0C2KQY5:matrix.primamateria.ddns.net&#39;, &#39;namespaces&#39;: {&#39;users&#39;: [Namespace(exclusive=True, regex=re.compile(&#39;^@wechatbot:primamateria.ddns.net$&#39;)), Namespace(exclusive=True, regex=re.compile(&#39;^@_wechat_.*:primamateria.ddns.net$&#39;))], &#39;aliases&#39;: [], &#39;rooms&#39;: []}, &#39;id&#39;: &#39;wechat&#39;, &#39;ip_range_whitelist&#39;: None, &#39;supports_ephemeral&#39;: True, &#39;msc3202_transaction_extensions&#39;: False, &#39;protocols&#39;: set(), &#39;rate_limited&#39;: False}
+</span><span>2024-08-14 20:53:47,942 - synapse.http.server - 130 - INFO - GET-2 - &lt;XForwardedForRequest at 0x7f5226547610 method=&#39;GET&#39; uri=&#39;/_matrix/client/versions?user_id=%40wechatbot%3Aprimamateria.ddns.net&#39; clientproto=&#39;HTTP/1.1&#39; site=&#39;8008&#39;&gt; SynapseError: 403 - Application service has not registered this user (@wechatbot:primamateria.ddns.net)
+</span><span>
+</span></code></pre>
+</li>
+<li>
+<p>I found wrongly set homeserver domain. It was <code>primamateria.ddns.net</code> instead
+of <code>matrix.primamateria.ddns.net</code>. Also in the double puppeting I used
+registration shared key instead of the authenticator key. Even after fixing
+these, the issue with unregistered user still prevails.</p>
+</li>
+<li>
+<p>I noticed that in the tutorial the synapse doesn't have forbidden
+registrations with <code>enabled_registrations = false</code>. So, I tried to register
+the wechatbot by myself but got another conflict:</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>root@5a1b41a9d80e:/# register_new_matrix_user -c /etc/synapse/synapse.yaml http://localhost:8008
+</span><span>New user localpart [root]: wechatbot
+</span><span>Password:
+</span><span>Confirm password:
+</span><span>Make admin [no]:
+</span><span>Sending registration request...
+</span><span>ERROR! Received 400 Bad Request
+</span><span>This user ID is reserved by an application service.
+</span></code></pre>
+</li>
+<li>
+<p>I tried to call the same URL from the bridge's container and it worked:</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>/data # wget http://synapse:8008/_matrix/client/versions?user_id=%40wechatbot%3Amatrix.primamateria.ddns.net
+</span><span>Connecting to synapse:8008 (172.19.0.4:8008)
+</span><span>saving to &#39;versions?user_id=%40wechatbot%3Amatrix.primamateria.ddns.net&#39;
+</span><span>versions?user_id=%40 100% |***************************************************************************************************************************************************************************************************************************************************************************************************************************|  1001  0:00:00 ETA
+</span><span>&#39;versions?user_id=%40wechatbot%3Amatrix.primamateria.ddns.net&#39; saved
+</span><span>/data # cat versions\?user_id=%40wechatbot%3Amatrix.primamateria.ddns.net
+</span><span>{&quot;versions&quot;:[&quot;r0.0.1&quot;,&quot;r0.1.0&quot;,&quot;r0.2.0&quot;,&quot;r0.3.0&quot;,&quot;r0.4.0&quot;,&quot;r0.5.0&quot;,&quot;r0.6.0&quot;,&quot;r0.6.1&quot;,&quot;v1.1&quot;,&quot;v1.2&quot;,&quot;v1.3&quot;,&quot;v1.4&quot;,&quot;v1.5&quot;,&quot;v1.6&quot;,&quot;v1.7&quot;,&quot;v1.8&quot;,&quot;v1.9&quot;,&quot;v1.10&quot;,&quot;v1.11&quot;],&quot;unstable_features&quot;:{&quot;org.matrix.label_based_filtering&quot;:true,&quot;org.matrix.e2e_cross_signing&quot;:true,&quot;org.matrix.msc2432&quot;:true,&quot;uk.half-shot.msc2666.query_mutual_rooms&quot;:true,&quot;io.element.e2ee_forced.public&quot;:false,&quot;io.element.e2ee_forced.private&quot;:false,&quot;io.element.e2ee_forced.trusted_private&quot;:false,&quot;org.matrix.msc3026.busy_presence&quot;:false,&quot;org.matrix.msc2285.stable&quot;:true,&quot;org.matrix.msc3827.stable&quot;:true,&quot;org.matrix.msc3440.stable&quot;:true,&quot;org.matrix.msc3771&quot;:true,&quot;org.matrix.msc3773&quot;:false,&quot;fi.mau.msc2815&quot;:false,&quot;fi.mau.msc2659.stable&quot;:true,&quot;org.matrix.msc3882&quot;:false,&quot;org.matrix.msc3881&quot;:false,&quot;org.matrix.msc3874&quot;:false,&quot;org.matrix.msc3886&quot;:false,&quot;org.matrix.msc3912&quot;:false,&quot;org.matrix.msc3981&quot;:true,&quot;org.matrix.msc3391&quot;:false,&quot;org.matrix.msc4069&quot;:false,&quot;org.matrix.msc4028&quot;:false,&quot;org.matrix.msc4108&quot;:false,&quot;org.matrix.msc4151&quot;:false}}
+</span></code></pre>
+<p>But so does also call to version endpoint without any <code>userId</code> works. So this
+might not be any indicator. Maybe I should try install <code>curl</code>.</p>
+</li>
+</ul>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2024<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

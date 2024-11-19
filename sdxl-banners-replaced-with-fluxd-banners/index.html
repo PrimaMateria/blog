@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Stable Diffusion XL banners replaced with Flux Dev banners</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="Stable Diffusion XL banners replaced with Flux Dev banners">
+    <meta property="og:url" content="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners">
+    
+    <meta property="og:description" content="Comparison of my posts&#x27; previous banners generated with Stable Diffusion XL with
+new ones generated with Flux Dev.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-sd-flux.93074f9ff8c2203d.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2024-08-18">
+    
+    
+    
+    <meta property="article:tags" content="nixos"><meta property="article:tags" content="nix-flakes">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>Stable Diffusion XL banners replaced with Flux Dev banners</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Sunday 18 August 2024</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 5 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nix-flakes/">#nix-flakes</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-sd-flux.06319a2512f82dea.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-sd-flux.43883424fcee4c0f.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-sd-flux.06f0ee9250d05da3.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-sd-flux.976d4c93bee844cf.png" alt="Mœbius comics style. Post-apocalyptic frozen river with abandoned military ships, smoking ruins in the background. Dominated with white snow blizzard. Flakes visible.">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>Comparison of my posts' previous banners generated with Stable Diffusion XL with
+new ones generated with Flux Dev.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/#opinion-about-sdxl-and-flux">Opinion about SDXL and Flux</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/#banner-don-juan-s-dream">Banner - Don Juan&#x27;s dream</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/#banner-thin-clients-spaceship-revival">Banner - Thin clients spaceship revival</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/#banner-haumea-the-hawaian-goddess-of-rebirth">Banner - Haumea - the Hawaian goddess of rebirth</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/#banner-intergalactic-hive">Banner - Intergalactic hive</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/#banner-cozy-cabbing-listening-to-the-deep-universe">Banner - Cozy cabbing listening to the deep universe</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/#banner-galaxy">Banner - Galaxy</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/#banner-winter-flakes-freezing-ships-in-the-channel">Banner - Winter flakes freezing ships in the channel</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/#banner-tired-paisano-riding-donkey-in-abandoned-desert">Banner - Tired Paisano riding donkey in abandoned desert</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/#banner-zombie-apocalypse">Banner - Zombie apocalypse</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/#banner-well-organized-white-rabbit-from-alice-in-the-wonderland">Banner - Well organized white rabbit from Alice in the Wonderland</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/#banner-neovim-matrix-and-it-s-pimp-up">Banner - Neovim matrix and it&#x27;s pimp up</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<h2 id="opinion-about-sdxl-and-flux"><a class="zola-anchor" href="#opinion-about-sdxl-and-flux" aria-label="Anchor link for: opinion-about-sdxl-and-flux"
+  >§</a
+>
+Opinion about SDXL and Flux</h2>
+<p>Flux is definetely smarter. The images are crisp and without deformed gibberish.
+And it thoroughly follows the instructions. At this point it actually disapoints
+me. Although SDXL images were inperfect, there was something deeper in the
+expression of the scene. Or maybe that is just because I used Mœbius Lora.</p>
+<p>Flux is still relatively fresh, and the Lora creators are just starting, so
+maybe the genius spark ignition is about to come. Anyway, for your enjoynment,
+here is the comparison of old and new banners.</p>
+<h2 id="banner-don-juan-s-dream"><a class="zola-anchor" href="#banner-don-juan-s-dream" aria-label="Anchor link for: banner-don-juan-s-dream"
+  >§</a
+>
+Banner - Don Juan's dream</h2>
+<p>Both came out great, but SDXL despite the lower quality has the Mœbius sketch.</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-ai-generated-images.4e61e93fcc9527de.png" />
+
+</div>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-ai-generated-images.7277b2c9bcd67866.png" />
+
+</div>
+<h2 id="banner-thin-clients-spaceship-revival"><a class="zola-anchor" href="#banner-thin-clients-spaceship-revival" aria-label="Anchor link for: banner-thin-clients-spaceship-revival"
+  >§</a
+>
+Banner - Thin clients spaceship revival</h2>
+<p>The SDXL settings is more cozy, but the Flux is really symmetric and detailed.
+Even the sceen content looks normal.</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-display-manager.46a0efc6e039493b.png" />
+
+</div>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-display-manager.673967c5eb0b68f9.png" />
+
+</div>
+<h2 id="banner-haumea-the-hawaian-goddess-of-rebirth"><a class="zola-anchor" href="#banner-haumea-the-hawaian-goddess-of-rebirth" aria-label="Anchor link for: banner-haumea-the-hawaian-goddess-of-rebirth"
+  >§</a
+>
+Banner - Haumea - the Hawaian goddess of rebirth</h2>
+<p>Here Flux made the dream image on the first try.</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-haumea-cheatsheet.b0bf268f249f8cce.png" />
+
+</div>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-haumea-cheatsheet.711d4a8c5613790f.png" />
+
+</div>
+<h2 id="banner-intergalactic-hive"><a class="zola-anchor" href="#banner-intergalactic-hive" aria-label="Anchor link for: banner-intergalactic-hive"
+  >§</a
+>
+Banner - Intergalactic hive</h2>
+<p>Original SD with Hive's logo added in Gimp.</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;hive.d61e07352aff811e.png" />
+
+</div>
+<p>This concept was too funky for both SDXL and Flux.</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-hive.16a6921d33822542.png" />
+
+</div>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-hive.e217f7b07b9d7aa6.png" />
+
+</div>
+<h2 id="banner-cozy-cabbing-listening-to-the-deep-universe"><a class="zola-anchor" href="#banner-cozy-cabbing-listening-to-the-deep-universe" aria-label="Anchor link for: banner-cozy-cabbing-listening-to-the-deep-universe"
+  >§</a
+>
+Banner - Cozy cabbing listening to the deep universe</h2>
+<p>Here Flux won the whole round. It was really hard to get the desired result from
+the SD.</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-homeserver.8b3c5a922078fc98.png" />
+
+</div>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-homeserver.4d94bc1b777492d4.png" />
+
+</div>
+<h2 id="banner-galaxy"><a class="zola-anchor" href="#banner-galaxy" aria-label="Anchor link for: banner-galaxy"
+  >§</a
+>
+Banner - Galaxy</h2>
+<p>First banner. Not generated, just a patched GIF image.</p>
+<div style="margin-top: 24px">
+  <img src="first-banners/banner-solar.gif" />
+</div>
+<p>Again Flux better following the instructions. SDXL is a nonsense hallucination.</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-i3-solar-workspaces.523c41fff07515f7.png" />
+
+</div>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-i3-solar-workspaces.1bbd4263b6262e12.png" />
+
+</div>
+<h2 id="banner-winter-flakes-freezing-ships-in-the-channel"><a class="zola-anchor" href="#banner-winter-flakes-freezing-ships-in-the-channel" aria-label="Anchor link for: banner-winter-flakes-freezing-ships-in-the-channel"
+  >§</a
+>
+Banner - Winter flakes freezing ships in the channel</h2>
+<p>Flux is more consistent, but the SD Mœbius composition is better.</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-nix-shell-custom-channel.a39e40111d5b5070.png" />
+
+</div>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-nix-shell-custom-channel.52ccedb970045796.png" />
+
+</div>
+<h2 id="banner-tired-paisano-riding-donkey-in-abandoned-desert"><a class="zola-anchor" href="#banner-tired-paisano-riding-donkey-in-abandoned-desert" aria-label="Anchor link for: banner-tired-paisano-riding-donkey-in-abandoned-desert"
+  >§</a
+>
+Banner - Tired Paisano riding donkey in abandoned desert</h2>
+<p>I was not able to reproduce that "tired bounty hounter" look.</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-paisano-cheatsheet.4d7eb6a16c7ea951.png" />
+
+</div>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-paisano-cheatsheet.540d97a88080788b.png" />
+
+</div>
+<h2 id="banner-zombie-apocalypse"><a class="zola-anchor" href="#banner-zombie-apocalypse" aria-label="Anchor link for: banner-zombie-apocalypse"
+  >§</a
+>
+Banner - Zombie apocalypse</h2>
+<p>SDXL with Mœbius Lora generated really atmoshperic sceneries. For Flux I had to
+be very specific what I want to achieve. At the end I have steered to the joke
+of zombie still programming.</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-pz-nixos.2ce4e53e0211677a.png" />
+
+</div>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-pz-nixos.19e301837db4c77d.png" />
+
+</div>
+<h2 id="banner-well-organized-white-rabbit-from-alice-in-the-wonderland"><a class="zola-anchor" href="#banner-well-organized-white-rabbit-from-alice-in-the-wonderland" aria-label="Anchor link for: banner-well-organized-white-rabbit-from-alice-in-the-wonderland"
+  >§</a
+>
+Banner - Well organized white rabbit from Alice in the Wonderland</h2>
+<p>SDXL with Mœbius Lora generated really atmoshperic sceneries. For Flux I had to
+be very specific what I want to achieve. At the end I have steered to the joke
+of zombie still programming.</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-time-tracking.f8dcb1b10ce2b4ee.png" />
+
+</div>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-time-tracking.8e652097dbff4df3.png" />
+
+</div>
+<h2 id="banner-neovim-matrix-and-it-s-pimp-up"><a class="zola-anchor" href="#banner-neovim-matrix-and-it-s-pimp-up" aria-label="Anchor link for: banner-neovim-matrix-and-it-s-pimp-up"
+  >§</a
+>
+Banner - Neovim matrix and it's pimp up</h2>
+<p>Here are the Neovim banners. The Flux is missing because when I tried to enable
+ControlNet with it, it was throwing an error. So instead here is comparison of
+origina SD + Gimp with the SDXL + ControlNet.</p>
+<p>Neovim post:</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;neovim-banner.1266838d5c905d0b.png" />
+
+</div>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake.37156e9e9c3e5c66.png" />
+
+</div>
+<p>Update post:</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;neovim-update.36e8a6fe9ee2716f.png" />
+
+</div>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake-update.cfd024f876007cc6.png" />
+
+</div>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2024<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

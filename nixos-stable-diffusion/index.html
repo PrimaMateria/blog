@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>AI generated images - Stable Diffusion on NixOS</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="AI generated images - Stable Diffusion on NixOS">
+    <meta property="og:url" content="https://primamateria.github.io/blog/nixos-stable-diffusion">
+    
+    <meta property="og:description" content="In this blog post, I share my journey of discovering AI-generated images,
+starting with generating an image for my blog using Craiyon and moving on to
+using DALL·E 2 and Stable Diffusion. While the former required credits for each
+run, the latter was an open-sourced and more affordable option that I could run
+locally. I also share the steps that I followed to run Stable Diffusion on
+NixOS.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-ai-generated-images.7757fc86509de295.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2022-10-08">
+    
+    
+    
+    <meta property="article:tags" content="nixos"><meta property="article:tags" content="ai">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>AI generated images - Stable Diffusion on NixOS</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Saturday 08 October 2022</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 5 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/ai/">#ai</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-ai-generated-images.e9dd77ac4644d891.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-ai-generated-images.f582fb64b76f58c6.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-ai-generated-images.3a6f4fc5f5ac1954.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-ai-generated-images.7775018376988c1d.png" alt="Mobius comic book style. Stories of Carlos Castaneda. Indian old man in had walking in the desert land. The sky is full of big dark red clouds.">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>In this blog post, I share my journey of discovering AI-generated images,
+starting with generating an image for my blog using Craiyon and moving on to
+using DALL·E 2 and Stable Diffusion. While the former required credits for each
+run, the latter was an open-sourced and more affordable option that I could run
+locally. I also share the steps that I followed to run Stable Diffusion on
+NixOS.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/nixos-stable-diffusion/#ai-generated-images">AI generated images</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/nixos-stable-diffusion/#what-worked">What worked</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/nixos-stable-diffusion/#what-didn-t-work">What didn&#x27;t work</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<h2 id="ai-generated-images"><a class="zola-anchor" href="#ai-generated-images" aria-label="Anchor link for: ai-generated-images"
+  >§</a
+>
+AI generated images</h2>
+<p>AI generated images became interesting for me when I start to think about
+creating this blog. I wanted to show the GitHub avatar on the top, but the
+original that I was using was recklessly copied from a copyrighted site.</p>
+<p>I got an idea that if I would generate an image, then I could still keep using
+the "alien octopus" and avoid the copyright issue. Actually I am still not fully
+sure how the copyright for AI generated images work, but I imagine that the AI
+is a tool like Photoshop. The images created with tool do not belong to the
+software, but to the human "author".</p>
+<p>My path of discovery started with <a href="https://www.craiyon.com/">Craiyon</a>. The first
+image I chose from the generated batch was this one:</p>
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;primamateria-craiyon.ed02df05b15a585d.jpg" />
+<p>At the same day I have found
+<a href="https://www.reddit.com/r/dalle2/">DALL·E 2 subreddit</a> with fresh post that the
+DALL·E 2 registration doesn't require special invite from wishlist anymore, and
+it goes fully public. So I jumped in, and generated some new octopuses:</p>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;primamateria-dalle-octopus1.550f62a7434fceef.png" />
+
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;primamateria-dalle-octopus2.7f46b3caf718a538.png" />
+
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;primamateria-dalle-octopus3.2e28ed46804235c5.png" />
+
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;primamateria-dalle-octopus4.d5b3cb71a88428c1.png" />
+</p>
+<p>How gorgeous! But bitter realization followed. Each run requires credits. Some
+free
+<a href="https://help.openai.com/en/articles/6399305-how-dall-e-credits-work">credits</a>
+are given at the sign-up and few more each month. Extra credits are paid. Of
+course this model makes sense for some professional writers. But for a hobbyist
+who just want to play, it feels like a sword of Damocles - not allowing freely
+to experiment with your imagination because I am going to run out of the credits
+any time soon.</p>
+<p>So the journey continues. Xe recently wrote some posts about the <strong>Stable
+Diffusion</strong>. A competitor to DALL·E 2, but open-sourced one 💕. And surprisingly
+originating from Munich, which made me personally feel happy.</p>
+<p>The first experience with Stable Diffusion was via
+<a href="https://beta.dreamstudio.ai/dream">Dream Studio</a>. It also offered an option I
+didn't see in DALL·E 2 before. It is possible to pass a reference image, provide
+a prompt and new image will be generated with the same style. For example the
+image on the left I draw long time ago, and the image on the right is the one
+generated via Dream Studio.</p>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;castaneda-origin.7c5d2fe813ad5671.png" />
+
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;castaneda-dreamstudio.2d999578168b3580.png" />
+</p>
+<p>And the credits again. Ah, no problem anymore, we can run it locally and forget
+the whole credit nightmare ~ if we have super duped GPU with
+<a href="https://github.com/CompVis/stable-diffusion">10 GB free VRAM</a>. Which we have,
+right? And if not, then there is
+<a href="https://github.com/basujindal/stable-diffusion">optimized version</a> which will
+be satisfied with 2.4 GB VRAM. These are the miracles that start happening when
+things go open source.</p>
+<h2 id="what-worked"><a class="zola-anchor" href="#what-worked" aria-label="Anchor link for: what-worked"
+  >§</a
+>
+What worked</h2>
+<p>I am enchanted by Nix. And if I will have a solution then this solution will be
+running in NixOS. And the best place for finding NixOS solutions is NixOS
+Discource.</p>
+<p><a href="https://discourse.nixos.org/t/stable-diffusion-using-nix-flakes/21610">Stable Diffusion using nix flakes</a>
+by <a href="https://collinarnett.me/">Collin Arnett</a></p>
+<p>These steps led me to locally running Stable Diffusion:</p>
+<ol>
+<li>clone repository</li>
+<li>register account on Hugging Faces</li>
+<li>generate Access account</li>
+<li>accept Terms and conditions for the Stable Diffusion model</li>
+<li>run <code>nix run --impure</code></li>
+<li>update token and run</li>
+</ol>
+<p>First run resulted in a lot of downloading, but subsequent runs spent time only
+on image generation. Later I have updated the script to get 4 images at once and
+also to save them in PNG format. The final version before I decided to write
+this post looked like this:</p>
+<pre data-lang="python" style="background-color:#ffffff;color:#4d4d4c;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#8959a8;">import </span><span>os
+</span><span style="color:#8959a8;">import </span><span>torch
+</span><span style="color:#8959a8;">import </span><span>transformers
+</span><span>
+</span><span style="color:#8959a8;">from </span><span>torch </span><span style="color:#8959a8;">import </span><span>autocast
+</span><span style="color:#8959a8;">from </span><span>diffusers </span><span style="color:#8959a8;">import </span><span>StableDiffusionPipeline
+</span><span>
+</span><span style="color:#c82829;">HF_TOKEN </span><span style="color:#3e999f;">=  </span><span style="color:#4271ae;">os.environ.</span><span style="color:#c82829;">get</span><span style="color:#4271ae;">(</span><span style="color:#718c00;">&quot;HF_TOKEN&quot;</span><span style="color:#4271ae;">)
+</span><span>
+</span><span>pipe </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">StableDiffusionPipeline.</span><span style="color:#c82829;">from_pretrained</span><span style="color:#4271ae;">(
+</span><span style="color:#4271ae;">    </span><span style="color:#718c00;">&quot;CompVis/stable-diffusion-v1-4&quot;</span><span style="color:#4271ae;">,
+</span><span style="color:#4271ae;">    </span><span style="color:#f5871f;">revision</span><span style="color:#3e999f;">=</span><span style="color:#718c00;">&quot;fp16&quot;</span><span style="color:#4271ae;">,
+</span><span style="color:#4271ae;">    </span><span style="color:#f5871f;">torch_dtype</span><span style="color:#3e999f;">=</span><span style="color:#4271ae;">torch.float16,
+</span><span style="color:#4271ae;">    </span><span style="color:#f5871f;">use_auth_token</span><span style="color:#3e999f;">=</span><span style="color:#c82829;">HF_TOKEN
+</span><span style="color:#4271ae;">)
+</span><span>pipe </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">pipe.</span><span style="color:#c82829;">to</span><span style="color:#4271ae;">(</span><span style="color:#718c00;">&quot;cuda&quot;</span><span style="color:#4271ae;">)
+</span><span style="color:#4271ae;">pipe.</span><span style="color:#c82829;">enable_attention_slicing</span><span style="color:#4271ae;">()
+</span><span>
+</span><span>prompt </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;Octopus symmetry geometry math&quot;
+</span><span style="color:#8959a8;">with </span><span style="color:#c82829;">autocast</span><span style="color:#4271ae;">(</span><span style="color:#718c00;">&quot;cuda&quot;</span><span style="color:#4271ae;">)</span><span>:
+</span><span>    image1 </span><span style="color:#3e999f;">= </span><span style="color:#c82829;">pipe</span><span style="color:#4271ae;">(prompt)</span><span>.images[</span><span style="color:#f5871f;">0</span><span>]
+</span><span>    image2 </span><span style="color:#3e999f;">= </span><span style="color:#c82829;">pipe</span><span style="color:#4271ae;">(prompt)</span><span>.images[</span><span style="color:#f5871f;">0</span><span>]
+</span><span>    image3 </span><span style="color:#3e999f;">= </span><span style="color:#c82829;">pipe</span><span style="color:#4271ae;">(prompt)</span><span>.images[</span><span style="color:#f5871f;">0</span><span>]
+</span><span>    image4 </span><span style="color:#3e999f;">= </span><span style="color:#c82829;">pipe</span><span style="color:#4271ae;">(prompt)</span><span>.images[</span><span style="color:#f5871f;">0</span><span>]
+</span><span>
+</span><span style="color:#c82829;">display</span><span style="color:#4271ae;">(image1)
+</span><span style="color:#c82829;">display</span><span style="color:#4271ae;">(image2)
+</span><span style="color:#c82829;">display</span><span style="color:#4271ae;">(image3)
+</span><span style="color:#c82829;">display</span><span style="color:#4271ae;">(image4)
+</span><span>
+</span><span style="color:#4271ae;">image1.</span><span style="color:#c82829;">save</span><span style="color:#4271ae;">(prompt </span><span style="color:#3e999f;">+ </span><span style="color:#718c00;">&quot;1.png&quot;</span><span style="color:#4271ae;">)
+</span><span style="color:#4271ae;">image2.</span><span style="color:#c82829;">save</span><span style="color:#4271ae;">(prompt </span><span style="color:#3e999f;">+ </span><span style="color:#718c00;">&quot;2.png&quot;</span><span style="color:#4271ae;">)
+</span><span style="color:#4271ae;">image3.</span><span style="color:#c82829;">save</span><span style="color:#4271ae;">(prompt </span><span style="color:#3e999f;">+ </span><span style="color:#718c00;">&quot;3.png&quot;</span><span style="color:#4271ae;">)
+</span><span style="color:#4271ae;">image4.</span><span style="color:#c82829;">save</span><span style="color:#4271ae;">(prompt </span><span style="color:#3e999f;">+ </span><span style="color:#718c00;">&quot;4.png&quot;</span><span style="color:#4271ae;">)
+</span></code></pre>
+<p>And here are some images I have generated for the prompt "Octopus symmetry
+geometry math":</p>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;octopus-sd1.0afe1b635c47825e.png" />
+
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;octopus-sd2.408831685ac105fa.png" />
+
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;octopus-sd3.786e54485bb11324.png" />
+
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;octopus-sd4.31e1f417262f7f83.png" />
+</p>
+<p>Update: Created repo
+<a href="https://github.com/PrimaMateria/stabble-diffusion">github:PrimaMateria/stable-diffusion</a>.</p>
+<h2 id="what-didn-t-work"><a class="zola-anchor" href="#what-didn-t-work" aria-label="Anchor link for: what-didn-t-work"
+  >§</a
+>
+What didn't work</h2>
+<p>Just for a record, here is what a tried before and what didn't work for me.</p>
+<p>First I tried to follow
+<a href="https://xeiaso.net/blog/stable-diffusion-nixos">Xe's blog post</a>.</p>
+<pre data-lang="bash" style="background-color:#ffffff;color:#4d4d4c;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82829;">nix</span><span style="color:#4271ae;"> shell nixpkgs#conda
+</span><span style="color:#c82829;">conda-shell
+</span></code></pre>
+<p>But running this resulted first in error messages
+<code>*** stack smashsng detected ***: terminated</code> and later failed creation of Conda
+environment because of no working git. Running git in Conda shell reported</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>git: error while loading shared libraries: __vdso_gettimeofday: invalid mode for dlopen(): Invalid argument
+</span></code></pre>
+<p>I have also tried to install Conda in via old <code>nix-shell</code>.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>nix-shell -p conda
+</span></code></pre>
+<p>Git was still not working, now with slightly different message:</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>git: /usr/lib/libc.so.6: version `GLIBC_2.34&#39; not found (required by git)
+</span></code></pre>
+<p>I tried to look for help on <a href="https://nixos.wiki/wiki/Python#conda">NixOS wiki</a>,
+but unfortunately it didn't help at all. When I searched on Discord the keyword
+Conda, I got NobbZ' recent message
+<a href="https://discordapp.com/channels/568306982717751326/747637173364457632/1027938976453120051">"The most reliable way of using conda I have heard about was through a VM"</a>,
+which ceased my further efforts involving Conda.</p>
+<p>And then I turned to Discourse and I found the working solution without Conda as
+described above.</p>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2024<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

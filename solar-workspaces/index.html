@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Solar i3 Workspaces</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="Solar i3 Workspaces">
+    <meta property="og:url" content="https://primamateria.github.io/blog/solar-workspaces">
+    
+    <meta property="og:description" content="In this blog post, I&#x27;ll be sharing my experience with customizing the workspaces
+in i3wm. Naming my workspaces based on the Solar System, and using corresponding
+wallpapers for each workspace. In this post, I&#x27;ll explain how I declared the
+wallpapers in Home Manager and updated the i3 config.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-i3-solar-workspaces.a1c134a3c02c2923.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2023-03-07">
+    
+    
+    
+    <meta property="article:tags" content="nixos"><meta property="article:tags" content="i3">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>Solar i3 Workspaces</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Tuesday 07 March 2023</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 6 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/i3/">#i3</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-i3-solar-workspaces.d977fdc66c5c1c12.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-i3-solar-workspaces.940d59e36ce86c53.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-i3-solar-workspaces.f96920c6300cb45d.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-i3-solar-workspaces.4b055eebdeb02623.png" alt="Mobius comic book style. Galaxy">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>In this blog post, I'll be sharing my experience with customizing the workspaces
+in i3wm. Naming my workspaces based on the Solar System, and using corresponding
+wallpapers for each workspace. In this post, I'll explain how I declared the
+wallpapers in Home Manager and updated the i3 config.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/solar-workspaces/#backstory">Backstory</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/solar-workspaces/#declaring-wallpapers-in-home-manager">Declaring wallpapers in Home Manager</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/solar-workspaces/#updating-i3-config-in-home-manager">Updating i3 config in Home Manager</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/solar-workspaces/#possible-enhancements">Possible enhancements</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/solar-workspaces/#wallpapers">Wallpapers</a>
+                
+                    <ul>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/solar-workspaces/#sun">Sun</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/solar-workspaces/#mercury">Mercury</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/solar-workspaces/#venus">Venus</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/solar-workspaces/#earth">Earth</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/solar-workspaces/#mars">Mars</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/solar-workspaces/#jupiter">Jupiter</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/solar-workspaces/#saturn">Saturn</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/solar-workspaces/#uranus">Uranus</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/solar-workspaces/#neptune">Neptune</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/solar-workspaces/#messier-87">Messier 87</a>
+                            </li>
+                        
+                    </ul>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<h2 id="backstory"><a class="zola-anchor" href="#backstory" aria-label="Anchor link for: backstory"
+  >§</a
+>
+Backstory</h2>
+<p>Most of the time while I am using i3wm I have been using
+<a href="https://github.com/roosta/i3wsr">automatic workspace renamer</a> that was setting
+the title of the workspace based on the windows. Having Firefox opened in
+several workspaces would simply mark them all as "Firefox". I wanted to label
+the workspace based on the designation, and not the tool.</p>
+<p>Manual naming of the workspace was accurate but tedious, and most of the time I
+went without setting the name resulting even in worse navigability.</p>
+<p>Later, on my work machine I came up with static name for the common designation
+like "Talk" for Slack and Teams, "Listen" for Spotify, "Code" for Windows
+Terminal, etc. The remaining spaces I thought to be backup a named them Earth,
+Moon and Sun.</p>
+<p>Over time, I come to like it. Some programs I learned to open always on Moon or
+Sun. Mentally I even imagine working on the surfaces of sun and moon.</p>
+<p>I tried to apply the same workflow on home machine, but I found that the static
+designation doesn't fit well. Sometimes my session is just above watching
+movies, browsing or crafting. Always trying to find the correct workspace to do
+something became again tedious.</p>
+<p>Therefore, I decided to try to go fully with generic names. Logically scaling
+Earth, Moon and Sun led me to name workspaces according to the Solar System. I
+must admit I never could very well remember order of the planets. This
+experiment should help with that as well.</p>
+<p>Until now, I used solid gray color wallpaper. I settled on this mundane solution
+one day while wasting my time in the office searching that one wallpaper that
+would best express my nature, and it would charm my coworkers. I figured this
+unprofessional and immediately set solid gray.</p>
+<p>This started my crusade to minimalism. I got to removing most of the noisy parts
+of the interfaces and try to follow CLI feel and look. The same was applied to
+my smartphone - black background and
+<a href="https://play.google.com/store/apps/details?id=com.whicons.iconpack&amp;gl=US&amp;pli=1">white icons</a>
+(I use this look until this day, and eliminating the eye-candy trap also helps
+to reduce the time watching the phone's screen).</p>
+<p>For some time I even experimented with monochrome editor themes. No syntax
+highlights, just read the text. But this was already too cruel, and I
+backtracked to Gruvbox as my champion theme.</p>
+<p>I always tried to utilize maximum space for the program in use. Just recently
+after I started to use GlazeWM in work I tried gaps. And I must admit even I
+don't exactly know how, but it works. Maxed-up windows carry with them some kind
+of tension, gaps on the other hand make it look like the windows levitate,
+evoking a feeling of airy freedom.</p>
+<p>I am returning to image wallpapers, but with prudence. Each workspace will show
+the celestial object that it is named after. The Sun and planets cover 9
+workspaces. For the workspace 0, which I usually use as a dump or temp, the
+black hole Messier 87 is a great fit.</p>
+<h2 id="declaring-wallpapers-in-home-manager"><a class="zola-anchor" href="#declaring-wallpapers-in-home-manager" aria-label="Anchor link for: declaring-wallpapers-in-home-manager"
+  >§</a
+>
+Declaring wallpapers in Home Manager</h2>
+<p>I copied the wallpapers' directory to a directory in my config repo where I
+store raw files. Then with Home Manger I instructed it to be set in the resulted
+i3 config directory.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">home</span><span>.</span><span style="color:#c82829;">file</span><span>.</span><span style="color:#c82829;">solarSystem </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">source </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">../configs/solarSystem</span><span>;
+</span><span>    </span><span style="color:#c82829;">target </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;.config/i3/wallpapers&quot;</span><span>;
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<h2 id="updating-i3-config-in-home-manager"><a class="zola-anchor" href="#updating-i3-config-in-home-manager" aria-label="Anchor link for: updating-i3-config-in-home-manager"
+  >§</a
+>
+Updating i3 config in Home Manager</h2>
+<p>In the <code>let</code> block I defined convenient functions:</p>
+<ul>
+<li><code>ws</code> a function that returns name of the workspace based on the index</li>
+<li><code>wswall</code> same as above, but returns wallpaper filename</li>
+<li><code>setWallpaper</code> returns the i3 <code>exec</code> command calling <code>feh</code> which will set the
+wallpaper</li>
+</ul>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">xsession</span><span>.</span><span style="color:#c82829;">windowManager</span><span>.</span><span style="color:#c82829;">i3 </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">config </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">let
+</span><span>      </span><span style="color:#c82829;">workspaces </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#718c00;">&quot;10: Messier 87&quot; &quot;1: Sun&quot; &quot;2: Mercury&quot; &quot;3: Venus&quot; &quot;4: Earth&quot; &quot;5: Mars&quot; &quot;6: Jupiter&quot; &quot;7: Saturn&quot; &quot;8: Uranus&quot; &quot;9: Neptune&quot;</span><span>];
+</span><span>      </span><span style="color:#c82829;">ws </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">n</span><span>: </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">elemAt workspaces n</span><span>;
+</span><span>
+</span><span>      </span><span style="color:#c82829;">wallpapers </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#718c00;">&quot;messier87.jpg&quot; &quot;sun.jpg&quot; &quot;mercury.jpg&quot; &quot;venus.jpg&quot; &quot;earth.jpg&quot; &quot;mars.jpg&quot; &quot;jupiter.jpg&quot; &quot;saturn.jpg&quot; &quot;uranus.jpg&quot; &quot;neptune.jpg&quot;</span><span>];
+</span><span>      </span><span style="color:#c82829;">wswall </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">n</span><span>: </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">elemAt wallpapers n</span><span>;
+</span><span>
+</span><span>      </span><span style="color:#c82829;">setWallpaper </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">w</span><span>: </span><span style="color:#718c00;">&quot;exec --no-startup-id feh --bg-center ~/.config/i3/wallpapers/</span><span style="color:#f5871f;">${w}</span><span style="color:#718c00;">&quot;</span><span>;
+</span><span>    </span><span style="color:#8959a8;">in </span><span>{
+</span><span>      </span><span style="color:#999999;"># rest of i3 config
+</span><span>    };
+</span><span>}
+</span></code></pre>
+<p>Then I updated keybindings that switch to workspaces. Before each <code>workspace</code>
+call I added the <code>setWallpaper</code> call with matching workspace index.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># xsession.windowManager.i3.config.keybindings
+</span><span>{
+</span><span>  </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${mod}</span><span style="color:#718c00;">+1&quot; </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${setWallpaper </span><span style="color:#718c00;">(</span><span style="color:#f5871f;">wswall 1</span><span style="color:#718c00;">)</span><span style="color:#f5871f;">}</span><span style="color:#718c00;">; workspace number </span><span style="color:#f5871f;">${ws 1}</span><span style="color:#718c00;">&quot;</span><span>;
+</span><span>  </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${mod}</span><span style="color:#718c00;">+2&quot; </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${setWallpaper </span><span style="color:#718c00;">(</span><span style="color:#f5871f;">wswall 2</span><span style="color:#718c00;">)</span><span style="color:#f5871f;">}</span><span style="color:#718c00;">; workspace number </span><span style="color:#f5871f;">${ws 2}</span><span style="color:#718c00;">&quot;</span><span>;
+</span><span>  </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${mod}</span><span style="color:#718c00;">+3&quot; </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${setWallpaper </span><span style="color:#718c00;">(</span><span style="color:#f5871f;">wswall 3</span><span style="color:#718c00;">)</span><span style="color:#f5871f;">}</span><span style="color:#718c00;">; workspace number </span><span style="color:#f5871f;">${ws 3}</span><span style="color:#718c00;">&quot;</span><span>;
+</span><span>  </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${mod}</span><span style="color:#718c00;">+4&quot; </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${setWallpaper </span><span style="color:#718c00;">(</span><span style="color:#f5871f;">wswall 4</span><span style="color:#718c00;">)</span><span style="color:#f5871f;">}</span><span style="color:#718c00;">; workspace number </span><span style="color:#f5871f;">${ws 4}</span><span style="color:#718c00;">&quot;</span><span>;
+</span><span>  </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${mod}</span><span style="color:#718c00;">+5&quot; </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${setWallpaper </span><span style="color:#718c00;">(</span><span style="color:#f5871f;">wswall 5</span><span style="color:#718c00;">)</span><span style="color:#f5871f;">}</span><span style="color:#718c00;">; workspace number </span><span style="color:#f5871f;">${ws 5}</span><span style="color:#718c00;">&quot;</span><span>;
+</span><span>  </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${mod}</span><span style="color:#718c00;">+6&quot; </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${setWallpaper </span><span style="color:#718c00;">(</span><span style="color:#f5871f;">wswall 6</span><span style="color:#718c00;">)</span><span style="color:#f5871f;">}</span><span style="color:#718c00;">; workspace number </span><span style="color:#f5871f;">${ws 6}</span><span style="color:#718c00;">&quot;</span><span>;
+</span><span>  </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${mod}</span><span style="color:#718c00;">+7&quot; </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${setWallpaper </span><span style="color:#718c00;">(</span><span style="color:#f5871f;">wswall 7</span><span style="color:#718c00;">)</span><span style="color:#f5871f;">}</span><span style="color:#718c00;">; workspace number </span><span style="color:#f5871f;">${ws 7}</span><span style="color:#718c00;">&quot;</span><span>;
+</span><span>  </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${mod}</span><span style="color:#718c00;">+8&quot; </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${setWallpaper </span><span style="color:#718c00;">(</span><span style="color:#f5871f;">wswall 8</span><span style="color:#718c00;">)</span><span style="color:#f5871f;">}</span><span style="color:#718c00;">; workspace number </span><span style="color:#f5871f;">${ws 8}</span><span style="color:#718c00;">&quot;</span><span>;
+</span><span>  </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${mod}</span><span style="color:#718c00;">+9&quot; </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${setWallpaper </span><span style="color:#718c00;">(</span><span style="color:#f5871f;">wswall 9</span><span style="color:#718c00;">)</span><span style="color:#f5871f;">}</span><span style="color:#718c00;">; workspace number </span><span style="color:#f5871f;">${ws 9}</span><span style="color:#718c00;">&quot;</span><span>;
+</span><span>  </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${mod}</span><span style="color:#718c00;">+0&quot; </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${setWallpaper </span><span style="color:#718c00;">(</span><span style="color:#f5871f;">wswall 0</span><span style="color:#718c00;">)</span><span style="color:#f5871f;">}</span><span style="color:#718c00;">; workspace number </span><span style="color:#f5871f;">${ws 0}</span><span style="color:#718c00;">&quot;</span><span>;
+</span><span>}
+</span></code></pre>
+<p>At the start i3 executes command to switch to workspace 1. I had to call
+<code>setWallpaper</code> there as well otherwise the wallpaper won't be set until I switch
+to some workspace manually.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># xsession.windowManager.i3.config.startup
+</span><span>[
+</span><span>  { </span><span style="color:#c82829;">command </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${setWallpaper </span><span style="color:#718c00;">(</span><span style="color:#f5871f;">wswall 1</span><span style="color:#718c00;">)</span><span style="color:#f5871f;">}</span><span style="color:#718c00;">; i3-msg workspace &#39;</span><span style="color:#f5871f;">${ws 1}</span><span style="color:#718c00;">&#39;&quot;</span><span>; </span><span style="color:#c82829;">notification </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">false</span><span>; }
+</span><span>]
+</span></code></pre>
+<h2 id="possible-enhancements"><a class="zola-anchor" href="#possible-enhancements" aria-label="Anchor link for: possible-enhancements"
+  >§</a
+>
+Possible enhancements</h2>
+<p>The action of changing wallpaper is now bound to keybinding, but there are other
+ways to switch workspaces. For example command <code>workspace back_and_forth</code> is not
+covered. Also, controlling i3 via IPC messages won't trigger wallpaper change.</p>
+<p>For future, probably the IPC protocol is the one that needs to be utilized. Run
+a daemon process and listen to messages and react on change of focused
+workspace.</p>
+<h2 id="wallpapers"><a class="zola-anchor" href="#wallpapers" aria-label="Anchor link for: wallpapers"
+  >§</a
+>
+Wallpapers</h2>
+<p>All the wallpapers I found on the Wikimedia.</p>
+<h3 id="sun"><a class="zola-anchor" href="#sun" aria-label="Anchor link for: sun"
+  >§</a
+>
+Sun</h3>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;sun.867ec8225398f30d.jpg" />
+ By
+NASA/SDO (AIA) -
+http://sdo.gsfc.nasa.gov/assets/img/browse/2010/08/19/20100819_003221_4096_0304.jpg,
+Public Domain, https://commons.wikimedia.org/w/index.php?curid=11348381</p>
+<h3 id="mercury"><a class="zola-anchor" href="#mercury" aria-label="Anchor link for: mercury"
+  >§</a
+>
+Mercury</h3>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;mercury.7aa0ff1420b08bc0.jpg" />
+
+By NASA/Johns Hopkins University Applied Physics Laboratory/Arizona State
+University/Carnegie Institution of Washington -
+https://photojournal.jpl.nasa.gov/catalog/PIA11364, Public Domain,
+https://commons.wikimedia.org/w/index.php?curid=83618472</p>
+<h3 id="venus"><a class="zola-anchor" href="#venus" aria-label="Anchor link for: venus"
+  >§</a
+>
+Venus</h3>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;venus.9878d247b4578da9.jpg" />
+ By
+NASA/JPL-Caltech -
+https://solarsystem.nasa.gov/resources/2524/newly-processed-views-of-venus-from-mariner-10/,
+Public Domain, https://commons.wikimedia.org/w/index.php?curid=105847882</p>
+<h3 id="earth"><a class="zola-anchor" href="#earth" aria-label="Anchor link for: earth"
+  >§</a
+>
+Earth</h3>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;earth.92d9861b03f22750.jpg" />
+ By
+NASA/Apollo 17 crew; taken by either Harrison Schmitt or Ron Evans -
+http://tothemoon.ser.asu.edu/gallery/Apollo/17/Hasselblad%20500EL%2070%20mm
+https://www.flickr.com/photos/projectapolloarchive/21081863984/, Public Domain,
+https://commons.wikimedia.org/w/index.php?curid=114976945</p>
+<h3 id="mars"><a class="zola-anchor" href="#mars" aria-label="Anchor link for: mars"
+  >§</a
+>
+Mars</h3>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;mars.b65c4081f8171375.jpg" />
+ By
+ESA &amp; MPS for OSIRIS Team MPS/UPD/LAM/IAA/RSSD/INTA/UPM/DASP/IDA, CC BY-SA IGO
+3.0, CC BY-SA 3.0 igo, https://commons.wikimedia.org/w/index.php?curid=56489423</p>
+<h3 id="jupiter"><a class="zola-anchor" href="#jupiter" aria-label="Anchor link for: jupiter"
+  >§</a
+>
+Jupiter</h3>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;jupiter.2d95f6e0c9f6680b.jpg" />
+
+By NASA/JPL-Caltech/SwRI/MSSS/Kevin M. Gill -
+jpl.nasa.gov/spaceimages/details.php?id=PIA22946, Public Domain,
+https://commons.wikimedia.org/w/index.php?curid=77494805</p>
+<h3 id="saturn"><a class="zola-anchor" href="#saturn" aria-label="Anchor link for: saturn"
+  >§</a
+>
+Saturn</h3>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;saturn.f3d82c232600c7ea.jpg" />
+ By
+NASA / JPL / Space Science Institute -
+http://www.ciclops.org/view/5155/Saturn-Four-Years-On
+http://www.nasa.gov/images/content/365640main_PIA11141_full.jpg
+http://photojournal.jpl.nasa.gov/catalog/PIA11141, Public Domain,
+https://commons.wikimedia.org/w/index.php?curid=7228953</p>
+<h3 id="uranus"><a class="zola-anchor" href="#uranus" aria-label="Anchor link for: uranus"
+  >§</a
+>
+Uranus</h3>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;uranus.c5107487c142befc.jpg" />
+ By
+NASA - http://photojournal.jpl.nasa.gov/catalog/PIA18182, Public Domain,
+https://commons.wikimedia.org/w/index.php?curid=121128532</p>
+<h3 id="neptune"><a class="zola-anchor" href="#neptune" aria-label="Anchor link for: neptune"
+  >§</a
+>
+Neptune</h3>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;neptune.46cd25f9865ec5ac.jpg" />
+
+By NASA/JPL - http://photojournal.jpl.nasa.gov/catalog/PIA00046, Public Domain,
+https://commons.wikimedia.org/w/index.php?curid=31789</p>
+<h3 id="messier-87"><a class="zola-anchor" href="#messier-87" aria-label="Anchor link for: messier-87"
+  >§</a
+>
+Messier 87</h3>
+<p>
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;messier87.89afa76a69bf66b8.jpg" />
+
+By Event Horizon Telescope - https://www.eso.org/public/images/eso1907a/; JPG
+saved from full size TIFF and converted with maximum quality level 12 in
+Photoshop 2019., CC BY 4.0,
+https://commons.wikimedia.org/w/index.php?curid=77916527</p>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2024<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

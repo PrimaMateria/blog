@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Paisano Cheatsheet</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="Paisano Cheatsheet">
+    <meta property="og:url" content="https://primamateria.github.io/blog/paisano-cheatsheet">
+    
+    <meta property="og:description" content="Paisano is not only a filesystem-based module system, but also a framework that
+specifies roles such as cell, block, target, or soil.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-paisano-cheatsheet.da922a72a9de95a8.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2023-11-02">
+    
+    
+    
+    <meta property="article:tags" content="nixos"><meta property="article:tags" content="paisano"><meta property="article:tags" content="hive">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>Paisano Cheatsheet</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Thursday 02 November 2023</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 2 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/paisano/">#paisano</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/hive/">#hive</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-paisano-cheatsheet.68916ef3970e0631.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-paisano-cheatsheet.a349cbe1572995bd.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-paisano-cheatsheet.5630e23188ec3c41.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-paisano-cheatsheet.1cb3f5386e483e87.png" alt="Mobius comic book style. Paisano riding donkey through the desert.">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>Paisano is not only a filesystem-based module system, but also a framework that
+specifies roles such as cell, block, target, or soil.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/paisano-cheatsheet/#grow-on">Grow On</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/paisano-cheatsheet/#harvest-cell">Harvest cell</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/paisano-cheatsheet/#harvest-block">Harvest block</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/paisano-cheatsheet/#harvest-block-key">Harvest block key</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/paisano-cheatsheet/#pick-cell">Pick cell</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/paisano-cheatsheet/#winnow-block-filtering-out-one-key">Winnow block filtering out one key</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<p>In comparison, Haumea is a more abstract system that allows users to load and
+process filesystem-based modules, without specifying what the modules should
+represent. Paisano, on the other hand, is closer to being a framework because it
+guides users in organizing their filesystem-based modules in a structure that
+has a specific meaning, while still allowing users to define the types and
+meaning themselves.</p>
+<p>From the limited information I gathered, it appears that Paisano was extracted
+from the <code>std</code> framework, while Haumea was developed in parallel. There is now a
+branch in Paisano that internally utilizes Haumea.</p>
+<p>According to the author, Paisano was created to meet the needs of devops
+engineers. Since I am currently not interested in packaging software, but rather
+in declaring my development environment, I have skipped advanced topics such as
+actions, registries, and TUI tools.</p>
+<ul>
+<li><a href="https://github.com/paisano-nix/core">github:paisano-nix/core</a></li>
+<li><a href="https://github.com/PrimaMateria/experiment-paisano">github:primamateria/experiment-paisano</a></li>
+</ul>
+<p>The examples below are just excerpts. For the full context, read the code in the
+GitHub repository.</p>
+<h2 id="grow-on"><a class="zola-anchor" href="#grow-on" aria-label="Anchor link for: grow-on"
+  >§</a
+>
+Grow On</h2>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">paisano </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:divnix/paisano&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>    </span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nix-community/nixpkgs.lib&quot;</span><span>;
+</span><span>  };
+</span><span>
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#f5871f;">paisano</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">self</span><span style="color:#3e999f;">, ... </span><span>}@</span><span style="color:#f5871f;">inputs</span><span>:
+</span><span>    </span><span style="color:#f5871f;">paisano</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">growOn
+</span><span>      {
+</span><span>        </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">inputs</span><span>;
+</span><span>        </span><span style="color:#c82829;">systems </span><span style="color:#3e999f;">= </span><span>[ </span><span style="color:#718c00;">&quot;x86_64-linux&quot; &quot;aarch64-linux&quot; </span><span>];
+</span><span>        </span><span style="color:#c82829;">cellsFrom </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">./cells</span><span>;
+</span><span>        </span><span style="color:#c82829;">cellBlocks </span><span style="color:#3e999f;">= </span><span>[
+</span><span>          {
+</span><span>            </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;fooblock&quot;</span><span>;
+</span><span>            </span><span style="color:#c82829;">type </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;experiment&quot;</span><span>;
+</span><span>          }
+</span><span>          {
+</span><span>            </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;barblock&quot;</span><span>;
+</span><span>            </span><span style="color:#c82829;">type </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;experiment&quot;</span><span>;
+</span><span>          }
+</span><span>        ];
+</span><span>      }
+</span><span>      {
+</span><span>        </span><span style="color:#c82829;">product </span><span style="color:#3e999f;">= </span><span>{
+</span><span>          </span><span style="color:#c82829;">cell </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">paisano</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">harvest self </span><span>[ </span><span style="color:#718c00;">&quot;cell&quot; </span><span>];
+</span><span>          </span><span style="color:#c82829;">block </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">paisano</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">harvest self </span><span>[ </span><span style="color:#718c00;">&quot;cell&quot; &quot;fooblock&quot; </span><span>];
+</span><span>          </span><span style="color:#c82829;">foo </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">paisano</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">harvest self </span><span>[ </span><span style="color:#718c00;">&quot;cell&quot; &quot;fooblock&quot; &quot;foo&quot; </span><span>];
+</span><span>          </span><span style="color:#c82829;">bar </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">paisano</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">harvest self </span><span>[ </span><span style="color:#718c00;">&quot;cell&quot; &quot;fooblock&quot; &quot;bar&quot; </span><span>];
+</span><span>
+</span><span>          </span><span style="color:#c82829;">cellPicked </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">paisano</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">pick self </span><span>[ </span><span style="color:#718c00;">&quot;cell&quot; </span><span>];
+</span><span>          </span><span style="color:#c82829;">winnow </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">paisano</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">winnow </span><span>(</span><span style="color:#f5871f;">field</span><span>: </span><span style="color:#f5871f;">value</span><span>: </span><span style="color:#f5871f;">field </span><span style="color:#3e999f;">!= </span><span style="color:#718c00;">&quot;baz&quot; </span><span style="color:#3e999f;">&amp;&amp; </span><span style="color:#f5871f;">value </span><span style="color:#3e999f;">!=
+</span><span>            </span><span style="color:#f5871f;">null</span><span>) </span><span style="color:#f5871f;">self </span><span>[ </span><span style="color:#718c00;">&quot;cell&quot; &quot;fooblock&quot; </span><span>];
+</span><span>        };
+</span><span>      };
+</span><span>}
+</span></code></pre>
+<h2 id="harvest-cell"><a class="zola-anchor" href="#harvest-cell" aria-label="Anchor link for: harvest-cell"
+  >§</a
+>
+Harvest cell</h2>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>├── cells
+</span><span>│  └── cell
+</span><span>│     ├── barblock.nix
+</span><span>│     │  └── { inputs, cell }: { bar = &quot;bar&quot;; }
+</span><span>│     └── fooblock.nix
+</span><span>│        └── { inputs, cell }: { foo = &quot;foo&quot;; inherit (cell.barblock) bar; baz = &quot;baz&quot;; }
+</span><span>└── flake.nix
+</span><span>   └── cell = paisano.harvest self [ &quot;cell&quot; ];
+</span><span>
+</span><span>{
+</span><span>  cell = {
+</span><span>    aarch64-linux = {
+</span><span>      barblock = {bar = &quot;bar&quot;;};
+</span><span>      fooblock = {
+</span><span>        bar = &quot;bar&quot;;
+</span><span>        baz = &quot;baz&quot;;
+</span><span>        foo = &quot;foo&quot;;
+</span><span>      };
+</span><span>    };
+</span><span>    x86_64-linux = {
+</span><span>      barblock = {bar = &quot;bar&quot;;};
+</span><span>      fooblock = {
+</span><span>        bar = &quot;bar&quot;;
+</span><span>        baz = &quot;baz&quot;;
+</span><span>        foo = &quot;foo&quot;;
+</span><span>      };
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<h2 id="harvest-block"><a class="zola-anchor" href="#harvest-block" aria-label="Anchor link for: harvest-block"
+  >§</a
+>
+Harvest block</h2>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>├── cells
+</span><span>│  └── cell
+</span><span>│     ├── barblock.nix
+</span><span>│     │  └── { inputs, cell }: { bar = &quot;bar&quot;; }
+</span><span>│     └── fooblock.nix
+</span><span>│        └── { inputs, cell }: { foo = &quot;foo&quot;; inherit (cell.barblock) bar; baz = &quot;baz&quot;; }
+</span><span>└── flake.nix
+</span><span>   └── block = paisano.harvest self [ &quot;cell&quot; &quot;fooblock&quot; ];
+</span><span>
+</span><span>{
+</span><span>  block = {
+</span><span>    aarch64-linux = {
+</span><span>      bar = &quot;bar&quot;;
+</span><span>      baz = &quot;baz&quot;;
+</span><span>      foo = &quot;foo&quot;;
+</span><span>    };
+</span><span>    x86_64-linux = {
+</span><span>      bar = &quot;bar&quot;;
+</span><span>      baz = &quot;baz&quot;;
+</span><span>      foo = &quot;foo&quot;;
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<h2 id="harvest-block-key"><a class="zola-anchor" href="#harvest-block-key" aria-label="Anchor link for: harvest-block-key"
+  >§</a
+>
+Harvest block key</h2>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>├── cells
+</span><span>│  └── cell
+</span><span>│     ├── barblock.nix
+</span><span>│     │  └── { inputs, cell }: { bar = &quot;bar&quot;; }
+</span><span>│     └── fooblock.nix
+</span><span>│        └── { inputs, cell }: { foo = &quot;foo&quot;; inherit (cell.barblock) bar; baz = &quot;baz&quot;; }
+</span><span>└── flake.nix
+</span><span>   └── foo = paisano.harvest self [ &quot;cell&quot; &quot;fooblock&quot; &quot;foo&quot; ];
+</span><span>
+</span><span>{
+</span><span>  foo = {
+</span><span>    aarch64-linux = &quot;foo&quot;;
+</span><span>    x86_64-linux = &quot;foo&quot;;
+</span><span>  };
+</span><span>}
+</span><span>
+</span></code></pre>
+<h2 id="pick-cell"><a class="zola-anchor" href="#pick-cell" aria-label="Anchor link for: pick-cell"
+  >§</a
+>
+Pick cell</h2>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>├── cells
+</span><span>│  └── cell
+</span><span>│     ├── barblock.nix
+</span><span>│     │  └── { inputs, cell }: { bar = &quot;bar&quot;; }
+</span><span>│     └── fooblock.nix
+</span><span>│        └── { inputs, cell }: { foo = &quot;foo&quot;; inherit (cell.barblock) bar; baz = &quot;baz&quot;; }
+</span><span>└── flake.nix
+</span><span>   └── cellPicked = paisano.pick self [ &quot;cell&quot; ];
+</span><span>
+</span><span>{
+</span><span>  cellPicked = {
+</span><span>    barblock = {bar = &quot;bar&quot;;};
+</span><span>    fooblock = {
+</span><span>      bar = &quot;bar&quot;;
+</span><span>      baz = &quot;baz&quot;;
+</span><span>      foo = &quot;foo&quot;;
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span><span>
+</span></code></pre>
+<h2 id="winnow-block-filtering-out-one-key"><a class="zola-anchor" href="#winnow-block-filtering-out-one-key" aria-label="Anchor link for: winnow-block-filtering-out-one-key"
+  >§</a
+>
+Winnow block filtering out one key</h2>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>├── cells
+</span><span>│  └── cell
+</span><span>│     ├── barblock.nix
+</span><span>│     │  └── { inputs, cell }: { bar = &quot;bar&quot;; }
+</span><span>│     └── fooblock.nix
+</span><span>│        └── { inputs, cell }: { foo = &quot;foo&quot;; inherit (cell.barblock) bar; baz = &quot;baz&quot;; }
+</span><span>└── flake.nix
+</span><span>   └── winnow = paisano.winnow
+</span><span>         (field: value: field != &quot;baz&quot; &amp;&amp; value != null)
+</span><span>         self
+</span><span>         [ &quot;cell&quot; &quot;fooblock&quot; ];
+</span><span>
+</span><span>{
+</span><span>  winnow = {
+</span><span>    aarch64-linux = {
+</span><span>      bar = &quot;bar&quot;;
+</span><span>      foo = &quot;foo&quot;;
+</span><span>    };
+</span><span>    x86_64-linux = {
+</span><span>      bar = &quot;bar&quot;;
+</span><span>      foo = &quot;foo&quot;;
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2024<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

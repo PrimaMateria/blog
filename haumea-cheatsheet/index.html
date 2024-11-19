@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Haumea Cheatsheet</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="Haumea Cheatsheet">
+    <meta property="og:url" content="https://primamateria.github.io/blog/haumea-cheatsheet">
+    
+    <meta property="og:description" content="Haumea is a filesystem-based module system for Nix that sets itself apart from
+NixOS modules by embracing a structure more akin to traditional programming
+languages. It incorporates a file hierarchy and visibility, aligning with the
+principles of organized directory layouts and extensibility. Haumea simplifies
+the process of importing files by automatically incorporating them into an
+attribute set, eliminating the need for manual imports.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-haumea-cheatsheet.612dc152829cef7f.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2023-10-22">
+    
+    
+    
+    <meta property="article:tags" content="nixos"><meta property="article:tags" content="haumea"><meta property="article:tags" content="hive">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>Haumea Cheatsheet</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Sunday 22 October 2023</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 2 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/haumea/">#haumea</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/hive/">#hive</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-haumea-cheatsheet.3e30924aa6bbd3c3.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-haumea-cheatsheet.d01ffcff1531616a.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-haumea-cheatsheet.c1d3d771b50678c3.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-haumea-cheatsheet.e76f7d309773ac28.png" alt="Mobius comic book style. Hawain goddess Haumea. Magically transforming to youth. Big island scenery.">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>Haumea is a filesystem-based module system for Nix that sets itself apart from
+NixOS modules by embracing a structure more akin to traditional programming
+languages. It incorporates a file hierarchy and visibility, aligning with the
+principles of organized directory layouts and extensibility. Haumea simplifies
+the process of importing files by automatically incorporating them into an
+attribute set, eliminating the need for manual imports.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/haumea-cheatsheet/#default">Default</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/haumea-cheatsheet/#path">Path</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/haumea-cheatsheet/#scoped">Scoped</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/haumea-cheatsheet/#hoist-attributes">Hoist Attributes</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/haumea-cheatsheet/#hoist-lists">Hoist Lists</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/haumea-cheatsheet/#lift-default">Lift Default</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/haumea-cheatsheet/#sub-dir">Sub Dir</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/haumea-cheatsheet/#self-super-root">Self Super Root</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/haumea-cheatsheet/#post-updates">Post Updates</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<ul>
+<li><a href="https://nix-community.github.io/haumea/intro/introduction.html">Haumea Docs</a></li>
+<li><a href="https://github.com/nix-community/haumea">github:nix-community/haumea</a></li>
+<li><a href="https://github.com/PrimaMateria/experiment-haumea">github:primamateria/experiment-haumea</a></li>
+</ul>
+<p>The examples below are just excerpts. For the full context, read the code in the
+GitHub repository.</p>
+<h2 id="default"><a class="zola-anchor" href="#default" aria-label="Anchor link for: default"
+  >§</a
+>
+Default</h2>
+<p>The default behavior is to load the content of the <code>one.nix</code> and <code>two.nix</code> files
+into the attributes <code>one</code> and <code>two</code>. Notice how we can easily pass the <code>farm</code>
+input.</p>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>├── examples
+</span><span>│  └── default
+</span><span>│     ├── one.nix
+</span><span>│     │  └── { farm }: { animal = farm.pig; fruit = &quot;orange&quot;; vegetables = [ &quot;potato&quot; ]; }
+</span><span>│     └── two.nix
+</span><span>│        └── { farm }: { animal = farm.cow; fruit = &quot;banana&quot;; vegetables = [ &quot;carrot&quot; ]; }
+</span><span>└── flake.nix
+</span><span>   └── default = haumea.lib.load {
+</span><span>         src = ./examples/default;
+</span><span>         inputs = { farm = { cow = &quot;cow&quot;; pig = &quot;pig&quot;; }; };
+</span><span>       };
+</span><span>
+</span><span>{
+</span><span>  one = { animal = &quot;pig&quot;; fruit = &quot;orange&quot;; vegetables = [ &quot;potato&quot; ]; };
+</span><span>  two = { animal = &quot;cow&quot;; fruit = &quot;banana&quot;; vegetables = [ &quot;carrot&quot; ]; };
+</span><span>}
+</span></code></pre>
+<h2 id="path"><a class="zola-anchor" href="#path" aria-label="Anchor link for: path"
+  >§</a
+>
+Path</h2>
+<p>Specifying the path loader will assign the paths of the files in the Nix store
+to the attributes instead.</p>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>├── examples
+</span><span>│  └── default
+</span><span>│     ├── one.nix
+</span><span>│     │  └── { farm }: { animal = farm.pig; fruit = &quot;orange&quot;; vegetables = [ &quot;potato&quot; ]; }
+</span><span>│     └── two.nix
+</span><span>│        └── { farm }: { animal = farm.cow; fruit = &quot;banana&quot;; vegetables = [ &quot;carrot&quot; ]; }
+</span><span>└── flake.nix
+</span><span>   └── path = haumea.lib.load {
+</span><span>         src = ./examples/default;
+</span><span>         loader = haumea.lib.loaders.path;
+</span><span>       };
+</span><span>
+</span><span>{
+</span><span>  one = /nix/store/3dkpf96ycknjszjqq2lwjhh42qmsw6q5-source/examples/default/one.nix;
+</span><span>  two = /nix/store/3dkpf96ycknjszjqq2lwjhh42qmsw6q5-source/examples/default/two.nix;
+</span><span>}
+</span></code></pre>
+<h2 id="scoped"><a class="zola-anchor" href="#scoped" aria-label="Anchor link for: scoped"
+  >§</a
+>
+Scoped</h2>
+<p>Notice that <code>one.nix</code> and <code>two.nix</code> do not declare the <code>farm</code> parameter, but
+still have access to <code>pig</code> and <code>cow</code>, since the <code>farm</code> is scoped.</p>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>├── examples
+</span><span>│  └── default
+</span><span>│     ├── one.nix
+</span><span>│     │  └── {}: { animal = farm.pig; fruit = &quot;orange&quot;; vegetables = [ &quot;potato&quot; ]; }
+</span><span>│     └── two.nix
+</span><span>│        └── {}: { animal = farm.cow; fruit = &quot;banana&quot;; vegetables = [ &quot;carrot&quot; ]; }
+</span><span>└── flake.nix
+</span><span>   └── scoped = haumea.lib.load {
+</span><span>         src = ./examples/scoped;
+</span><span>         loader = haumea.lib.loaders.scoped;
+</span><span>         inputs = { farm = { cow = &quot;cow&quot;; pig = &quot;pig&quot;; }; };
+</span><span>       };
+</span><span>
+</span><span>{
+</span><span>  one = { animal = &quot;pig&quot;; fruit = &quot;orange&quot;; vegetables = [ &quot;potato&quot; ]; };
+</span><span>  two = { animal = &quot;cow&quot;; fruit = &quot;banana&quot;; vegetables = [ &quot;carrot&quot; ]; };
+</span><span>}
+</span></code></pre>
+<h2 id="hoist-attributes"><a class="zola-anchor" href="#hoist-attributes" aria-label="Anchor link for: hoist-attributes"
+  >§</a
+>
+Hoist Attributes</h2>
+<p>Hoisting attributes named <code>fruit</code> from the files' contents and moving them to a
+new attribute called <code>medley</code>.</p>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>├── examples
+</span><span>│  └── scoped
+</span><span>│     ├── one.nix
+</span><span>│     │  └── { farm }: { animal = farm.pig; fruit = &quot;orange&quot;; vegetables = [ &quot;potato&quot; ]; }
+</span><span>│     └── two.nix
+</span><span>│        └── { farm }: { animal = farm.cow; fruit = &quot;banana&quot;; vegetables = [ &quot;carrot&quot; ]; }
+</span><span>└── flake.nix
+</span><span>   └── hoistAttrs = haumea.lib.load {
+</span><span>         src = ./examples/hoistAttrs;
+</span><span>         inputs = { farm = { cow = &quot;cow&quot;; pig = &quot;pig&quot;; }; };
+</span><span>         transformer = haumea.lib.transformers.hoistAttrs &quot;fruit&quot; &quot;medley&quot;;
+</span><span>       };
+</span><span>
+</span><span>{
+</span><span>  one = { animal = &quot;pig&quot;; vegetables = [ &quot;potato&quot; ]; };
+</span><span>  medley = { one = &quot;orange&quot;; two = &quot;banana&quot;; };
+</span><span>  two = { animal = &quot;cow&quot;; vegetables = [ &quot;carrot&quot; ]; };
+</span><span>}
+</span></code></pre>
+<h2 id="hoist-lists"><a class="zola-anchor" href="#hoist-lists" aria-label="Anchor link for: hoist-lists"
+  >§</a
+>
+Hoist Lists</h2>
+<p>Hoisting lists named <code>vegetables</code> and concatenating them into one list assigned
+to the attribute <code>salad</code>.</p>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>├── examples
+</span><span>│  └── scoped
+</span><span>│     ├── one.nix
+</span><span>│     │  └── { farm }: { fruit = &quot;orange&quot;; vegetable = [ &quot;potato&quot; ]; animal = farm.pig; }
+</span><span>│     └── two.nix
+</span><span>│        └── { farm }: { fruit = &quot;banana&quot;; vegetable = [ &quot;carrot&quot; ]; animal = farm.cow; }
+</span><span>└── flake.nix
+</span><span>   └── hoistLists = haumea.lib.load {
+</span><span>         src = ./examples/hoistLists;
+</span><span>         inputs = { farm = { cow = &quot;cow&quot;; pig = &quot;pig&quot;; }; };
+</span><span>         transformer = haumea.lib.transformers.hoistLists &quot;vegetables&quot; &quot;salad&quot;;
+</span><span>       };
+</span><span>
+</span><span>{
+</span><span>  one = { animal = &quot;pig&quot;; fruit = &quot;orange&quot;; };
+</span><span>  salad = [ &quot;potato&quot; &quot;carrot&quot; ];
+</span><span>  two = { animal = &quot;cow&quot;; fruit = &quot;banana&quot;; };
+</span><span>}
+</span></code></pre>
+<h2 id="lift-default"><a class="zola-anchor" href="#lift-default" aria-label="Anchor link for: lift-default"
+  >§</a
+>
+Lift Default</h2>
+<p>The contents of the <code>default.nix</code> file are included in the resulting set.</p>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>├── examples
+</span><span>│  └── liftDefault
+</span><span>│     ├── one.nix
+</span><span>│     │  └── { farm }: { fruit = &quot;orange&quot;; vegetable = [ &quot;potato&quot; ]; animal = farm.pig; }
+</span><span>│     └── default.nix
+</span><span>│        └── { farm }: {
+</span><span>│              two = { animal = farm.cow; fruit = &quot;banana&quot;; vegetables = [ &quot;carrot&quot; ]; };
+</span><span>│            }
+</span><span>└── flake.nix
+</span><span>   └── liftDefault = haumea.lib.load {
+</span><span>         src = ./examples/liftDefault;
+</span><span>         inputs = { farm = { cow = &quot;cow&quot;; pig = &quot;pig&quot;; }; };
+</span><span>         transformer = haumea.lib.transformers.liftDefault;
+</span><span>       };
+</span><span>
+</span><span>{
+</span><span>  one = { animal = &quot;pig&quot;; fruit = &quot;orange&quot;; vegetables = [ &quot;potato&quot; ]; };
+</span><span>  two = { animal = &quot;cow&quot;; fruit = &quot;banana&quot;; vegetables = [ &quot;carrot&quot; ]; };
+</span><span>}
+</span></code></pre>
+<h2 id="sub-dir"><a class="zola-anchor" href="#sub-dir" aria-label="Anchor link for: sub-dir"
+  >§</a
+>
+Sub Dir</h2>
+<p>Module <code>one</code> is further divided into its individual leaf attributes modules.</p>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>├── examples
+</span><span>│  └── subDir
+</span><span>│     ├── one
+</span><span>│     │  ├── animal.nix
+</span><span>│     │  │  └── { farm }: farm.pig
+</span><span>│     │  ├── fruit.nix
+</span><span>│     │  │  └── &quot;orange&quot;
+</span><span>│     │  └── vegetables.nix
+</span><span>│     │     └── [ &quot;potato&quot; ]
+</span><span>│     └── two.nix
+</span><span>│        └── { farm }: { fruit = &quot;banana&quot;; vegetable = [ &quot;carrot&quot; ]; animal = farm.cow; }
+</span><span>└── flake.nix
+</span><span>   └── subDir = haumea.lib.load {
+</span><span>         src = ./examples/subDir;
+</span><span>         inputs = { farm = { cow = &quot;cow&quot;; pig = &quot;pig&quot;; }; };
+</span><span>       };
+</span><span>
+</span><span>{
+</span><span>  one = { animal = &quot;pig&quot;; fruit = &quot;orange&quot;; vegetables = [ &quot;potato&quot; ]; };
+</span><span>  two = { animal = &quot;cow&quot;; fruit = &quot;banana&quot;; vegetables = [ &quot;carrot&quot; ]; };
+</span><span>}
+</span></code></pre>
+<h2 id="self-super-root"><a class="zola-anchor" href="#self-super-root" aria-label="Anchor link for: self-super-root"
+  >§</a
+>
+Self Super Root</h2>
+<ul>
+<li><code>self</code> - the module itself</li>
+<li><code>super</code> - the directory where the modules is located</li>
+<li><code>root</code> - whole src directory</li>
+</ul>
+<p>Files that start with <code>_</code> or <code>__</code> are not included in the result set. Files that
+start with <code>_</code> are visible to the <code>root</code> (entire src directory). Files that
+start with <code>__</code> are visible to the nearest <code>super</code> (directory). Please take note
+of the commented invalid selectors in the <code>default.nix</code> file.</p>
+<pre data-lang="text" style="background-color:#ffffff;color:#4d4d4c;" class="language-text "><code class="language-text" data-lang="text"><span>├── examples
+</span><span>│  └── selfSuperRoot
+</span><span>│     ├── alpha
+</span><span>│     │  ├── __field.nix
+</span><span>│     │  │  └── { carrot = &quot;carrot&quot;; potato = &quot;potato&quot;; }
+</span><span>│     │  ├── _orchard.nix
+</span><span>│     │  │  └── { banana = &quot;banana&quot;; orange = &quot;orange&quot;; }
+</span><span>│     │  ├── one.nix
+</span><span>│     │  │  └── { self, super, root }: {
+</span><span>│     │  │        id = &quot;${self.animal}-${self.fruit}-${builtins.elemAt self.vegetables 0}&quot;;
+</span><span>│     │  │        animal = root.farm.pig;
+</span><span>│     │  │        fruit = super.orchard.orange;
+</span><span>│     │  │        vegetables = [ super.field.potato ];
+</span><span>│     │  │      }
+</span><span>│     │  └── two.nix
+</span><span>│     │     └── { self, super, root }: {
+</span><span>│     │           id = &quot;${self.animal}-${self.fruit}-${builtins.elemAt self.vegetables 0}&quot;;
+</span><span>│     │           animal = root.farm.cow;
+</span><span>│     │           fruit = super.orchard.banana;
+</span><span>│     │           vegetables = [ super.field.carrot ];
+</span><span>│     │         }
+</span><span>│     │── _farm.nix
+</span><span>│     │  └── { cow = &quot;cow&quot;; pig = &quot;pig&quot;; }
+</span><span>│     └── default.nix
+</span><span>│        └── { self, super, root }: {
+</span><span>│              salad = super.alpha.one.vegetables ++ super.alpha.two.vegetables;
+</span><span>│              medley = [ super.alpha.orchard.banana super.alpha.orchard.orange ];
+</span><span>│
+</span><span>│              # inherit (self) alpha; =&gt; error: attribute &#39;alpha&#39; missing
+</span><span>│              # inherit (super.alpha) field; =&gt; error: attribute &#39;field&#39; missing
+</span><span>│            }
+</span><span>└── flake.nix
+</span><span>   └── selfSuperRoot = haumea.lib.load {
+</span><span>         src = ./examples/selfSuperRoot;
+</span><span>         transformer = haumea.lib.transformers.liftDefault;
+</span><span>       };
+</span><span>
+</span><span>{
+</span><span>  alpha = {
+</span><span>    one = { animal = &quot;pig&quot;; fruit = &quot;orange&quot;; id = &quot;pig-orange-potato&quot;; vegetables = [ &quot;potato&quot; ]; };
+</span><span>    two = { animal = &quot;cow&quot;; fruit = &quot;banana&quot;; id = &quot;cow-banana-carrot&quot;; vegetables = [ &quot;carrot&quot; ]; };
+</span><span>  };
+</span><span>  medley = [ &quot;banana&quot; &quot;orange&quot; ];
+</span><span>  salad = [ &quot;potato&quot; &quot;carrot&quot; ];
+</span><span>}
+</span></code></pre>
+<h2 id="post-updates"><a class="zola-anchor" href="#post-updates" aria-label="Anchor link for: post-updates"
+  >§</a
+>
+Post Updates</h2>
+<div class="update article-info">
+  <div>Update</div>
+  <div class="article-date">
+    Tuesday 05 March 2024
+  </div>
+  <div class="content">
+    <div><p>I have standardized the example inputs to make it easier to identify differences
+between the methods. I have also included two new examples for subdirectories
+and internal directories.</p>
+</div>
+  </div>
+</div>
+<div class="update article-info">
+  <div>Update</div>
+  <div class="article-date">
+    Wednesday 06 March 2024
+  </div>
+  <div class="content">
+    <div><p>Added "Lift Default" example.</p>
+</div>
+  </div>
+</div>
+<div class="update article-info">
+  <div>Update</div>
+  <div class="article-date">
+    Saturday 09 March 2024
+  </div>
+  <div class="content">
+    <div><p>I replaced the example "Internal Dir" with "Self Super Root" because I realized
+that using "protected" and "private" modules is more elegant than loading the
+internal deal separately. I also added a short description to each example.</p>
+</div>
+  </div>
+</div>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2024<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Prima​Materia&#x27;s - Posts</title>
+    <link rel="self" type="application/atom+xml" href="https://primamateria.github.io/blog/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-10-03T00:00:00+00:00</updated>
+    <id>https://primamateria.github.io/blog/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Startpages: Your Personalized Browser Launch Pad</title>
+        <published>2024-10-03T00:00:00+00:00</published>
+        <updated>2024-10-03T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/startpages/"/>
+        <id>https://primamateria.github.io/blog/startpages/</id>
+        
+        <summary type="html">&lt;p&gt;Have you ever wished for a more personalized and efficient way to start your
+browsing sessions? Enter Startpages – customizable web pages designed to replace
+your browser&#x27;s new tab page and provide quick access to your curated list of
+links. Today, I&#x27;m excited to share a personal project I&#x27;ve been relying on for
+some time.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Playwright on NixOS for webdev</title>
+        <published>2024-08-21T00:00:00+00:00</published>
+        <updated>2024-08-21T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/playwright-nixos-webdev/"/>
+        <id>https://primamateria.github.io/blog/playwright-nixos-webdev/</id>
+        
+        <summary type="html">&lt;p&gt;In this post, I will explain how to run Playwright tests on NixOS. Playwright is
+a framework for running automated tests on web pages in real browsers. However,
+the recommended method of installing browsers doesn&#x27;t work on NixOS due to its
+unique nature. This post will demonstrate how to set up a flake for a Vite
+project to run the Playwright version of your choice.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Stable Diffusion XL banners replaced with Flux Dev banners</title>
+        <published>2024-08-18T00:00:00+00:00</published>
+        <updated>2024-08-18T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/"/>
+        <id>https://primamateria.github.io/blog/sdxl-banners-replaced-with-fluxd-banners/</id>
+        
+        <summary type="html">&lt;p&gt;Comparison of my posts&#x27; previous banners generated with Stable Diffusion XL with
+new ones generated with Flux Dev.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>nix-shell with custom nix channel</title>
+        <published>2024-04-17T00:00:00+00:00</published>
+        <updated>2024-04-17T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/nix-shell-with-custom-channels/"/>
+        <id>https://primamateria.github.io/blog/nix-shell-with-custom-channels/</id>
+        
+        <summary type="html">&lt;p&gt;In NixOS, there is an old world of Nix channels, environments, and paths, and a
+new world of Nix flakes, inputs, and outputs. Today, after a long time, I needed
+to run &lt;code&gt;nix-shell -p foo&lt;&#x2F;code&gt; again, but it kept failing with an error stating that
+the package could not be found, even though I could find it while searching the
+stable and unstable channels.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Hive</title>
+        <published>2024-02-11T00:00:00+00:00</published>
+        <updated>2024-02-11T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/hive/"/>
+        <id>https://primamateria.github.io/blog/hive/</id>
+        
+        <summary type="html">&lt;p&gt;Hive is a framework that aims to help with organizing personal Nix
+configurations. This post explains why I have decided to switch to it and
+provides a step-by-step tutorial for trying it out yourself. It is intended for
+Nix users who are curious and feel that their current configuration is
+disorganized, and are looking for a new way to restructure their code.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Paisano Cheatsheet</title>
+        <published>2023-11-02T00:00:00+00:00</published>
+        <updated>2023-11-02T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/paisano-cheatsheet/"/>
+        <id>https://primamateria.github.io/blog/paisano-cheatsheet/</id>
+        
+        <summary type="html">&lt;p&gt;Paisano is not only a filesystem-based module system, but also a framework that
+specifies roles such as cell, block, target, or soil.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Haumea Cheatsheet</title>
+        <published>2023-10-22T00:00:00+00:00</published>
+        <updated>2023-10-22T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/haumea-cheatsheet/"/>
+        <id>https://primamateria.github.io/blog/haumea-cheatsheet/</id>
+        
+        <summary type="html">&lt;p&gt;Haumea is a filesystem-based module system for Nix that sets itself apart from
+NixOS modules by embracing a structure more akin to traditional programming
+languages. It incorporates a file hierarchy and visibility, aligning with the
+principles of organized directory layouts and extensibility. Haumea simplifies
+the process of importing files by automatically incorporating them into an
+attribute set, eliminating the need for manual imports.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Display Manager Origins</title>
+        <published>2023-07-02T00:00:00+00:00</published>
+        <updated>2023-07-02T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/display-manager-origins/"/>
+        <id>https://primamateria.github.io/blog/display-manager-origins/</id>
+        
+        <summary type="html">&lt;p&gt;The term &quot;Display Manager&quot; and &quot;Login Manager&quot; are often used interchangeably,
+causing confusion for many people. The question arises: why is it called a
+Display Manager, and what does the term &quot;Display&quot; refer to in this context?&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Neovim flake Updates</title>
+        <published>2023-06-04T00:00:00+00:00</published>
+        <updated>2023-06-04T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/neovim-nix-update/"/>
+        <id>https://primamateria.github.io/blog/neovim-nix-update/</id>
+        
+        <summary type="html">&lt;p&gt;This is a follow-up post to
+&lt;a href=&quot;https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;neovim-nix&#x2F;&quot;&gt;How to create your own Neovim flake&lt;&#x2F;a&gt;. Thanks to
+the help of &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;samjwillis97&quot;&gt;Sam Willis&lt;&#x2F;a&gt;, the mystery of the
+non-functioning &lt;code&gt;symlinkjoin&lt;&#x2F;code&gt; has been clarified, and a workaround has been
+found. Sam also assisted me in using &lt;code&gt;flake-utils&lt;&#x2F;code&gt;, which enabled me to
+successfully build Neovim on Nix-on-Droid.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>How to create your own Neovim flake</title>
+        <published>2023-03-18T00:00:00+00:00</published>
+        <updated>2023-03-18T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/neovim-nix/"/>
+        <id>https://primamateria.github.io/blog/neovim-nix/</id>
+        
+        <summary type="html">&lt;p&gt;In this blog post, I will guide you through the process of setting up Neovim as
+a Nix Flake, allowing you to keep your editor configuration in sync across
+multiple machines. We&#x27;ll start by initializing the flake. We&#x27;ll add Vim script
+configuration, organizing Vim scripts in separate files and transforming them
+into config files in the Nix store. I will guide you through adding plugins, Lua
+scripts, and runtime dependencies to Neovim using Nix. By the end of this blog
+post, you will be able to configure your own development environment in a more
+manageable way.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Solar i3 Workspaces</title>
+        <published>2023-03-07T00:00:00+00:00</published>
+        <updated>2023-03-07T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/solar-workspaces/"/>
+        <id>https://primamateria.github.io/blog/solar-workspaces/</id>
+        
+        <summary type="html">&lt;p&gt;In this blog post, I&#x27;ll be sharing my experience with customizing the workspaces
+in i3wm. Naming my workspaces based on the Solar System, and using corresponding
+wallpapers for each workspace. In this post, I&#x27;ll explain how I declared the
+wallpapers in Home Manager and updated the i3 config.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Running Steam and Project Zomboid on NixOS</title>
+        <published>2022-10-29T00:00:00+00:00</published>
+        <updated>2022-10-29T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/nixos-steam-project-zomboid/"/>
+        <id>https://primamateria.github.io/blog/nixos-steam-project-zomboid/</id>
+        
+        <summary type="html">&lt;p&gt;In recent years, Linux gaming has come a long way. Thanks to projects like
+Proton and the work of the Linux gaming community, more and more games are now
+available to play on Linux. In this blog post, I&#x27;ll walk you through my
+experience of setting up Steam on NixOS and playing the game Project Zomboid.
+I&#x27;ll cover how to install Steam, how to install games, and how to get mouse
+support and run Steam games from dmenu. While I still believe that Windows is a
+superior gaming platform, the recent announcement of Valve&#x27;s Steam Deck has made
+me excited to try gaming on Linux once again.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>AI generated images - Stable Diffusion on NixOS</title>
+        <published>2022-10-08T00:00:00+00:00</published>
+        <updated>2022-10-08T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/nixos-stable-diffusion/"/>
+        <id>https://primamateria.github.io/blog/nixos-stable-diffusion/</id>
+        
+        <summary type="html">&lt;p&gt;In this blog post, I share my journey of discovering AI-generated images,
+starting with generating an image for my blog using Craiyon and moving on to
+using DALL·E 2 and Stable Diffusion. While the former required credits for each
+run, the latter was an open-sourced and more affordable option that I could run
+locally. I also share the steps that I followed to run Stable Diffusion on
+NixOS.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Time tracking with Watson and Jira</title>
+        <published>2021-12-11T00:00:00+00:00</published>
+        <updated>2021-12-11T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://primamateria.github.io/blog/time-tracking/"/>
+        <id>https://primamateria.github.io/blog/time-tracking/</id>
+        
+        <summary type="html">&lt;p&gt;In this blog post, I share my experience of how I track my work using Watson and
+synchronize the logs with Jira. I prefer to keep most of my workflow inside the
+terminal and Watson has proven to be the most fitting tool for me. I track my
+work retrospectively in 5-minute intervals and use significant tags to instruct
+the synchronization tool with which Jira tickets to upload the logs. I also
+provide details about my environment setup, including the use of entr to watch
+Watson&#x27;s frames and automatically rerun a script, and aliases for issuing Watson
+commands.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+</feed>

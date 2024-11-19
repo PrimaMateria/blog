@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Hive</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="Hive">
+    <meta property="og:url" content="https://primamateria.github.io/blog/hive">
+    
+    <meta property="og:description" content="Hive is a framework that aims to help with organizing personal Nix
+configurations. This post explains why I have decided to switch to it and
+provides a step-by-step tutorial for trying it out yourself. It is intended for
+Nix users who are curious and feel that their current configuration is
+disorganized, and are looking for a new way to restructure their code.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-hive.b2c1bfd50fcfabe6.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2024-02-11">
+    
+    
+    
+    <meta property="article:tags" content="nixos"><meta property="article:tags" content="hive"><meta property="article:tags" content="paisano"><meta property="article:tags" content="haumea">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>Hive</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Sunday 11 February 2024</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 18 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/hive/">#hive</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/paisano/">#paisano</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/haumea/">#haumea</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-hive.bae9ae248eb5fbdc.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-hive.e5139550c162464d.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-hive.283d4d257c12ca83.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-hive.4bbd2ad2fc6db836.png" alt="Mobius comic book style. Cosmic nebula landscape bee hive cells. Honeycomb. Pastel honey color.">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>Hive is a framework that aims to help with organizing personal Nix
+configurations. This post explains why I have decided to switch to it and
+provides a step-by-step tutorial for trying it out yourself. It is intended for
+Nix users who are curious and feel that their current configuration is
+disorganized, and are looking for a new way to restructure their code.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/hive/#factoids">Factoids</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/hive/#road-to-hive">Road to Hive</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/hive/#nixos-module">NixOS Module</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/hive/#paisano-and-haumea">Paisano and Haumea</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/hive/#the-hive">The Hive</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/hive/#tutorial">Tutorial</a>
+                
+                    <ul>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/hive/#testing-environment">Testing Environment</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/hive/#hive-flake">Hive Flake</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/hive/#cell">Cell</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/hive/#cell-block">Cell Block</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/hive/#bee-module">Bee Module</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/hive/#collect">Collect</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/hive/#findload">findLoad</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/hive/#haumea-load">Haumea Load</a>
+                            </li>
+                        
+                    </ul>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/hive/#standard-cell-structure">Standard Cell Structure</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/hive/#dream-cell-structure">Dream Cell Structure</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/hive/#outro">Outro</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<p>In this post, I will describe my own approach to using Hive. It may differ from
+the prevailing convention of naming things, and it may not utilize the latest
+available Nix tools. I approach my problem as a developer who aims to create a
+convenient and reproducible development environment. I am not an operations
+professional who needs to ensure absolute security. Additionally, I am limited
+by my current understanding, and I am open to your comments and opinions.</p>
+<h2 id="factoids"><a class="zola-anchor" href="#factoids" aria-label="Anchor link for: factoids"
+  >§</a
+>
+Factoids</h2>
+<ul>
+<li>Hive is the spiritual successor of Digga.</li>
+<li>Hive originates from std (Standard).</li>
+<li>The author is David Arnold.</li>
+<li>The first commit in the repository is dated 29th March 2022.</li>
+</ul>
+<h2 id="road-to-hive"><a class="zola-anchor" href="#road-to-hive" aria-label="Anchor link for: road-to-hive"
+  >§</a
+>
+Road to Hive</h2>
+<p>I began with
+<a href="https://www.youtube.com/watch?v=QKoQ1gKJY5A&amp;list=PL-saUBvIJzOkjAw_vOac75v-x6EzNzZq-">Will T's NixOS series</a>
+in 2022, where I copied configurations without fully comprehending them.
+However, I was able to sustain this practice for some time and eventually
+transitioned my daily office tasks from Ubuntu WSL to NixOS WSL.</p>
+<p>After creating the <a href="https://primamateria.github.io/blog/neovim-nix/">Neovim flake</a>, I gained some
+confidence. I felt like I understood much more and was ready for the next step.
+I wanted to redo my main NixOS configuration.</p>
+<p>In my initial configuration, things became quite messy. I mixed flakes, dwelled
+on the old-school <code>import</code>, tampered with <code>callPackage</code> without comprehending
+its purpose, and I completely overlooked the "nix modules boat", despite using
+them as copy-pasta occasionally.</p>
+<p>I didn't have a solid grasp of the language and the module system, and I needed
+some guidance on how to organize my configurations. So I began researching and
+came across the <a href="https://github.com/mikeroyal/NixOS-Guide">NixOS Guide</a>, which
+included a link to <a href="https://github.com/divnix/digga">Digga</a>. However, I
+discovered that the project had already been deprecated.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Digga was already
+<a href="https://github.com/mikeroyal/NixOS-Guide/commit/14a6d9530bb958bae7eaf531191bcc99f03e44f0">removed</a>
+from the NixOS Guide, but Hive had not yet been added.</p>
+</div>
+  </div>
+</div>
+<p>The author mentions migration to std, flake-parts or flake-utils-plus. While
+investigating std, the Hive was
+<a href="https://std.divnix.com/#the-standard-nixos-story-in-case-you-wondered">mentioned</a>
+in the docs:</p>
+<p>The author mentions migration to std, flake-parts, or flake-utils-plus. While
+investigating std, the Hive was mentioned in the documentation:</p>
+<blockquote>
+<p><em>"Once you got fed up with divnix/digga or a disorganized personal
+configuration, please head straight over to divnix/hive and join the chat,
+there. It's work in progress. But hey! It means: we can progress together!"</em></p>
+<p><a href="https://std.divnix.com/#the-standard-nixos-story-in-case-you-wondered">The Standard NixOS Story (in case you wondered)</a>.</p>
+</blockquote>
+<p>And there it was, Hive, a mysterious project with a ban on README, a small
+community, and some praise in the matrix chat. I was intrigued.</p>
+<p>However, before fully committing, I searched for alternatives.</p>
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;flake-parts.11eab4ee26406a76.png" />
+<p>This message is from Discord, and it is not me who is asking, but rather someone
+who is facing the same dilemma.</p>
+<p>I have explored the <a href="https://flake.parts/">documentation of flake-parts</a>, but it
+was too difficult for me to fully understand the concept. It felt like I was
+starting from scratch with both Hive and flake-parts. One thing I noticed was
+that the repositories using Hive had certain block types, which gave me the
+impression that it is a more opinionated framework. As a beginner, this is
+something I was searching for.</p>
+<p>I followed
+<a href="https://github.com/Lord-Valen/configuration.nix">Lord-Valen's repository</a>. I
+initially created a rough foundation draft by rewriting Valen's flake and
+migrating my old configurations without checking if they build. Once I had my
+desired structure set up, I created a fresh WSL instance and continued fixing
+the code until I successfully completed the first full build and system switch.
+From that point on, I had a good-enough understanding of it, and the remaining
+final details were easily resolved.</p>
+<h2 id="nixos-module"><a class="zola-anchor" href="#nixos-module" aria-label="Anchor link for: nixos-module"
+  >§</a
+>
+NixOS Module</h2>
+<p>Before I begin describing Hive, I must mention that the NixOS module is an
+essential mechanism.</p>
+<p>The usual structure is as follows:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">config</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">, ... </span><span>}:
+</span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">lib</span><span>;
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#c82829;">cfg </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">config</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">thisModule</span><span>;
+</span><span style="color:#8959a8;">in </span><span>{
+</span><span>  </span><span style="color:#c82829;">imports </span><span style="color:#3e999f;">= </span><span>[
+</span><span>    </span><span style="color:#718c00;">./someOtherModule1.nix
+</span><span>    </span><span style="color:#718c00;">./someOtherModule2.nix
+</span><span>  ];
+</span><span>  </span><span style="color:#c82829;">options</span><span>.</span><span style="color:#c82829;">thisModule </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">someOption </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">mkOption </span><span>{
+</span><span>      </span><span style="color:#c82829;">type </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">types</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">bool</span><span>;
+</span><span>      </span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">false</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">config </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">someConfig </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">mkIf cfg</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">someOption </span><span style="color:#718c00;">&quot;someValue&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">someOtherConfig </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;someOtherValue&quot;</span><span>;
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>There are three important sections:</p>
+<ul>
+<li><code>imports</code> - a list of other NixOS modules that will be imported.</li>
+<li><code>options</code> - a list of options for the current module.</li>
+<li><code>config</code> - the main "body" containing default and option-based configuration.</li>
+</ul>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Usually, the documentation mentions the <code>enable</code> option, which is common in
+NixOS and Home Manager configurations. In my case, I write and import modules
+that I intend to use, so I never use <code>enable</code>. However, I can now understand the
+concept of repositories with prepared and maintained modules. This is also why I
+received feedback on my Neovim flake tutorial, suggesting that the preferred
+approach should be contributing to
+<a href="https://github.com/nix-community/nixvim">NixVim</a>.</p>
+</div>
+  </div>
+</div>
+<p>If modules do not have options or imports, then we can omit the config field and
+place the "main body" at the top level.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">, ... </span><span>}: {
+</span><span>  </span><span style="color:#c82829;">imports </span><span style="color:#3e999f;">= </span><span>[ </span><span style="color:#718c00;">./someOtherModule.nix </span><span>];
+</span><span>  </span><span style="color:#c82829;">environment</span><span>.</span><span style="color:#c82829;">systemPackages </span><span style="color:#3e999f;">=  </span><span>[ </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">hello </span><span>];
+</span><span>}
+</span></code></pre>
+<h2 id="paisano-and-haumea"><a class="zola-anchor" href="#paisano-and-haumea" aria-label="Anchor link for: paisano-and-haumea"
+  >§</a
+>
+Paisano and Haumea</h2>
+<p>It is appropriate to mention the transitive dependencies <strong>Paisano</strong> and
+<strong>Haumea</strong>. Both tools appear to have been created to solve a similar problem -
+enabling the use of file systems to declare modules and providing a nix function
+to automatically load or collect these modules into a nix attribute set.
+Additionally, the load functions provide standardized call parameters, making it
+easy to access other modules from the configuration. While there are more
+advanced techniques such as picking, filtering, or hoisting different
+attributes, it is not necessary to delve into further details about them right
+now.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p><a href="https://github.com/nix-community/haumea">Haumea</a> exists with its
+<a href="https://github.com/nix-community/haumea/commit/13c2fcf9e60ac2cd99e25433efd0d35e3b43d14ca">initial commit</a>
+from the 1st April 2023, and it is authored by
+<a href="https://github.com/figsoda">figsoda</a>. You can also take a look on my brief
+<a href="https://primamateria.github.io/blog/haumea-cheatsheet/">cheatsheet on Haumea</a>.</p>
+<p><a href="https://github.com/paisano-nix/core">Paisano</a> was initially a part of the
+Standard platform, but it was extracted as separate tool with a
+<a href="https://github.com/paisano-nix/core/commit/9b95b00f7b4ea1af1d4eb5e09b33cdf8fdc1db44">first commit</a>
+in its own repository on 9th February 2023. There is also a short
+<a href="https://primamateria.github.io/blog/paisano-cheatsheet/">cheatsheet</a> available.</p>
+</div>
+  </div>
+</div>
+<h2 id="the-hive"><a class="zola-anchor" href="#the-hive" aria-label="Anchor link for: the-hive"
+  >§</a
+>
+The Hive</h2>
+<p>Hive uses the following hierarchy of building blocks:</p>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+flowchart TB
+  subgraph Hive
+    subgraph Cell
+      subgraph Cell Block
+        subgraph Cell Block Instance
+        end
+      end
+    end
+  end
+</pre>
+<!-- prettier-ignore-end -->
+<p>The blocks will be introduced gradually throughout the tutorial.</p>
+<p>Before we start, please also take a look at the diagram below that explains the
+Hive. Don't worry if it seems complex at first glance. Just give it a quick scan
+for now and proceed with the tutorial. Once you finish the tutorial, you can
+come back to review the diagram and see if it becomes easier to understand.</p>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+flowchart TB
+  growOn --&gt;|produces| flakeOutput
+  growOn --&gt;|processing| soil
+  growOn --&gt;|uses| hiveConfig
+  hiveConfig --&gt;|declares source directory of| cellBlock
+  hiveConfig --&gt;|declares list of| cellBlockType
+  soil --&gt;|contains| transformedBlock
+  transformedBlock --&gt;|is produced by| collect
+
+  collect --&gt;|resolves| collector
+  collect --&gt;|processing| cellBlock
+  collector --&gt;|calls| walkPaisano 
+  walkPaisano --&gt;|applies| renamer
+  walkPaisano --&gt;|applies| transformer
+
+  cellBlock --&gt;|calls| findLoad
+  findLoad --&gt;|finds all| cellBlockInstance
+  findLoad --&gt;|calls| hamuea-load
+  hamuea-load --&gt;|loads| cellBlockInstance
+
+  cellBlock --&gt;|is of| cellBlockType
+  cellBlockType ----&gt;|has dedicated| collector
+  cellBlockType --&gt;|has dedicated| transformer
+
+  transformer --&gt;|uses| bee
+</pre>
+<!-- prettier-ignore-end -->
+<h2 id="tutorial"><a class="zola-anchor" href="#tutorial" aria-label="Anchor link for: tutorial"
+  >§</a
+>
+Tutorial</h2>
+<p>I invite you to try out Hive on your own with the following tutorial. It's very
+simple, just enough to explain the key concept I have learned. Afterwards, there
+are a few more chapters discussing the whole system organization.</p>
+<p>You can also find the tutorial sources at
+<a href="https://github.com/PrimaMateria/blog-hive">github:PrimaMateria/blog-hive</a>.</p>
+<h3 id="testing-environment"><a class="zola-anchor" href="#testing-environment" aria-label="Anchor link for: testing-environment"
+  >§</a
+>
+Testing Environment</h3>
+<p>To test this tutorial, we will utilize Nix's built-in functionality to execute
+system configuration in the virtual machine. Initially, define the initial flake
+without Hive.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#3e999f;">... </span><span>}@</span><span style="color:#f5871f;">inputs</span><span>:
+</span><span>    {
+</span><span>      </span><span style="color:#c82829;">nixosConfigurations</span><span>.</span><span style="color:#c82829;">experiment </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">nixosSystem </span><span>{
+</span><span>        </span><span style="color:#c82829;">system </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;x86_64-linux&quot;</span><span>;
+</span><span>        </span><span style="color:#c82829;">modules </span><span style="color:#3e999f;">= </span><span>[
+</span><span>          ({ </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">, ... </span><span>}: {
+</span><span>
+</span><span>            </span><span style="color:#c82829;">users</span><span>.</span><span style="color:#c82829;">users</span><span>.</span><span style="color:#c82829;">foo </span><span style="color:#3e999f;">= </span><span>{
+</span><span>              </span><span style="color:#c82829;">isNormalUser </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">true</span><span>;
+</span><span>              </span><span style="color:#c82829;">initialPassword </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;foo&quot;</span><span>;
+</span><span>            };
+</span><span>
+</span><span>            </span><span style="color:#c82829;">environment</span><span>.</span><span style="color:#c82829;">systemPackages </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span>; [ </span><span style="color:#f5871f;">hello </span><span>];
+</span><span>            </span><span style="color:#c82829;">system</span><span>.</span><span style="color:#c82829;">stateVersion </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;23.11&quot;</span><span>;
+</span><span>          })
+</span><span>        ];
+</span><span>      };
+</span><span>    };
+</span><span>
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs-stable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/23.11&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs-unstable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/master&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs-unstable&quot;</span><span>;
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>Now, test it with the following command.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>nix run &#39;.#nixosConfigurations.experiment.config.system.build.vm&#39;
+</span></code></pre>
+<p>The Qemu window will start with a machine that loads the configuration. Log in
+using "foo/foo" and try to run the command <code>hello</code>.</p>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;vm-test.d7d5f16779518daf.png" />
+
+</div>
+<h3 id="hive-flake"><a class="zola-anchor" href="#hive-flake" aria-label="Anchor link for: hive-flake"
+  >§</a
+>
+Hive Flake</h3>
+<p>Hive is a configuration based on flakes. Inputs include:</p>
+<ul>
+<li><strong>std</strong> - the Standard - as I understand it, it is a more complex framework
+intended for DevOps to declare configurations for building and deploying
+projects. The Hive was created based on the Standard with the intention of
+focusing on system and home configurations. Personally, I have never used the
+Standard before and probably will never need to.</li>
+<li><strong>hive</strong> - I wouldn't say that Hive is an extension of the Standard. It
+follows the same principles and reuses some block types from std, but other
+than that, it seems that there isn't much dependency on it.</li>
+</ul>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#f5871f;">std</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">, ... </span><span>}@</span><span style="color:#f5871f;">inputs</span><span>:
+</span><span>    </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">growOn
+</span><span>      {
+</span><span>        </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">inputs</span><span>;
+</span><span>        </span><span style="color:#999999;"># TODO: define cells source directory
+</span><span>        </span><span style="color:#999999;"># TODO: define cell blocks
+</span><span>      }
+</span><span>      {
+</span><span>        </span><span style="color:#999999;"># TODO: define flake output
+</span><span>      };
+</span><span>
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs-stable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/23.11&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs-unstable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/master&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs-unstable&quot;</span><span>;
+</span><span>
+</span><span>    </span><span style="color:#c82829;">std </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:divnix/std&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>
+</span><span>    </span><span style="color:#c82829;">hive </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:divnix/hive&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>The outputs are the result of the <code>hive.growOn</code> function. <code>growOn</code> is a Paisano
+function that takes a variable count of parameters. The first one is always a
+Hive config, where the cells' source directory and cell block types list are
+specified.</p>
+<p>I believe the remaining parameters are referred to as "layers of soil". These
+layers are recursively combined into one attribute set, which then becomes the
+conventional outputs of the flake.</p>
+<h3 id="cell"><a class="zola-anchor" href="#cell" aria-label="Anchor link for: cell"
+  >§</a
+>
+Cell</h3>
+<p>Cells are supposed to be the top-level structure for organizing the
+configuration. Cells are constructed from different types of cell blocks. What I
+have usually observed in repositories using Hive is one main cell, sometimes
+accompanied by smaller cells for, probably, some more exotic use cases. In my
+own configuration, I decided for the cell to contain everything, and I named it
+with my nickname "PrimaMateria".</p>
+<p>Create a new directory path called <code>cells/experiment</code> and leave it empty for the
+time being.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>├── cells
+</span><span>│  └── experiment
+</span><span>└── flake.nix
+</span></code></pre>
+<p>Update the Hive configuration with the <code>cellsFrom</code> attribute.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#f5871f;">std</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">, ... </span><span>}@</span><span style="color:#f5871f;">inputs</span><span>:
+</span><span>    </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">growOn
+</span><span>      {
+</span><span>        </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">inputs</span><span>;
+</span><span>        </span><span style="color:#c82829;">cellsFrom </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">./cells</span><span>;
+</span><span>        </span><span style="color:#999999;"># TODO: define cell blocks
+</span><span>      }
+</span><span>      {
+</span><span>        </span><span style="color:#999999;"># TODO: define flake output
+</span><span>      };
+</span><span>
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs-stable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/23.11&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs-unstable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/master&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs-unstable&quot;</span><span>;
+</span><span>
+</span><span>    </span><span style="color:#c82829;">std </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:divnix/std&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>
+</span><span>    </span><span style="color:#c82829;">hive </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:divnix/hive&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>David, the author of Standard and Hive, suggests naming the directory <code>nix</code>
+instead of <code>cells</code>. This recommendation is based on the idea that it would
+provide a clearer indication of the directory's content to individuals who are
+not familiar with Hive. However, I have chosen to adopt the new domain language
+and name the directory <code>cells</code>.</p>
+</div>
+  </div>
+</div>
+<h3 id="cell-block"><a class="zola-anchor" href="#cell-block" aria-label="Anchor link for: cell-block"
+  >§</a
+>
+Cell Block</h3>
+<p>Cell blocks are the fundamental components of a cell. They exist in different
+forms, and each form dictates the changes that take place when they are
+collected. Furthermore, each form may have different actions associated with it.
+Although I personally do not utilize them, based on the documentation, it
+appears that Standard provides a command-line interface (CLI) tool that offers a
+user-friendly way to execute these actions.</p>
+<p>At first, declare that the hive configuration will use a cell of type
+<code>nixosConfiguration</code>.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#f5871f;">std</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">, ... </span><span>}@</span><span style="color:#f5871f;">inputs</span><span>:
+</span><span>    </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">growOn
+</span><span>      {
+</span><span>        </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">inputs</span><span>;
+</span><span>        </span><span style="color:#c82829;">cellsFrom </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">./cells</span><span>;
+</span><span>        </span><span style="color:#c82829;">cellBlocks </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">blockTypes</span><span>; [
+</span><span>          </span><span style="color:#f5871f;">nixosConfigurations
+</span><span>        ];
+</span><span>      }
+</span><span>      {
+</span><span>        </span><span style="color:#999999;"># TODO: define flake output
+</span><span>      };
+</span><span>
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs-stable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/23.11&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs-unstable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/master&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs-unstable&quot;</span><span>;
+</span><span>
+</span><span>    </span><span style="color:#c82829;">std </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:divnix/std&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>
+</span><span>    </span><span style="color:#c82829;">hive </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:divnix/hive&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>Now, create the new cell block. The filename must match the name of the cell
+block type.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>├── cells
+</span><span>│  └── experiment
+</span><span>│     └── nixosConfigurations.nix
+</span><span>└── flake.nix
+</span></code></pre>
+<p>Move the "experiment" system to the cell block and assign the main module, which
+is currently the only module, to the attribute that bears the name of the system
+configuration - <code>experiment</code>.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">cell </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">inputs</span><span>) </span><span style="color:#c82829;">nixpkgs</span><span>;
+</span><span style="color:#8959a8;">in
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">experiment </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">users</span><span>.</span><span style="color:#c82829;">users</span><span>.</span><span style="color:#c82829;">foo </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">isNormalUser </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">true</span><span>;
+</span><span>      </span><span style="color:#c82829;">initialPassword </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;foo&quot;</span><span>;
+</span><span>    };
+</span><span>
+</span><span>    </span><span style="color:#c82829;">environment</span><span>.</span><span style="color:#c82829;">systemPackages </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">nixpkgs</span><span>; [ </span><span style="color:#f5871f;">hello </span><span>];
+</span><span>    </span><span style="color:#c82829;">system</span><span>.</span><span style="color:#c82829;">stateVersion </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;23.11&quot;</span><span>;
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>The top-level configuration with the <code>system</code> attribute is not included in the
+cell block. Cell blocks are independent of any specific system. The target
+system will be configured later in the "bee" module.</p>
+<p>Observe how the cell block can access all the inputs of the root flake
+(specified by the <code>inputs</code> parameter), as well as all other cell blocks from the
+current cell (specified by the <code>cell</code> parameter, which will be used later).</p>
+<h3 id="bee-module"><a class="zola-anchor" href="#bee-module" aria-label="Anchor link for: bee-module"
+  >§</a
+>
+Bee Module</h3>
+<p>The Bee module is a configuration used by the transformer to transform the cell
+blocks into system-specific derivatives. It includes a list of target systems
+and slots for passing Home Manager, WSL, Darwin, and Nix package flakes, which
+will be used to produce the transformed blocks.</p>
+<p>Once again, declare a new cell block of the type <code>functions</code> as the first step.
+This type is the most versatile and does not undergo any special transformations
+during the harvest process.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#f5871f;">std</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">, ... </span><span>}@</span><span style="color:#f5871f;">inputs</span><span>:
+</span><span>    </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">growOn
+</span><span>      {
+</span><span>        </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">inputs</span><span>;
+</span><span>        </span><span style="color:#c82829;">cellsFrom </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">./cells</span><span>;
+</span><span>        </span><span style="color:#c82829;">cellBlocks </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">std</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">blockTypes</span><span>; </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">blockTypes</span><span>; [
+</span><span>          (</span><span style="color:#f5871f;">functions </span><span style="color:#718c00;">&quot;bee&quot;</span><span>)
+</span><span>          </span><span style="color:#f5871f;">nixosConfigurations
+</span><span>        ];
+</span><span>      }
+</span><span>      {
+</span><span>        </span><span style="color:#999999;"># TODO: define flake output
+</span><span>      };
+</span><span>
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs-stable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/23.11&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs-unstable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/master&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs-unstable&quot;</span><span>;
+</span><span>
+</span><span>    </span><span style="color:#c82829;">std </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:divnix/std&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>
+</span><span>    </span><span style="color:#c82829;">hive </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:divnix/hive&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>Create the bee module. If your configuration becomes more complex, you may
+eventually have multiple bees.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>├── cells
+</span><span>│  └── experiment
+</span><span>│     ├── nixosConfigurations.nix
+</span><span>│     └── bee.nix
+</span><span>└── flake.nix
+</span></code></pre>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#        ████  ████
+</span><span style="color:#999999;">#      ██    ██    ██
+</span><span style="color:#999999;">#        ██    ██  ██
+</span><span style="color:#999999;">#          ██████████
+</span><span style="color:#999999;">#        ████░░██░░░░██
+</span><span style="color:#999999;">#      ██░░██░░██░░░░░░▓▓
+</span><span style="color:#999999;">#  ▓▓▓▓██░░██░░██░░▓▓░░██
+</span><span style="color:#999999;">#      ██░░██░░██░░░░░░██
+</span><span style="color:#999999;">#        ████░░██░░░░██
+</span><span style="color:#999999;">#          ██████████
+</span><span>
+</span><span>{ </span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">cell </span><span>}: {
+</span><span>  </span><span style="color:#c82829;">system </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;x86_64-linux&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">pkgs </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">nixpkgs</span><span>;
+</span><span>}
+</span></code></pre>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>If you attempt to define an overlay within the cell block, Hive will warn you
+that this will not work and that overlays need to be already defined in <code>pkgs</code>
+provided by the bee. I don't have an example for it because, so far, I have
+always been able to meet my requirements without an overlay.</p>
+<p>Update:
+<a href="https://matrix.to/#/!PGCGaLTNODVQNScOEp:matrix.org/$J0cTd9sMmmtUCQc4Jcp2zdCKXWvz8xG6P1ZepAAkcFk?via=matrix.org&amp;via=hackliberty.org&amp;via=mozilla.org">an example how to set up overlays</a>.
+I didn't try this yet.</p>
+</div>
+  </div>
+</div>
+<p>Finally, assign the bee to the main module of the experiment's NixOS
+configuration. Now, the <code>cell</code> parameter becomes useful for easily referencing
+the bee cell block.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">cell </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">inputs</span><span>) </span><span style="color:#c82829;">nixpkgs</span><span>;
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">cell</span><span>) </span><span style="color:#c82829;">bee</span><span>;
+</span><span style="color:#8959a8;">in
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">experiment </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">bee</span><span>;
+</span><span>
+</span><span>    </span><span style="color:#c82829;">users</span><span>.</span><span style="color:#c82829;">users</span><span>.</span><span style="color:#c82829;">foo </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">isNormalUser </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">true</span><span>;
+</span><span>      </span><span style="color:#c82829;">initialPassword </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;foo&quot;</span><span>;
+</span><span>    };
+</span><span>
+</span><span>    </span><span style="color:#c82829;">environment</span><span>.</span><span style="color:#c82829;">systemPackages </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">nixpkgs</span><span>; [ </span><span style="color:#f5871f;">hello </span><span>];
+</span><span>    </span><span style="color:#c82829;">system</span><span>.</span><span style="color:#c82829;">stateVersion </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;23.11&quot;</span><span>;
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<h3 id="collect"><a class="zola-anchor" href="#collect" aria-label="Anchor link for: collect"
+  >§</a
+>
+Collect</h3>
+<p>The collect function produces transformed blocks from the provided cell block.
+Depending on the type of cell block, it selects the corresponding collector and
+executes it to collect and transform cell block instances using the Bee module.
+The transformed blocks are then placed in the soil, which will be processed by
+the <code>growOn</code> function to produce the final flake output.</p>
+<p>Collect <code>nixosConfigurations</code> cell block.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#f5871f;">self</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">std</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">, ... </span><span>}@</span><span style="color:#f5871f;">inputs</span><span>:
+</span><span>    </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">growOn
+</span><span>      {
+</span><span>        </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">inputs</span><span>;
+</span><span>        </span><span style="color:#c82829;">cellsFrom </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">./cells</span><span>;
+</span><span>        </span><span style="color:#c82829;">cellBlocks </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">blockTypes</span><span>; </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">std</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">blockTypes</span><span>; [
+</span><span>          (</span><span style="color:#f5871f;">functions </span><span style="color:#718c00;">&quot;bee&quot;</span><span>)
+</span><span>          </span><span style="color:#f5871f;">nixosConfigurations
+</span><span>        ];
+</span><span>      }
+</span><span>      {
+</span><span>        </span><span style="color:#c82829;">nixosConfigurations </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">collect self </span><span style="color:#718c00;">&quot;nixosConfigurations&quot;</span><span>;
+</span><span>      };
+</span><span>
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs-stable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/23.11&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs-unstable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/master&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs-unstable&quot;</span><span>;
+</span><span>
+</span><span>    </span><span style="color:#c82829;">std </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:divnix/std&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>
+</span><span>    </span><span style="color:#c82829;">hive </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:divnix/hive&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>If we look at the output of <code>nix flake show</code>, it will show us the following:</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>├───nixosConfigurations
+</span><span>│   └───experiment-experiment: NixOS configuration
+</span></code></pre>
+<p>The name "experiment-experiment" is chosen because the cell is called experiment
+and the nixos configuration is also called experiment. This can be a bit
+confusing, so let's change it in the next step. But before that, let's test it
+in the virtual machine.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>nix run &#39;.#nixosConfigurations.experiment-experiment.config.system.build.vm&#39;
+</span></code></pre>
+<h3 id="findload"><a class="zola-anchor" href="#findload" aria-label="Anchor link for: findload"
+  >§</a
+>
+findLoad</h3>
+<p>The function <code>findLoad</code> collects all instances of the cell block with the
+specified path in the "block" attribute. These instances are then loaded using
+Haumea. The process of loading will be explained in the next step.</p>
+<p>Create two instances in the cell block for nixos configurations - a home
+instance that will build the NixOS system used at home, and a work instance that
+will build the NixOS system used at work.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>├── cells
+</span><span>│  └── experiment
+</span><span>│     ├── nixosConfigurations
+</span><span>│     │  ├── default.nix
+</span><span>│     │  ├── home.nix
+</span><span>│     │  └── work.nix
+</span><span>│     └── bee.nix
+</span><span>└── flake.nix
+</span></code></pre>
+<p>To simplify the tutorial, let's assume that we need to use the package "hello"
+at work. Implement <code>work.nix</code> in the following manner:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">cell </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">inputs</span><span>) </span><span style="color:#c82829;">nixpkgs</span><span>;
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">cell</span><span>) </span><span style="color:#c82829;">bee</span><span>;
+</span><span style="color:#8959a8;">in
+</span><span>{
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">bee</span><span>;
+</span><span>
+</span><span>  </span><span style="color:#c82829;">users</span><span>.</span><span style="color:#c82829;">users</span><span>.</span><span style="color:#c82829;">foo </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">isNormalUser </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">true</span><span>;
+</span><span>    </span><span style="color:#c82829;">initialPassword </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;foo&quot;</span><span>;
+</span><span>  };
+</span><span>
+</span><span>  </span><span style="color:#c82829;">environment</span><span>.</span><span style="color:#c82829;">systemPackages </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">nixpkgs</span><span>; [ </span><span style="color:#f5871f;">hello </span><span>];
+</span><span>  </span><span style="color:#c82829;">system</span><span>.</span><span style="color:#c82829;">stateVersion </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;23.11&quot;</span><span>;
+</span><span>}
+</span></code></pre>
+<p>And at home, we need to use the package "cowsay". Implement <code>home.nix</code> as shown
+below:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">cell </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">inputs</span><span>) </span><span style="color:#c82829;">nixpkgs</span><span>;
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">cell</span><span>) </span><span style="color:#c82829;">bee</span><span>;
+</span><span style="color:#8959a8;">in
+</span><span>{
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">bee</span><span>;
+</span><span>
+</span><span>  </span><span style="color:#c82829;">users</span><span>.</span><span style="color:#c82829;">users</span><span>.</span><span style="color:#c82829;">foo </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">isNormalUser </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">true</span><span>;
+</span><span>    </span><span style="color:#c82829;">initialPassword </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;foo&quot;</span><span>;
+</span><span>  };
+</span><span>
+</span><span>  </span><span style="color:#c82829;">environment</span><span>.</span><span style="color:#c82829;">systemPackages </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">nixpkgs</span><span>; [ </span><span style="color:#f5871f;">cowsay </span><span>];
+</span><span>  </span><span style="color:#c82829;">system</span><span>.</span><span style="color:#c82829;">stateVersion </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;23.11&quot;</span><span>;
+</span><span>}
+</span></code></pre>
+<p>Finally, in the <code>default.nix</code>, call <code>findLoad</code> to locate and load the NixOS
+configurations for both home and work.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">cell </span><span>}:
+</span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">findLoad </span><span>{
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">inputs cell</span><span>;
+</span><span>  </span><span style="color:#c82829;">block </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">./.</span><span>;
+</span><span>}
+</span></code></pre>
+<p>Now we can test both NixOS systems in the virtual machine. Test if we can call
+"hello" on the work system and "cowsay" on the home system.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>nix run &#39;.#nixosConfigurations.experiment-work.config.system.build.vm&#39;
+</span><span>nix run &#39;.#nixosConfigurations.experiment-home.config.system.build.vm&#39;
+</span></code></pre>
+<h3 id="haumea-load"><a class="zola-anchor" href="#haumea-load" aria-label="Anchor link for: haumea-load"
+  >§</a
+>
+Haumea Load</h3>
+<p>Instances that are loaded by <code>findLoad</code> are loaded using Haumea. This implies
+that the instance can be divided into separate files, which will then be
+combined into a single set where the attributes align with the file names.</p>
+<p>Perhaps I have not fully realized the potential of Haumea yet, but up until now,
+I have only found it useful for defining NixOS module options separately. In
+other situations, I extract the code into "private" submodules with names that
+have the prefix "__". Haumea disregards these submodules, and I load them
+either through Nix's <code>import</code> or with <code>nixpkgs.callPackage</code>.</p>
+<p>In this step we introduce "system" cell block, that will act as collection of
+different system configurations for the nixos configurations.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>├── cells
+</span><span>│  └── experiment
+</span><span>│     ├── bee.nix
+</span><span>│     ├── nixosConfigurations
+</span><span>│     │  ├── default.nix
+</span><span>│     │  ├── home.nix
+</span><span>│     │  └── work.nix
+</span><span>│     └── system
+</span><span>│        ├── common.nix
+</span><span>│        ├── default.nix
+</span><span>│        └── parrot
+</span><span>│           ├── __cowsay.nix
+</span><span>│           ├── __hello.nix
+</span><span>│           ├── default.nix
+</span><span>│           └── options.nix
+</span><span>└── flake.nix
+</span></code></pre>
+<p>First, inform Hive about the new cell block that we will be using. Update the
+<code>cellblocks</code> in the <code>flake.nix</code> file with the <code>system</code> cell block of type
+<code>functions</code>.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#f5871f;">self</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">std</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">, ... </span><span>}@</span><span style="color:#f5871f;">inputs</span><span>:
+</span><span>    </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">growOn
+</span><span>      {
+</span><span>        </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">inputs</span><span>;
+</span><span>        </span><span style="color:#c82829;">cellsFrom </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">./cells</span><span>;
+</span><span>        </span><span style="color:#c82829;">cellBlocks </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">blockTypes</span><span>; </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">std</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">blockTypes</span><span>; [
+</span><span>          (</span><span style="color:#f5871f;">functions </span><span style="color:#718c00;">&quot;bee&quot;</span><span>)
+</span><span>          (</span><span style="color:#f5871f;">functions </span><span style="color:#718c00;">&quot;system&quot;</span><span>)
+</span><span>          </span><span style="color:#f5871f;">nixosConfigurations
+</span><span>        ];
+</span><span>      }
+</span><span>      {
+</span><span>        </span><span style="color:#c82829;">nixosConfigurations </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">collect self </span><span style="color:#718c00;">&quot;nixosConfigurations&quot;</span><span>;
+</span><span>      };
+</span><span>
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs-stable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/23.11&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs-unstable</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/master&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs-unstable&quot;</span><span>;
+</span><span>
+</span><span>    </span><span style="color:#c82829;">std </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:divnix/std&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>
+</span><span>    </span><span style="color:#c82829;">hive </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:divnix/hive&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>Instances of the system cell block will be loaded using the <code>findLoad</code> function
+as previously done. Please create the file <code>system/default.nix</code> in the following
+manner:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">cell </span><span>}:
+</span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">hive</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">findLoad </span><span>{
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">inputs cell</span><span>;
+</span><span>  </span><span style="color:#c82829;">block </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">./.</span><span>;
+</span><span>}
+</span></code></pre>
+<p>Prior to the home and work NixOS configurations, there was duplicated code that
+created the VM user and set the state version. This code should be extracted to
+<code>system/common.nix</code>.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{
+</span><span>  </span><span style="color:#c82829;">users</span><span>.</span><span style="color:#c82829;">users</span><span>.</span><span style="color:#c82829;">foo </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">isNormalUser </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">true</span><span>;
+</span><span>    </span><span style="color:#c82829;">initialPassword </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;foo&quot;</span><span>;
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">system</span><span>.</span><span style="color:#c82829;">stateVersion </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;23.11&quot;</span><span>;
+</span><span>}
+</span></code></pre>
+<p>Next, we will create a new cell block instance, which is a "parrot" system
+module.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Parrot is a strange name. Heh, sorry, just go with it.</p>
+</div>
+  </div>
+</div>
+<p>The Parrot module configures the <code>cowsay</code> and <code>hello</code> packages based on the set
+options values. Create the file <code>system/parrot/default.nix</code>.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">config </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">inputs</span><span>) </span><span style="color:#c82829;">nixpkgs</span><span>;
+</span><span>  </span><span style="color:#c82829;">cfg </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">config</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">experiment</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">system</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">parrot</span><span>;
+</span><span style="color:#8959a8;">in
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">config </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">environment</span><span>.</span><span style="color:#c82829;">systemPackages </span><span style="color:#3e999f;">= </span><span>[
+</span><span>      (</span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">callPackage </span><span style="color:#718c00;">./__hello.nix </span><span>{ </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">cfg</span><span>) </span><span style="color:#c82829;">greeting</span><span>; })
+</span><span>      (</span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">callPackage </span><span style="color:#718c00;">./__cowsay.nix </span><span>{ </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">cfg</span><span>) </span><span style="color:#c82829;">art</span><span>; })
+</span><span>    ];
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>The option definitions will be extracted to a separate Hamuea module,
+<code>system/parrot/options.nix</code>.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">cell </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">nixpkgs</span><span>) </span><span style="color:#c82829;">lib</span><span>;
+</span><span style="color:#8959a8;">in
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">experiment</span><span>.</span><span style="color:#c82829;">system</span><span>.</span><span style="color:#c82829;">parrot </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">greeting </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">mkOption </span><span>{
+</span><span>      </span><span style="color:#c82829;">type </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">types</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">str</span><span>;
+</span><span>      </span><span style="color:#c82829;">description </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;hello message&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;Hello world&quot;</span><span>;
+</span><span>    };
+</span><span>    </span><span style="color:#c82829;">art </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">mkOption </span><span>{
+</span><span>      </span><span style="color:#c82829;">type </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">types</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">str</span><span>;
+</span><span>      </span><span style="color:#c82829;">description </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;cowsay art - one of items listed by cowsay -l&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;default&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>The custom cowsay and hello packages are implemented in private Haumea modules.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">art </span><span style="color:#3e999f;">? </span><span style="color:#718c00;">&quot;default&quot; </span><span>}:
+</span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">writeShellApplication </span><span>{
+</span><span>  </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;cowsay&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">text </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;</span><span style="color:#f5871f;">${pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">cowsay}</span><span style="color:#718c00;">/bin/cowsay -f &quot;</span><span style="color:#f5871f;">${art}</span><span style="color:#718c00;">&quot; &quot;$@&quot;&#39;&#39;</span><span>;
+</span><span>}
+</span></code></pre>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">greeting </span><span style="color:#3e999f;">? </span><span style="color:#718c00;">&quot;Hello world&quot; </span><span>}:
+</span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">writeShellApplication </span><span>{
+</span><span>  </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;hello&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">text </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;</span><span style="color:#f5871f;">${pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">hello}</span><span style="color:#718c00;">/bin/hello --greeting &quot;</span><span style="color:#f5871f;">${greeting}</span><span style="color:#718c00;">&quot;&#39;&#39;</span><span>;
+</span><span>}
+</span></code></pre>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>If they were not private, Haumea would attempt to load them into the NixOS
+module set, resulting in the following:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#c82829;">config </span><span style="color:#3e999f;">= </span><span>{}; </span><span style="color:#c82829;">option </span><span style="color:#3e999f;">= </span><span>{}; </span><span style="color:#c82829;">cowsay </span><span style="color:#3e999f;">= </span><span>{}; </span><span style="color:#c82829;">hello </span><span style="color:#3e999f;">= </span><span>{}; }
+</span></code></pre>
+<p>The build would fail with a message stating that the NixOS module contains
+unsupported attributes because the top level can only contain <code>options</code>,
+<code>imports</code>, and <code>config</code>.</p>
+</div>
+  </div>
+</div>
+<p>Update the work and home NixOS configurations using the new system modules.
+Configure each system to provide custom values for the parrot options.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">cell </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">inputs</span><span>) </span><span style="color:#c82829;">nixpkgs</span><span>;
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">cell</span><span>) </span><span style="color:#c82829;">bee system</span><span>;
+</span><span style="color:#8959a8;">in
+</span><span>{
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">bee</span><span>;
+</span><span>
+</span><span>  </span><span style="color:#c82829;">imports </span><span style="color:#3e999f;">= </span><span>[
+</span><span>    </span><span style="color:#f5871f;">system</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">common
+</span><span>    </span><span style="color:#f5871f;">system</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">parrot
+</span><span>    {
+</span><span>      </span><span style="color:#c82829;">experiment</span><span>.</span><span style="color:#c82829;">system</span><span>.</span><span style="color:#c82829;">parrot </span><span style="color:#3e999f;">= </span><span>{
+</span><span>        </span><span style="color:#c82829;">art </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;elephant&quot;</span><span>;
+</span><span>        </span><span style="color:#c82829;">greeting </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;Hello home!&quot;</span><span>;
+</span><span>      };
+</span><span>    }
+</span><span>  ];
+</span><span>}
+</span></code></pre>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span>{ </span><span style="color:#f5871f;">inputs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">cell </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">inputs</span><span>) </span><span style="color:#c82829;">nixpkgs</span><span>;
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">cell</span><span>) </span><span style="color:#c82829;">bee system</span><span>;
+</span><span style="color:#8959a8;">in
+</span><span>{
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">bee</span><span>;
+</span><span>
+</span><span>  </span><span style="color:#c82829;">imports </span><span style="color:#3e999f;">= </span><span>[
+</span><span>    </span><span style="color:#f5871f;">system</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">common
+</span><span>    </span><span style="color:#f5871f;">system</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">parrot
+</span><span>    {
+</span><span>      </span><span style="color:#c82829;">experiment</span><span>.</span><span style="color:#c82829;">system</span><span>.</span><span style="color:#c82829;">parrot </span><span style="color:#3e999f;">= </span><span>{
+</span><span>        </span><span style="color:#c82829;">art </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;small&quot;</span><span>;
+</span><span>        </span><span style="color:#c82829;">greeting </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;Hello work!&quot;</span><span>;
+</span><span>      };
+</span><span>    }
+</span><span>  ];
+</span><span>}
+</span></code></pre>
+<p>Finally, retest the outcome in the virtual machine.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>nix run &#39;.#nixosConfigurations.experiment-work.config.system.build.vm&#39;
+</span></code></pre>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;vm-test-work.ec16f722e4aad728.png" />
+
+</div>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>nix run &#39;.#nixosConfigurations.experiment-home.config.system.build.vm&#39;
+</span></code></pre>
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;vm-test-home.bcd831d0563651a1.png" />
+
+</div>
+<p>This tutorial concludes here. In the upcoming chapters, we will discuss cell
+organization.</p>
+<h2 id="standard-cell-structure"><a class="zola-anchor" href="#standard-cell-structure" aria-label="Anchor link for: standard-cell-structure"
+  >§</a
+>
+Standard Cell Structure</h2>
+<p>Now that we already know how to create cell blocks and how to connect them, a
+question arises regarding the organization of the hive. What does one cell
+encompass and what types of cell blocks does it consist of?</p>
+<p>First, I will present
+<a href="https://github.com/Lord-Valen/configuration.nix">Lord-Valen's configuration.nix</a>
+which, I believe, originates from the recommended structures used in Standard.
+Next, I will present my own domain language that I hope is a tiny bit more
+self-explanatory.</p>
+<p>Valen's comb contains three cells.</p>
+<ul>
+<li>lord-valen</li>
+<li>repo</li>
+<li>sioux</li>
+</ul>
+<p>The cell labeled "lord-valen" is the largest, and I dedicated my attention to
+studying it further. I proceeded to open each cell block and documented which
+other cell block it utilizes. The outcome was presented in the form of the
+following diagram:</p>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+flowchart BT
+
+    subgraph cell
+        homeModules --&gt; homeProfiles
+        homeProfiles --&gt; homeSuites
+        homeProfiles --&gt; nixosConfigurations
+        homeSuites --&gt; nixosConfigurations
+
+        nixosModules --&gt; nixosProfiles
+        nixosProfiles --&gt; nixosSuites
+        nixosProfiles  --&gt; nixosConfigurations
+        nixosSuites --&gt; nixosConfigurations
+        userProfiles --&gt; nixosSuites
+
+        diskoConfigurations --&gt; hardwareProfiles
+        hardwareProfiles ---&gt; nixosConfigurations
+        arionProfiles ---&gt; nixosConfigurations
+
+        nixosConfigurations --&gt; colmenaConfigurations
+        nixosConfigurations --&gt; installers
+    end
+
+    subgraph inputs
+       nixos-hardware
+       nixos-generators
+    end
+
+    nixos-hardware -..-&gt; hardwareProfiles
+    nixos-generators -..-&gt; installers
+</pre>
+<!-- prettier-ignore-end -->
+<p>If we examine the vertical lines, we can identify a simplified backbone.</p>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+flowchart BT
+
+    modules --&gt; profiles
+    profiles --&gt; suites
+    suites --&gt; nixosConfigurations
+</pre>
+<!-- prettier-ignore-end -->
+<p>If we examine the horizontal planes, we can observe such simplified landscape.</p>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+block-beta
+columns 3
+
+    nixosConfigurations:3
+    home
+    nixos
+    hardware
+</pre>
+<!-- prettier-ignore-end -->
+<p>Interestingly, Valen does not use separate <code>homeConfigurations</code>, but instead
+includes the home manager config into <code>nixosConfigurations</code>.</p>
+<h2 id="dream-cell-structure"><a class="zola-anchor" href="#dream-cell-structure" aria-label="Anchor link for: dream-cell-structure"
+  >§</a
+>
+Dream Cell Structure</h2>
+<p>I challenged myself to create a scheme that is essentially the same as Standard,
+but based on my own perspective and the elements I have included in my NixOS
+configuration.</p>
+<p>In my previous repository, I had separate definitions for nixos and user
+configurations, which could be installed separately. I wanted to maintain this
+setup because I am accustomed to it, although I'm not sure if it is the most
+correct approach.</p>
+<p>Next, I wanted to avoid using <code>profiles</code> and <code>suites</code> and instead choose more
+descriptive names. I came up with the following hierarchy:</p>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+flowchart BT
+
+    applications ---&gt; homeConfigurations
+    devices --&gt; machines
+    machines --&gt; nixosConfigurations
+    system --&gt; installations
+    installations --&gt; nixosConfigurations
+</pre>
+<!-- prettier-ignore-end -->
+<p>Let's examine how the home system and work system are arranged.</p>
+<p>At home, I run NixOS on my PC, so the system must have properly configured
+hardware such as a mouse, monitor, disks, printer, etc. Additionally, since I
+use a pure NixOS bare metal installation, I need to configure the window
+manager, sound, graphics, etc.</p>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+flowchart BT
+
+    devices[&quot;
+      &lt;b&gt;devices&lt;&#x2F;b&gt;
+      disk_ssd_win
+      ethernet
+      graphics_nvidia_3080
+      monitor_acer
+      mouse_logitech_g502
+      printer_hp_deskjet
+    &quot;]:::list
+
+    machines[&quot;
+      &lt;b&gt;machines&lt;&#x2F;b&gt;
+      tower
+    &quot;]:::list
+
+    system[&quot;
+      &lt;b&gt;system&lt;&#x2F;b&gt;
+      bootloader
+      bluetooth
+      networking
+      sound
+      essentials
+      i3
+      docker
+    &quot;]:::list
+
+    installations[&quot;
+      &lt;b&gt;installations&lt;&#x2F;b&gt;
+      common
+      bare_metal
+    &quot;]:::list
+
+    nixosConfigurations[&quot;
+      &lt;b&gt;nixosConfigurations&lt;&#x2F;b&gt;
+      home
+    &quot;]:::list
+
+    devices --&gt; machines
+    machines --&gt; nixosConfigurations
+    system --&gt; installations
+    installations --&gt; nixosConfigurations
+
+    classDef list text-align:left;
+</pre>
+<!-- prettier-ignore-end -->
+<p>At work, I run NixOS on WSL, so the entire machine part is not necessary because
+it is managed and configured by the host Windows system. However, the
+installation on WSL requires its own specific configuration and setup of VNC.</p>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+flowchart BT
+
+    system[&quot;
+      &lt;b&gt;system&lt;&#x2F;b&gt;
+      wsl
+      essentials
+      vnc
+      docker
+    &quot;]:::list
+
+    installations[&quot;
+      &lt;b&gt;installations&lt;&#x2F;b&gt;
+      common
+      wsl
+    &quot;]:::list
+
+    nixosConfigurations[&quot;
+      &lt;b&gt;nixosConfigurations&lt;&#x2F;b&gt;
+      work
+    &quot;]:::list
+
+    system --&gt; installations
+    installations --&gt; nixosConfigurations
+
+    classDef list text-align:left;
+</pre>
+<!-- prettier-ignore-end -->
+<p>This is how it should work in theory, at least. In practice, I was only able to
+configure WSL for work. At home, I also found a WSL configuration that allows me
+to avoid annoying reboots whenever I want to switch between gaming and crafting.
+Of course, it has its limitations, but I believe this is currently the most
+energy-efficient option for me.</p>
+<h2 id="outro"><a class="zola-anchor" href="#outro" aria-label="Anchor link for: outro"
+  >§</a
+>
+Outro</h2>
+<p>Hive is still in its early stages with only a few people involved, and most of
+the work is being done by one person. This person may also lose interest over
+time and shift his focus to other projects.</p>
+<p>Additionally, the lack of openness, such as the absence of documentation, may
+discourage the few interested individuals who come across it. It is possible
+that Hive could easily fade away in the future.</p>
+<p>This is why I have chosen to write this blog post, to uncover what is hidden
+behind the facade of this "secretly open NixOS-Society" and share this idea with
+a wider audience.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>If you like this post, please leave a comment, even if it's just a simple kudos.
+You wouldn't believe how great it feels to see that someone has read through the
+work you spent a long time working on and that it is not completely ignored.</p>
+</div>
+  </div>
+</div>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+
+<h2><i class="fa-brands fa-reddit-alien comment-section-icon"></i> Reddit comments</h2>
+
+<a class="reddit-link" href=https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;NixOS&#x2F;comments&#x2F;1aprbw1&#x2F;hive&#x2F;>See on Reddit</a>
+<div class="reddit-embed"
+     red-href="https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;NixOS&#x2F;comments&#x2F;1aprbw1&#x2F;hive&#x2F;" 
+     red-opts='{"show_loading_animation": false, "show_post": true, "show_post_title": false, "show_post_body": false, "show_comments_section_header": false}'
+>
+</div>
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2024<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

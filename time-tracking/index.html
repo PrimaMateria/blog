@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Time tracking with Watson and Jira</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="Time tracking with Watson and Jira">
+    <meta property="og:url" content="https://primamateria.github.io/blog/time-tracking">
+    
+    <meta property="og:description" content="In this blog post, I share my experience of how I track my work using Watson and
+synchronize the logs with Jira. I prefer to keep most of my workflow inside the
+terminal and Watson has proven to be the most fitting tool for me. I track my
+work retrospectively in 5-minute intervals and use significant tags to instruct
+the synchronization tool with which Jira tickets to upload the logs. I also
+provide details about my environment setup, including the use of entr to watch
+Watson&#x27;s frames and automatically rerun a script, and aliases for issuing Watson
+commands.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-time-tracking.3f9932833ef1a63b.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2021-12-11">
+    
+    
+    
+    <meta property="article:tags" content="workflow">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>Time tracking with Watson and Jira</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Saturday 11 December 2021</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 4 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/workflow/">#workflow</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-time-tracking.52f127a6df444097.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-time-tracking.28b640e6673ac471.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-time-tracking.28ad2abcddaa76d2.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-time-tracking.ae8fb1fe34d92a88.png" alt="Mobius comic book style. White rabbit from the Alice in the Wonderland. Proper organization of his table.">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>In this blog post, I share my experience of how I track my work using Watson and
+synchronize the logs with Jira. I prefer to keep most of my workflow inside the
+terminal and Watson has proven to be the most fitting tool for me. I track my
+work retrospectively in 5-minute intervals and use significant tags to instruct
+the synchronization tool with which Jira tickets to upload the logs. I also
+provide details about my environment setup, including the use of entr to watch
+Watson's frames and automatically rerun a script, and aliases for issuing Watson
+commands.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/time-tracking/#watson">Watson</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/time-tracking/#how-do-i-track">How do I track</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/time-tracking/#what-do-i-track">What do I track</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/time-tracking/#environment-setup">Environment setup</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/time-tracking/#synchronization-with-jira">Synchronization with Jira</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/time-tracking/#outro">Outro</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<h2 id="watson"><a class="zola-anchor" href="#watson" aria-label="Anchor link for: watson"
+  >§</a
+>
+Watson</h2>
+<p>I try to keep of most of my workflow inside the terminal. The most fitting tool
+I have found was <code>watson</code>.</p>
+<p><a href="https://tailordev.github.io/Watson/">https://tailordev.github.io/Watson/</a></p>
+<h2 id="how-do-i-track"><a class="zola-anchor" href="#how-do-i-track" aria-label="Anchor link for: how-do-i-track"
+  >§</a
+>
+How do I track</h2>
+<p>I chose granularity of 5 minutes. I track in retrospective, that means, in the
+ideal scenario when I switch tasks I log the task I just finished. Then, I am
+using reports of submitted logs to check my monthly balance to know if I need to
+work some days longer or if I have enough overtime to leave earlier.</p>
+<h2 id="what-do-i-track"><a class="zola-anchor" href="#what-do-i-track" aria-label="Anchor link for: what-do-i-track"
+  >§</a
+>
+What do I track</h2>
+<p>Projects relate to real work projects. It is good idea to have project per
+technical module even if it is then uploaded to the same Jira ticket. Activities
+out of the scope of these projects I track under project named “none”.</p>
+<p><strong>Significant tags</strong> are used to instruct the synchronization tool with which
+Jira tickets it should upload the logs. The structure will depend on your
+company’s way of doing things. In my case, the following schema has emerged:</p>
+<ul>
+<li><strong>sprint</strong> - activities that belong to specific tasks in the sprint</li>
+<li><strong>other</strong> - activities that do not have specific task and are all reported to
+one general Jira ticket</li>
+<li><strong>vacation &amp; sick</strong> - in our case, we track vacation and sick leaves in Jira
+as well</li>
+<li><strong>break</strong> - at the end, it has no meaning for the end-report, but it helps
+with reviewing the logs of the day to see there is no “missed spot”</li>
+</ul>
+<p>Action tags describe repeating activities. They will vary for everyone. Just to
+inspire you, as a software engineer, I have identified following action tags:</p>
+<ul>
+<li><strong>code</strong> - casual implementation and writing automation tests. Also including
+git and PR actions.</li>
+<li><strong>review</strong> - reviewing other colleagues PRs</li>
+<li><strong>qa</strong> - quality assurance is about manually verifying the acceptance criteria</li>
+<li><strong>docs</strong> - used if I spent significant amount of time on documentation that I
+do not consider as part of the coding</li>
+<li><strong>research</strong> - used in case task requires some time for reading and
+preparation</li>
+<li><strong>drill</strong> - investigation, probing that is not considered to be a research</li>
+<li><strong>spec</strong> - taking time for writing functional or technical specification for
+the Jira tickets</li>
+<li><strong>sync</strong> - very often used tag for logging ad hoc discussions</li>
+<li><strong>meeting</strong> - used for reoccurring meetings and scrum ceremonies</li>
+<li><strong>env</strong> - logs time spent setting, fixing and tweaking tools I work with</li>
+<li><strong>buzz</strong> - checking slack, emails, answering some questions and just general
+buzz that fills the gaps between task-focused work</li>
+</ul>
+<h2 id="environment-setup"><a class="zola-anchor" href="#environment-setup" aria-label="Anchor link for: environment-setup"
+  >§</a
+>
+Environment setup</h2>
+<p>I usually have one tmux window named “reporting” which is divided to 2 panes.
+One pane shows the logs of the current week, and the other pane I use for
+writing <code>watson</code> commands.</p>
+<p>I am using <code>entr</code> to watch the Watson’s frames and to automatically rerun a
+script which does a custom print pf the logs.</p>
+<pre data-lang="bash" style="background-color:#ffffff;color:#4d4d4c;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#999999;">#!/bin/bash
+</span><span style="color:#c82829;">ls </span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">HOME</span><span style="color:#718c00;">/.config/watson/frames&quot; </span><span style="color:#3e999f;">| </span><span style="color:#c82829;">entr</span><span style="color:#f5871f;"> -cr </span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">HOME</span><span style="color:#718c00;">/reporting/current-script&quot;
+</span></code></pre>
+<p><code>current-script</code> prints separately today’s breaks and underneath logs for
+selected projects in the current week time frame.</p>
+<pre data-lang="bash" style="background-color:#ffffff;color:#4d4d4c;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#999999;">#!/bin/bash
+</span><span style="color:#4271ae;">echo </span><span style="color:#718c00;">&quot;--------------------------------------------------&quot;
+</span><span style="color:#4271ae;">echo </span><span style="color:#718c00;">&quot; Break&quot;
+</span><span style="color:#4271ae;">echo </span><span style="color:#718c00;">&quot;--------------------------------------------------&quot;
+</span><span style="color:#c82829;">watson</span><span style="color:#4271ae;"> log</span><span style="color:#f5871f;"> -c -d -G --no-pager -p</span><span style="color:#4271ae;"> break
+</span><span style="color:#4271ae;">echo
+</span><span style="color:#4271ae;">echo </span><span style="color:#718c00;">&quot;--------------------------------------------------&quot;
+</span><span style="color:#4271ae;">echo </span><span style="color:#718c00;">&quot; Current&quot;
+</span><span style="color:#4271ae;">echo </span><span style="color:#718c00;">&quot;--------------------------------------------------&quot;
+</span><span style="color:#c82829;">watson</span><span style="color:#4271ae;"> log</span><span style="color:#f5871f;"> -c -w -G --no-pager -p</span><span style="color:#4271ae;"> project1</span><span style="color:#f5871f;"> -p</span><span style="color:#4271ae;"> project2</span><span style="color:#f5871f;"> -p</span><span style="color:#4271ae;"> none
+</span></code></pre>
+<p>For issuing <code>watson</code> commands I have created a bunch of scripts and heir aliases
+in <code>.bashrc</code>.</p>
+<pre data-lang="bash" style="background-color:#ffffff;color:#4d4d4c;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#4271ae;">alias @ws</span><span style="color:#3e999f;">=</span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">HOME</span><span style="color:#718c00;">/reporting/watson-add-project1-sprint.sh&quot;
+</span><span style="color:#4271ae;">alias @wo</span><span style="color:#3e999f;">=</span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">HOME</span><span style="color:#718c00;">/reporting/watson-add-project1-other.sh&quot;
+</span><span style="color:#4271ae;">alias @fs</span><span style="color:#3e999f;">=</span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">HOME</span><span style="color:#718c00;">/reporting/watson-add-project2-sprint.sh&quot;
+</span><span style="color:#4271ae;">alias @fo</span><span style="color:#3e999f;">=</span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">HOME</span><span style="color:#718c00;">/reporting/watson-add-project2-other.sh&quot;
+</span><span style="color:#4271ae;">alias @n</span><span style="color:#3e999f;">=</span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">HOME</span><span style="color:#718c00;">/reporting/watson-add-none.sh&quot;
+</span><span style="color:#4271ae;">alias @b</span><span style="color:#3e999f;">=</span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">HOME</span><span style="color:#718c00;">/reporting/watson-add-break.sh&quot;
+</span><span style="color:#4271ae;">alias @</span><span style="color:#3e999f;">=</span><span style="color:#718c00;">&quot;watson&quot;
+</span></code></pre>
+<p>Example for <code>watson-add-project1-sprint.sh</code>.</p>
+<pre data-lang="bash" style="background-color:#ffffff;color:#4d4d4c;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#999999;">#!/bin/bash
+</span><span style="color:#c82829;">DIR</span><span style="color:#3e999f;">=</span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">HOME</span><span style="color:#718c00;">/reporting&quot;
+</span><span>
+</span><span style="color:#c82829;">FROM</span><span style="color:#3e999f;">=</span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">1</span><span style="color:#718c00;">&quot;
+</span><span style="color:#c82829;">TO</span><span style="color:#3e999f;">=</span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">2</span><span style="color:#718c00;">&quot;
+</span><span style="color:#c82829;">LOG</span><span style="color:#3e999f;">=</span><span style="color:#718c00;">&quot;${</span><span style="color:#c82829;">@</span><span style="color:#3e999f;">:</span><span style="color:#f5871f;">3</span><span style="color:#718c00;">}&quot;
+</span><span>
+</span><span style="color:#c82829;">FROM_DATE</span><span style="color:#3e999f;">=</span><span style="color:#4271ae;">`</span><span style="color:#c82829;">$DIR/d </span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">FROM</span><span style="color:#718c00;">&quot;</span><span style="color:#4271ae;">`
+</span><span style="color:#c82829;">TO_DATE</span><span style="color:#3e999f;">=</span><span style="color:#4271ae;">`</span><span style="color:#c82829;">$DIR/d </span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">TO</span><span style="color:#718c00;">&quot;</span><span style="color:#4271ae;">`
+</span><span style="color:#c82829;">watson</span><span style="color:#4271ae;"> add</span><span style="color:#f5871f;"> -f </span><span style="color:#4271ae;">$</span><span style="color:#c82829;">FROM_DATE</span><span style="color:#f5871f;"> -t </span><span style="color:#4271ae;">$</span><span style="color:#c82829;">TO_DATE</span><span style="color:#4271ae;"> project1 +sprint $</span><span style="color:#c82829;">LOG
+</span></code></pre>
+<p>The <code>d</code> takes advantage of <code>date</code> utility which can parse relative dates and
+produce date in format that <code>watson</code> expects. Then instead of specifying full
+date <code>2021-12-12 10:00</code> I can just write time for current day <code>10:00</code> or
+relative date <code>yesterday 10:00</code>.</p>
+<pre data-lang="bash" style="background-color:#ffffff;color:#4d4d4c;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#999999;">#!/bin/bash
+</span><span style="color:#c82829;">date</span><span style="color:#f5871f;"> -d </span><span style="color:#718c00;">&quot;$</span><span style="color:#c82829;">1</span><span style="color:#718c00;">&quot; &#39;+%FT%T&#39;
+</span></code></pre>
+<p>Then a usual log commands look like this.</p>
+<pre data-lang="bash" style="background-color:#ffffff;color:#4d4d4c;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82829;">@ws</span><span style="color:#4271ae;"> 14:00 15:15 +JIRA-1234 +code
+</span><span style="color:#c82829;">@wo</span><span style="color:#4271ae;"> 15:15 15:40 +sync
+</span><span style="color:#c82829;">@b</span><span style="color:#4271ae;"> 15:40 16:05
+</span></code></pre>
+<h2 id="synchronization-with-jira"><a class="zola-anchor" href="#synchronization-with-jira" aria-label="Anchor link for: synchronization-with-jira"
+  >§</a
+>
+Synchronization with Jira</h2>
+<p><code>watson-jira-next</code> is a tool I use for syncing logs to Jira via REST calls. I
+have extended already existing <code>watson-jira</code> project, which, unfortunately, seem
+to become abandoned.</p>
+<p><a href="https://github.com/PrimaMateria/watson-jira-next">github:PrimaMateria/watson-jira-next</a></p>
+<p>All the important information you can find in the project’s README. Just to give
+you a short preview, this is the configuration file which is set for my
+significant tags.</p>
+<pre data-lang="yaml" style="background-color:#ffffff;color:#4d4d4c;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#c82829;">jira</span><span>:
+</span><span>  </span><span style="color:#c82829;">server</span><span>: { { </span><span style="color:#718c00;">JIRA_URL </span><span>} }
+</span><span>  </span><span style="color:#c82829;">cookie</span><span>: { { </span><span style="color:#718c00;">COOKIE </span><span>} }
+</span><span style="color:#c82829;">mappings</span><span>:
+</span><span>  - </span><span style="color:#c82829;">name</span><span>: </span><span style="color:#718c00;">sprint
+</span><span>    </span><span style="color:#c82829;">type</span><span>: </span><span style="color:#718c00;">issue_specified_in_tag
+</span><span>  - </span><span style="color:#c82829;">name</span><span>: </span><span style="color:#718c00;">sick
+</span><span>    </span><span style="color:#c82829;">type</span><span>: </span><span style="color:#718c00;">single_issue
+</span><span>    </span><span style="color:#c82829;">issue</span><span>: { { </span><span style="color:#718c00;">JIRA_TICKET_SICK_LEAVE </span><span>} }
+</span><span>  - </span><span style="color:#c82829;">name</span><span>: </span><span style="color:#718c00;">vacation
+</span><span>    </span><span style="color:#c82829;">type</span><span>: </span><span style="color:#718c00;">single_issue
+</span><span>    </span><span style="color:#c82829;">issue</span><span>: { { </span><span style="color:#718c00;">JIRA_TICKET_VACATION </span><span>} }
+</span><span>  - </span><span style="color:#c82829;">name</span><span>: </span><span style="color:#718c00;">other
+</span><span>    </span><span style="color:#c82829;">type</span><span>: </span><span style="color:#718c00;">issue_per_project
+</span><span>    </span><span style="color:#c82829;">projects</span><span>:
+</span><span>      </span><span style="color:#c82829;">none</span><span>: { { </span><span style="color:#718c00;">JIRA_TICKET_GENERAL </span><span>} }
+</span><span>      </span><span style="color:#c82829;">project1</span><span>: { { </span><span style="color:#718c00;">JIRA_TICKET_GENERAL_PROJECT1 </span><span>} }
+</span><span>      </span><span style="color:#c82829;">project2</span><span>: { { </span><span style="color:#718c00;">JIRA_TICKET_GENERAL_PROJECT2 </span><span>} }
+</span></code></pre>
+<h2 id="outro"><a class="zola-anchor" href="#outro" aria-label="Anchor link for: outro"
+  >§</a
+>
+Outro</h2>
+<p>At the end, time tracking data are not only for the month-end report, but they
+also provide you insight about the modules and allows you to reflect about your
+job — e.g. how much time spent coding, testing, researching, or discussing with
+others.</p>
+<p>Thank you for reading. I hope <code>watson</code> and <code>watson-jira</code> will help you in your
+daily work.</p>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2024<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
