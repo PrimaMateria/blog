@@ -105,7 +105,7 @@ sometimes it can happen that Nix can fail to build it.") }}
       url = "github:NixOS/nixpkgs";
     };
     neovim = {
-      url = "github:neovim/neovim/stable?dir=contrib";
+      url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -124,7 +124,7 @@ As first, we will simply pass Neovim from the input to the output.
       url = "github:NixOS/nixpkgs";
     };
     neovim = {
-      url = "github:neovim/neovim/stable?dir=contrib";
+      url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -183,7 +183,7 @@ Neovim package.
       url = "github:NixOS/nixpkgs";
     };
     neovim = {
-      url = "github:neovim/neovim/stable?dir=contrib";
+      url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -573,7 +573,7 @@ to your flake inputs. In the `overlayFlakeInputs` we extend existing list of
       url = "github:NixOS/nixpkgs";
     };
     neovim = {
-      url = "github:neovim/neovim/stable?dir=contrib";
+      url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     telescope-recent-files-src = {
