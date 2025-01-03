@@ -1,15 +1,57 @@
-# neovim editions
++++
+title = "Neovim Editions"
+date = 2025-01-03
+slug = "neovim-editions"
 
-Here on my blog I wrote a post about creating your own neovim flake. It was nothing great, but it was working for me for several years. Adding plugins, tweaking configs here and there was without problem.
-First sign of potential of enhancement came when I was experimenting with termux and running neovim on Android phone. As I remember I had to disable some plugins, but more or less the neovim was running. But it was so heavy. I was not planning to code in rust or do the web development on the phne. My wish was tohave some mobile blogging, note taking device. Once I have realizd that the I cannot connect my custom split keyboard (ferris sweep) to the phone, I fully gave up on the termux.
-Later the same feeling of too heavy editor came when I have installed it on my home server. It runs on Alder lake N100 interl processor, and even it is not as fast as my home or work machine, but it is fast enough for me to accept the longer build at first run.
-Another big hit was when I was preparing plantuml plugin with plantuml server that requires whole JDK. I realized that my neovim editor is becoming mud of ball. The JDK would influence the performance of the update, even if I make the UML diagram sporadically.
+[extra]
+banner = "banner-neovim-flake.png"
+bannerAlt = "todo"
+reddithref = ""
 
-But believe or not the decision came when I was considering to have a little fun wit C. When I was still elarning to program I bought some books about C and the pointer where confusing that time.But now after long tie Iwanted to revisit it again.
-Anyway, as I was ready to start configuring another language in my mud of ball I thought that since I am already ready to hack around, why rather not to reafactor my neovim flake.
+[taxonomies]
+tags = ["nixos","neovim"]
++++
 
-My nix skills are not great. But I got familar with hamuea, that is has big ipact on the organization of my flakes. 
-The goal was to create linear inheritance of neovim editions, starting with a light neovim with minimum plugins, evolving to base IDE and then specializing to different languages like rust, python, and of course my main web focused development environment.
+Introduction to a neovim flake to host multilple neovim editions with
+inheritance. Instead of having one big configuration for multiple 
+tasks, we can create multiple editions focused on one specific task.
+With the inheritance we can reusue configurations of one edition in another.
+In this article I will provide a step by step guidance with beginner friendly
+explanations on how create your own flake.
 
-The core organization of the configuration files and the library that was packaging thm into the nix store was left in principle the same. I just tried to modularize the utility finctions to separate files.
-To followthe spirit of my first blog post, I will also write down a step by step guide, with slow beginner-friendly guidance.
+
+<!-- more -->
+<!-- TOC -->
+
+## Personal story
+
+Here on my blog, I wrote a post about creating your own Neovim flake. It wasn't
+anything extraordinary, but it had been working for me for several years. Adding
+plugins and tweaking configurations was easy and problem-free (most of the
+time).
+
+I use neovim as daily driver for web development. Apart of that I use it for
+side projects often programmed with different languages. For that are necessary
+different language servers and different plugins. I didn't like that my
+configuration is becoming a mix of everything.
+
+Therefore recently I have reworked my neovim flake. Instead of providing one
+editor for everything the flake provides now multiple editions of neovim
+configured for a specific task.
+
+Also my skills with nix have slightly improved. Especially, getting familiar
+with Haumea granted me access to neatly organized modules. 
+
+I am using the editions for few weeks, and I got enough confidence to say that
+it was a right decision. 
+
+## Before we start
+
+This article stands alone. You do not need to read a previous one. Although I
+may not delve deeply into analyzing every line like before, you may still find
+it useful to read through it.
+
+All the code you can find in
+[github:PrimaMateria/blog-example-neovim-editions](todo).
+
+
