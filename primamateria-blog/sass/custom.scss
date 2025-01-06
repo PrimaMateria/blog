@@ -167,8 +167,9 @@ kbd {
   line-height: 1;
 }
 
-code {
-  color: #5C4033;
+code:not(pre code) {
+  color: black;
+  background-color: #f2f2f2;
 }
 
 ul {
