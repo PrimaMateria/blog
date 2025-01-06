@@ -167,6 +167,10 @@ kbd {
   line-height: 1;
 }
 
+code {
+  color: #5C4033;
+}
+
 ul {
   margin-left: -20px;
   @media (min-width: #{$md}) {

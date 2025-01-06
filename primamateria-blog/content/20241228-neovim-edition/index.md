@@ -304,6 +304,7 @@ assembles neovim editions.
     nixpkgs,
     utils,
     haumea,
+    neovimNightlyOverlay,
     neovim-nix-utils,
     ...
   }:
@@ -312,6 +313,7 @@ assembles neovim editions.
         pkgs = import nixpkgs {
           inherit system;
           config = {allowUnfree = true;};
+          overlays = [neovimNightlyOverlay.overlays.default];
         };
         neovimNixLib = neovim-nix-utils.lib.${system};
       in (haumea.lib.load {
@@ -329,6 +331,10 @@ assembles neovim editions.
     utils.url = "github:numtide/flake-utils";
     haumea = {
       url = "github:nix-community/haumea";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    neovimNightlyOverlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     neovim-nix-utils = {
@@ -409,3 +415,73 @@ repository or reload the home manager if I were to use the package there.
 ") }}
 
 ## Step 4: Create neovim light edition
+
+Create new folder `/src/packages/neovim/light/`.
+
+#### Default module
+
+```nix
+#/src/packages/neovim/light/default.nix
+{root}: root.lib.assembleNeovim {name = "light";}
+```
+
+This is default nix file that will be lifted by Haumea to the attribute with the
+name of the folder - so,  in the flake outputs after ran through the flake utils
+this will be `packages.neovim.light`.
+
+Through the root reference we call the local library and pass the name of the
+edition we want to assemble into nix pakcage.
+
+#### Edition manifest
+
+```nix
+#/src/packages/neovim/light/_manifest.nix
+{}: {name = "light";}
+```
+
+It declares `name` and `basedOn`. Since the light edition is the first,
+`basedOn` is not defined here.
+
+#### Edition list of plugins
+
+```nix
+#/src/packages/neovim/light/_plugins.nix
+{pkgs}: with pkgs.vimPlugins; [nvim-tree-lua]
+```
+Here we simply add nvim-tree from the nixpkgs repository.
+
+{{ nerdy(text="
+
+By the way, there is a repository [github:zachcoyle/neovim-plugins-nightly-overlay](https://github.com/zachcoyle/neovim-plugins-nightly-overlay) if you want to have really fresh plugins.
+
+") }}
+
+#### Edition config
+
+Lua config: 
+
+```lua
+--/src/packages/neovim/light/__config/lua/nvim-tree.lua
+require("nvim-tree").setup({})
+vim.api.nvim_set_keymap("n", "<C-n>", ":NvimTreeFindFileToggle<CR>", { noremap = true })
+```
+
+Vim config:
+
+```vim
+"/src/packages/neovim/light/__config/vim/setters.vim
+set number
+```
+
+That is enough for the light edition. You can now give it a try.
+
+```sh
+nix run .#neovim.light
+```
+
+You should see numbered lines in the buffer window, and when you press `<C-n>`,
+the Neovim tree should show.
+
+<div style="margin-top: 24px">
+{{ resize_image_w(path="20241228-neovim-edition/lightEdition.png", width=450) }}
+</div>
