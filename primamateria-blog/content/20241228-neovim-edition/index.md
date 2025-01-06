@@ -57,7 +57,7 @@ All the code you can find in
 
 I assume that you are familiar with the basics of Nix and know what a Nix flake is.
 
-## What will we create - neovim edition configuration
+## What will we create - neovim edition
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -66,6 +66,7 @@ graph TD;
     neovim --> plugins
     neovim --> config
     neovim --> treesitterPlugins
+    neovim --> envVars
     config --> lua
     config --> vim
     config --> luanix
@@ -97,6 +98,21 @@ it.
 
 ") }}
 
+{{ curious(text="
+
+I also noticed that some similar changes are recently being included into the
+main neovim wrapper function. I just had a brief look on it, and if I understand
+it right then it there will be a mechanism that will pass lua scripts and if
+expand some placeholders with computed full nix store path.
+
+") }}
+
+{{ nerdy(text="
+
+We should keep eye on it!
+
+") }}
+
 ## What will we create - neovim editions hierarchy
 
 <!-- prettier-ignore-start -->
@@ -122,7 +138,7 @@ base IDE. This will include a web edition for web development, a blog edition
 with support for writing blog posts, and a Puml edition for writing and
 generating PlantUML diagrams.
 
-## What will we create - nix flake
+## What will we create - neovim editions flake
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -133,7 +149,8 @@ graph LR;
     vimPlugins@{ shape: procs, label: "vim plugins" }
     otherPackages@{ shape: procs, label: "other packages" }
 
-    flake --> packages
+    flake --> outputs
+    outputs --> packages
     packages --> systems
     systems --> editions
     systems --> vimPlugins
@@ -183,7 +200,6 @@ Go ahead, try it now.
         src = ./src;
         inputs = {
           inherit pkgs;
-          inherit (pkgs.lib) debug;
         };
         transformer = haumea.lib.transformers.liftDefault;
       })
@@ -214,30 +230,182 @@ Additionally we use Haumea transformer `liftDefault`. This tells Haumea that
 `./src/foo/default.nix` will be resolved to `{ foo:  "I am foo" }` instead of `{
     foo: { default: "I am foo" }}`.
 
-## Step 2: Prepare the file structure
+## Step 2: Add neovim nightly overlay
 
-```
-.
-├── flake.nix
-└── src
-    ├── _lib
-    └── packages
-        ├── neovim
-        └── vimPlugins
+The Neovim nightly overlay offers a Nix package of the Neovim nightly build. By
+using this, you can access the latest updates and features. While this can be
+beneficial, there is also a risk of encountering issues. Alternatively, you can
+continue using Neovim from the nixpkgs repository, either from the unstable
+channel (as shown in this example) or from the stable channel. If so, skip this
+step.
+
+```nix
+#/flake.nix
+{
+  description = "neovim editions - PrimaMateria blog tutorial";
+
+  outputs = {
+    self,
+    nixpkgs,
+    utils,
+    haumea,
+    neovimNightlyOverlay,
+    ...
+  }:
+    utils.lib.eachDefaultSystem (
+      system: let
+        pkgs = import nixpkgs {
+          inherit system;
+          config = {allowUnfree = true;};
+          overlays = [neovimNightlyOverlay.overlays.default];
+        };
+      in (haumea.lib.load {
+        src = ./src;
+        inputs = {
+          inherit pkgs;
+          inherit (pkgs.lib) debug;
+        };
+        transformer = haumea.lib.transformers.liftDefault;
+      })
+    );
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/master";
+    utils.url = "github:numtide/flake-utils";
+    haumea = {
+      url = "github:nix-community/haumea";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    neovimNightlyOverlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+}
 ```
 
-Create a `src` folder with `packages` and `_lib`. In the `_lib` folder, we will
-place our internal library utilities, and the `packages` folder will be included
-in the flake's outputs.
+We add the `neovim-nightly-overlay` flake to the inputs and include the default
+overlay in the list of overlays when configuring nix packages. From now on, the
+package `pkgs.neovim` will refer to the nightly build.
+
+## Step 3: Add neovim nix utils
+
+[github:PrimaMateria/neovim-nix-utils](https://github.com/PrimaMateria/neovim-nix-utils)
+is a flake that I have written to provide a library with functions that
+assembles neovim editions.
+
+```nix
+# /flake.nix
+{
+  description = "neovim editions - PrimaMateria blog tutorial";
+
+  outputs = {
+    self,
+    nixpkgs,
+    utils,
+    haumea,
+    neovim-nix-utils,
+    ...
+  }:
+    utils.lib.eachDefaultSystem (
+      system: let
+        pkgs = import nixpkgs {
+          inherit system;
+          config = {allowUnfree = true;};
+        };
+        neovimNixLib = neovim-nix-utils.lib.${system};
+      in (haumea.lib.load {
+        src = ./src;
+        inputs = {
+          inherit pkgs;
+          inherit neovimNixLib;
+        };
+        transformer = haumea.lib.transformers.liftDefault;
+      })
+    );
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/master";
+    utils.url = "github:numtide/flake-utils";
+    haumea = {
+      url = "github:nix-community/haumea";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    neovim-nix-utils = {
+      url = "github:PrimaMateria/neovim-nix-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+}
+```
+
+Add flake to inputs, and list it in the outputs function parameter. In the `let`
+clause, select the system-specific library and add it to the Haumea`s inputs so
+that we can access it in the file modules.
+
+```nix
+#/src/_lib.nix
+{
+  pkgs,
+  root,
+  neovimNixLib,
+}: let
+  initializedNeovimNixLib = neovimNixLib.init {
+    neovimPackage = pkgs.neovim;
+    editionsDir = ./packages/neovim;
+    editionsSet = root.packages.neovim;
+  };
+in {
+  assembleNeovim = {name}:
+    initializedNeovimNixLib.assembleNeovim {inherit name;};
+}
+```
+
+Create new local lib module. It will initialize the utils' lib. We need to
+provide te neovim package. 
 
 {{ nerdy(text="
 
-When a folder name starts with an underscore, Haumea will not include it in the
-set of packages (`{ packages: {...}; #_lib not here }`). However, this module
-will still be accessible through Haumea's `root` parameter. There is a
-difference between a single underscore and two underscores. One underscore is
-like `protected`, while two underscores are like `private`.
-
+Here you can see that the Haumea file module starts with an underscore. This
+means that the file module will not be included in the attribute set, but it
+will still be accessible through Haumea's `root` and `super` parameters. You can
+investigate more in [Haumea Cheatsheet](@/20231022-haumea-cheatsheet/index.md#self-super-root)
 
 ") }}
 
+## Interlude - about running neovim editions
+
+Here start examples of neovim configuration. I will keep it minimal just enough
+to be able to present different aspects. It's up to how will you decide to
+organize your editions. If you want to have a real life example you can have a
+look on my repo [github:PrimaMateria/neovim-nix](https://github.com/PrimaMateria/neovim-nix).
+
+{{ nerdy(text="
+
+By the way, do not attempt to run neovim editions from that repository because
+it is using `git-crypt` to encode secrets. Without unlocking it with a secret
+key, the file content will be encrypted gibberish and the nix build will fail.
+
+") }}
+
+{{ curious(text="
+
+What a boomer. Now we can't use the neovim editions without first cloning the
+repo and unlocking it locally. It would be nicer just to be able to run `nix run
+github:PrimaMateria/neovim-nix#neovim.web`. 
+
+") }}
+
+{{ nerdy(text="
+
+I have a few well-configured environments that I use regularly. I never SSH to
+some remote servers where I would need to edit configuration files. If I did,
+then it would make sense to deal with the hindrance of `git-crypt`. By the way,
+running Neovim from a local path like `nix run
+/home/primamateria/dev/neovim-nix#neovim.web` has one more advantage: edits are
+applied right after saving, so I don't need to push them to the GitHub
+repository or reload the home manager if I were to use the package there.
+
+") }}
+
+## Step 4: Create neovim light edition
