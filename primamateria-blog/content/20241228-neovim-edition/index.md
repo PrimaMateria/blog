@@ -498,10 +498,14 @@ derivation, and adds a source command for each to neovim RC.
 Test it by running in the root directory where the `flake.nix` is stored: `nix
 run .#neovim.light`.
 
+{{ nerdy(text="
+
 For my [real-life light
 edition](https://github.com/PrimaMateria/neovim-nix/tree/main/src/packages/neovim/light),
 I set up basic navigation using nvim-tree and telescope, and also configured the
 editor's appearance with colorscheme, lualine, and noice notifications.
+
+") }}
 
 ## Step 5: Create neovim base edition
 
@@ -667,3 +671,14 @@ jump to the center. This is the go-up plugin. Press `alt+g` to bring up
 lazygit. If you have a file, try pressing `e` to see if it opens in the
 underlying neovim window. Notice that the buffer line numbers and nvim-tree are
 inherited from the light edition.
+
+{{ nerdy(text="
+
+My [real-life base
+edition](https://github.com/PrimaMateria/neovim-nix/tree/main/src/packages/neovim/base),
+has the most extensive configuration. Here, I have set up all aspects of a
+generic IDE, including refactoring, git support, a snippets engine (although
+each project edition has its own snippets), AI support, language server
+keybindings, and linting & formatting.
+
+") }}
