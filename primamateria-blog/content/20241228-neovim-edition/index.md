@@ -61,8 +61,9 @@ I assume that you are familiar with the basics of Nix and know what a Nix flake 
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
-graph TD;
+graph LR;
     neovim --> dependencies
+    neovim --> dependenciesEnd
     neovim --> plugins
     neovim --> config
     neovim --> treesitterPlugins
@@ -117,26 +118,42 @@ We should keep eye on it!
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
-graph TD;
+graph LR;
     light --> base
     base --> web
-    base --> blog
-    base --> puml
 {% end %}
 <!-- prettier-ignore-end -->
 
-In this tutorial, we will create a few editions. Light neovim will be a very
-basic configuration acting as a pure text editor, for example, when you need to
+This tutorial will create minimal and not very useful editions, but just enough
+to cover the key aspects of the different types of configurations.
+
+My real-life editions currently look like this:
+
+<!-- prettier-ignore-start -->
+{% mermaid() %}
+graph LR;
+    light --> base
+    base --> web
+    base --> blog 
+    base --> puml 
+    base --> rust
+    base --> python
+{% end %}
+<!-- prettier-ignore-end -->
+
+
+ Light neovim is very basic configuration acting as a pure text editor, for example, when you need to
 use it remotely and you don't want to waste time on a big Nix build.
 
-The base edition will inherit configuration from the light edition and also
-provide generic IDE capabilities such as enhanced navigation, basic refactoring
+The base edition inherits configuration from the light edition and also
+provides generic IDE capabilities such as enhanced navigation, basic refactoring
 tools, git support, and AI tools.
 
-The final layer of task-oriented editions will inherit configuration from the
-base IDE. This will include a web edition for web development, a blog edition
-with support for writing blog posts, and a Puml edition for writing and
-generating PlantUML diagrams.
+The final layer of task-oriented editions inherits configuration from the base
+IDE. There is a web edition for web development, a blog edition with support for
+writing blog posts, a Puml edition for writing and generating PlantUML diagrams,
+and simple Rust and Python editions for some side projects that I don't use very
+often.
 
 ## What will we create - neovim editions flake
 
@@ -167,11 +184,12 @@ The packages will include the Neovim editions, Vim plugins that we did not find
 in the nixpkgs and had to package ourselves. Additionally, we will have an
 adjusted LazyGit package in the other packages.
 
-Afterwards, you will be able to run any edition with a command like this:
+Afterwards, you will be able to run any edition with a commands like these:
 
 ```sh
-# TODO: change to repo of example when ready
-nix run github:PrimaMateria/neovim-nix#neovim.web
+nix run github:PrimaMateria/blog-neovim-editions#neovim.light
+nix run github:PrimaMateria/blog-neovim-editions#neovim.base
+nix run github:PrimaMateria/blog-neovim-editions#neovim.web
 ```
 
 Go ahead, try it now.
@@ -616,7 +634,7 @@ try.
         │   ├── base
         │   │   ├── __config
         │   │   │   └── lua
-        │   │   │       └── lazygit-nvim.lua
+        │   │   │       └── go-up-nvim.lua
         │   │   ├── _plugins.nix
         │   └── light
         └── vimPlugins
@@ -682,3 +700,98 @@ each project edition has its own snippets), AI support, language server
 keybindings, and linting & formatting.
 
 ") }}
+
+## Step 6: Create neovim web edition
+
+Web edition is here to showcase the last aspects of assembling. We will add
+quirky node package dependencies, treesitter plugins and provide environment
+variables.
+
+```
+.
+└── src
+    └── packages
+        ├── neovim
+        │   └── web
+        │       ├── _dependenciesEnd.nix
+        │       ├── _envVars.nix
+        │       ├── _manifest.nix
+        │       ├── _treesitterPlugins.nix
+        │       └── default.nix
+        └── vimPlugins
+```
+
+```nix
+#src/packages/neovim/web/default.nix
+{root}: root.lib.assembleNeovim {name = "web";}
+
+#src/packages/neovim/web/_manifest.nix
+{}: {
+  name = "web";
+  basedOn = "base";
+}
+```
+
+As usual, create `default` and `manifest`. The edition is based on "base",
+therefore it will inherit everything from "base" and "light".
+
+```nix
+#src/packages/neovim/web/_envVars.nix
+{}: {MY_ENV_VAR = "foo";}
+```
+
+We can specify environment variables that will be available inside the neovim
+edition runtime. I am currently using it to specify `OPENAI_API_KEY`.
+
+```nix
+#src/packages/neovim/web/_treesitterPlugins.nix
+{}: treesitterPlugins:
+with treesitterPlugins; [javascript typescript html css]
+```
+
+Treesitter plugins are passed as a list into 
+
+```nix
+#src/packages/neovim/web/_dependenciesEnd.nix
+{pkgs}:
+with pkgs; [
+  nodePackages.typescript
+  nodePackages.typescript-language-server
+  nodePackages.eslint_d
+  nodePackages.prettier
+]
+```
+
+`dependenciesEnd` are dependencies that, due to a bug I encountered a long time
+ago, need to be placed at the end of the list when creating the `symlinkJoin`
+Nix derivation. If you are interested, you can find more details at
+[https://ertt.ca/blog/2022/01-12-nix-symlinkJoin-nodePackages/](https://ertt.ca/blog/2022/01-12-nix-symlinkJoin-nodePackages/).  Usually they are node or python packages.
+
+<div style="margin: 24px">
+{{ resize_image_w(path="20241228-neovim-edition/webEdition-envAndDep.png", width=450) }}
+{{ resize_image_w(path="20241228-neovim-edition/webEdition-treesitterPlugins.png", width=450) }}
+</div>
+
+Run `nix run .#neovim.web`. Inside Neovim's terminal (`:term`), we can prove
+that the environment variable is set and that dependencies can be found on the
+execution path. Using `:TSInstallationInfo`, we can check that additional
+languages are supported by Treesitter.
+
+{{ nerdy(text="
+
+The
+[real-life](https://github.com/PrimaMateria/neovim-nix/tree/main/src/packages/neovim/web)
+web edition is pretty simple, because most of the configuration is present in
+the base edition. There is some additional configuration for typescript and
+React, language specific snippets.
+") }}
+
+## Conclusion
+
+Neovim editions are a nice way to avoid creating a monolithic configuration,
+possibly with undesired interferences, while taking advantage of configuration
+inheritance and, of course, everything in the Nix world with all the benefits.
+
+I hope you find this article useful, and if you need help or want to discuss
+don't hesitate to leave a comment.
+
