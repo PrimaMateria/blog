@@ -748,7 +748,8 @@ edition runtime. I am currently using it to specify `OPENAI_API_KEY`.
 with treesitterPlugins; [javascript typescript html css]
 ```
 
-Treesitter plugins are passed as a list into 
+Treesitter plugins are passed as a list to the Treesitter plugin build function
+`nixpkgs.vimPlugins.nvim-treesitter.withPlugins`.
 
 ```nix
 #src/packages/neovim/web/_dependenciesEnd.nix
