@@ -12,12 +12,12 @@ reddithref = ""
 tags = ["nixos","neovim"]
 +++
 
-Introduction to a neovim flake to host multilple neovim editions with
-inheritance. Instead of having one big configuration for multiple 
-tasks, we can create multiple editions focused on one specific task.
-With the inheritance we can reusue configurations of one edition in another.
-In this article I will provide a step by step guidance with beginner friendly
-explanations on how create your own flake.
+Introduction to a Neovim flake for hosting multiple Neovim editions with
+inheritance. Instead of having one large configuration for multiple tasks, we
+can create multiple editions focused on specific tasks. With inheritance, we can
+reuse configurations from one edition in another. In this article, I will
+provide a step-by-step guide with beginner-friendly explanations on how to
+create your own flake.
 
 
 <!-- more -->
