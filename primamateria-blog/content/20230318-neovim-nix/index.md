@@ -44,6 +44,15 @@ you are in the right place.
 
 ") }}
 
+
+{{ update(date="2025-01-13", content="
+
+This article is outdated and has been replaced with a newer and improved version
+of Flake that supports multiple versions and has clearer organization. Please
+read [Neovim Editions](@/20241228-neovim-edition/index.md) instead.
+
+") }}
+
 ## Preface
 
 This guide will provide a step-by-step process for setting up your own Neovim as
