@@ -30,13 +30,13 @@ anything extraordinary, but it had been working for me for several years. Adding
 plugins and tweaking configurations was easy and problem-free (most of the
 time).
 
-I use neovim as daily driver for web development. Apart of that I use it for
+I use Neovim as daily driver for web development. Apart of that I use it for
 side projects often programmed with different languages. For that are necessary
 different language servers and different plugins. I didn't like that my
 configuration is becoming a mix of everything.
 
-Therefore recently I have reworked my neovim flake. Instead of providing one
-editor for everything the flake provides now multiple editions of neovim
+Therefore recently I have reworked my Neovim flake. Instead of providing one
+editor for everything the flake provides now multiple editions of Neovim
 configured for a specific task.
 
 Also my skills with nix have slightly improved. Especially, getting familiar
@@ -57,7 +57,7 @@ All the code you can find in
 
 I assume that you are familiar with the basics of Nix and know what a Nix flake is.
 
-## What will we create - neovim edition
+## What will we create - Neovim edition
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -76,7 +76,7 @@ graph LR;
 <!-- prettier-ignore-end -->
 
 This is how a single edition will look like. In the dependencies we can specify
-packages that will be available during the runtime to the neovim. For example in
+packages that will be available during the runtime to the Neovim. For example in
 the web edition there will be typescript language server, eslint_d daemon
 providing engine for linting, or prettier tool allowing us to format the code.
 
@@ -102,7 +102,7 @@ it.
 {{ curious(text="
 
 I also noticed that some similar changes are recently being included into the
-main neovim wrapper function. I just had a brief look on it, and if I understand
+main Neovim wrapper function. I just had a brief look on it, and if I understand
 it right then it there will be a mechanism that will pass lua scripts and if
 expand some placeholders with computed full nix store path.
 
@@ -114,7 +114,7 @@ We should keep eye on it!
 
 ") }}
 
-## What will we create - neovim editions hierarchy
+## What will we create - Neovim editions hierarchy
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -142,7 +142,7 @@ graph LR;
 <!-- prettier-ignore-end -->
 
 
- Light neovim is very basic configuration acting as a pure text editor, for example, when you need to
+ Light Neovim is very basic configuration acting as a pure text editor, for example, when you need to
 use it remotely and you don't want to waste time on a big Nix build.
 
 The base edition inherits configuration from the light edition and also
@@ -155,7 +155,7 @@ writing blog posts, a Puml edition for writing and generating PlantUML diagrams,
 and simple Rust and Python editions for some side projects that I don't use very
 often.
 
-## What will we create - neovim editions flake
+## What will we create - Neovim editions flake
 
 <!-- prettier-ignore-start -->
 {% mermaid() %}
@@ -253,7 +253,7 @@ Additionally we use Haumea transformer `liftDefault`. This tells Haumea that
 `./src/foo/default.nix` will be resolved to `{ foo:  "I am foo" }` instead of `{
     foo: { default: "I am foo" }}`.
 
-## Step 2: Add neovim nightly overlay
+## Step 2: Add Neovim nightly overlay
 
 The Neovim nightly overlay offers a Nix package of the Neovim nightly build. By
 using this, you can access the latest updates and features. While this can be
@@ -311,11 +311,11 @@ We add the `neovim-nightly-overlay` flake to the inputs and include the default
 overlay in the list of overlays when configuring nix packages. From now on, the
 package `pkgs.neovim` will refer to the nightly build.
 
-## Step 3: Add neovim nix utils
+## Step 3: Add Neovim nix utils
 
 [github:PrimaMateria/neovim-nix-utils](https://github.com/PrimaMateria/neovim-nix-utils)
 is a flake that I have written to provide a library with functions that
-assembles neovim editions.
+assembles Neovim editions.
 
 ```
 .
@@ -397,7 +397,7 @@ in {
 ```
 
 Create new local lib module. It will initialize the utils' lib. We need to
-provide te neovim package. 
+provide the Neovim package. 
 
 {{ nerdy(text="
 
@@ -408,16 +408,16 @@ investigate more in [Haumea Cheatsheet](@/20231022-haumea-cheatsheet/index.md#se
 
 ") }}
 
-## Interlude - about running neovim editions
+## Interlude - about running Neovim editions
 
-Here start examples of neovim configuration. I will keep it minimal just enough
+Here start examples of Neovim configuration. I will keep it minimal just enough
 to be able to present different aspects. It's up to how will you decide to
 organize your editions. If you want to have a real life example you can have a
 look on my repo [github:PrimaMateria/neovim-nix](https://github.com/PrimaMateria/neovim-nix).
 
 {{ nerdy(text="
 
-By the way, do not attempt to run neovim editions from that repository because
+By the way, do not attempt to run Neovim editions from that repository because
 it is using `git-crypt` to encode secrets. Without unlocking it with a secret
 key, the file content will be encrypted gibberish and the nix build will fail.
 
@@ -425,7 +425,7 @@ key, the file content will be encrypted gibberish and the nix build will fail.
 
 {{ curious(text="
 
-What a boomer. Now we can't use the neovim editions without first cloning the
+What a boomer. Now we can't use the Neovim editions without first cloning the
 repo and unlocking it locally. It would be nicer just to be able to run `nix run
 github:PrimaMateria/neovim-nix#neovim.web`. 
 
@@ -443,7 +443,7 @@ repository or reload the home manager if I were to use the package there.
 
 ") }}
 
-## Step 4: Create neovim light edition
+## Step 4: Create Neovim light edition
 
 In the light edition, I will demonstrate how to add plugins and configure them
 easily. We will add the nvim-tree plugin and enable line numbers.
@@ -478,7 +478,7 @@ the name.
 ```
 
 This is default file that becomes the edition package in the flake output. We
-call our library to assemnbe neovim and pass the name.
+call our library to assemble Neovim and pass the name.
 
 {{ nerdy(text="
 
@@ -506,7 +506,7 @@ set number
 
 Lua and vim scripts are simply placed in the `__config` folder. The
 `neovim-nix-utils` then iterates through the files, stores them in a nix store
-derivation, and adds a source command for each to neovim RC.
+derivation, and adds a source command for each to Neovim RC.
 
 <div style="margin: 24px">
 {{ resize_image_w(path="20241228-neovim-edition/lightEdition.png", width=450) }}
@@ -524,7 +524,7 @@ editor's appearance with colorscheme, lualine, and noice notifications.
 
 ") }}
 
-## Step 5: Create neovim base edition
+## Step 5: Create Neovim base edition
 
 In the basic edition, we will include the lazygit plugin. However, the lazygit
 program will be wrapped with our own configuration. Let's begin with this.
@@ -572,9 +572,9 @@ The package lazygit is a shell application that uses the original lazygit from
 the nixpkgs, but also sets the config file to point to the nix store. The config
 can be written in nix and converted to yaml.
 
-By default, lazygit will open a new neovim instance inside a floating window
+By default, lazygit will open a new Neovim instance inside a floating window
 where the nvim plugin runs it inside the terminal. This configuration makes
-lazygit to open selected files in the current neovim session instead.  This is
+lazygit to open selected files in the current Neovim session instead.  This is
 achieved using the environment variable `$NVIM_SELF`, which points to the
 executable of the edition and is automatically set up by the utilities when
 calling `assembleNeovim`.
@@ -686,7 +686,7 @@ a simple Lua configuration that will load the plugin with default options.
 Run `nix run .#neovim.base` and try pressing `zz` on the first line to see it
 jump to the center. This is the go-up plugin. Press `alt+g` to bring up
 lazygit. If you have a file, try pressing `e` to see if it opens in the
-underlying neovim window. Notice that the buffer line numbers and nvim-tree are
+underlying Neovim window. Notice that the buffer line numbers and nvim-tree are
 inherited from the light edition.
 
 {{ nerdy(text="
@@ -700,7 +700,7 @@ keybindings, and linting & formatting.
 
 ") }}
 
-## Step 6: Create neovim web edition
+## Step 6: Create Neovim web edition
 
 Web edition is here to showcase the last aspects of assembling. We will add
 quirky node package dependencies, treesitter plugins and provide environment
@@ -739,7 +739,7 @@ therefore it will inherit everything from "base" and "light".
 {}: {MY_ENV_VAR = "foo";}
 ```
 
-We can specify environment variables that will be available inside the neovim
+We can specify environment variables that will be available inside the Neovim
 edition runtime. I am currently using it to specify `OPENAI_API_KEY`.
 
 ```nix
