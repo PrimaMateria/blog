@@ -6,7 +6,7 @@ slug = "neovim-editions"
 [extra]
 banner = "banner-neovim-editions.png"
 bannerAlt = "3 neovim logos on background alien planet landscape with buildings"
-reddithref = ""
+reddithref = "https://www.reddit.com/r/NixOS/comments/1i0nw2l/neovim_editions/"
 
 [taxonomies]
 tags = ["nixos","neovim"]
