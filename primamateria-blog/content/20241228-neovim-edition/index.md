@@ -1,11 +1,11 @@
 +++
 title = "Neovim Editions"
-date = 2025-01-03
+date = 2025-01-13
 slug = "neovim-editions"
 
 [extra]
-banner = "banner-neovim-flake.png"
-bannerAlt = "todo"
+banner = "banner-neovim-editions.png"
+bannerAlt = "3 neovim logos on background alien planet landscape with buildings"
 reddithref = ""
 
 [taxonomies]
@@ -53,7 +53,7 @@ may not delve deeply into analyzing every line like before, you may still find
 it useful to read through it.
 
 All the code you can find in
-[github:PrimaMateria/blog-example-neovim-editions](todo).
+[github:PrimaMateria/blog-example-neovim-editions](https://github.com/PrimaMateria/blog-neovim-editions).
 
 I assume that you are familiar with the basics of Nix and know what a Nix flake is.
 
@@ -320,8 +320,7 @@ assembles neovim editions.
 ```
 .
 └── src
-    ├── _lib.nix
-    └── packages
+    └── _lib.nix
 ```
 
 ```nix
