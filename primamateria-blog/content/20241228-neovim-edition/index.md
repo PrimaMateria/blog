@@ -30,23 +30,23 @@ anything extraordinary, but it had been working for me for several years. Adding
 plugins and tweaking configurations was easy and problem-free (most of the
 time).
 
-I use Neovim as daily driver for web development. Apart of that I use it for
+I use Neovim as daily driver for web development. Apart from that I use it for
 side projects often programmed with different languages. For that are necessary
 different language servers and different plugins. I didn't like that my
 configuration is becoming a mix of everything.
 
-Therefore recently I have reworked my Neovim flake. Instead of providing one
+Therefore, recently I have reworked my Neovim flake. Instead of providing one
 editor for everything the flake provides now multiple editions of Neovim
 configured for a specific task.
 
-Also my skills with nix have slightly improved. Especially, getting familiar
+Also, my skills with nix have slightly improved. Especially, getting familiar
 with Haumea granted me access to neatly organized modules. 
 
 After using these editions for a few weeks, I'm sure it was the right choice.
 
 ## Before we start
 
-The previous articles is called [How to create your own Neovim flake](@/20230318-neovim-nix/index.md).
+The previous articles are called [How to create your own Neovim flake](@/20230318-neovim-nix/index.md).
 
 This article stands alone. You do not need to read the previous one. Although I
 may not delve deeply into analyzing every line like before, you may still find
@@ -80,8 +80,8 @@ packages that will be available during the runtime to the Neovim. For example in
 the web edition there will be typescript language server, eslint_d daemon
 providing engine for linting, or prettier tool allowing us to format the code.
 
-The plugins will be a list of Vim or Neovim plugins either from the nixpkgs, or
-from plugins that we packaged ourselves if they are not yet included in nixpkgs.
+The plugins will be a list of Vim or Neovim plugins either from the Nixpkgs, or
+from plugins that we packaged ourselves if they are not yet included in Nixpkgs.
 
 Config will hold 4 types: lua and vim, are raw config files in their respective
 formats. luanix and vimnix are nix files that return the lua or vim script as a
@@ -92,7 +92,7 @@ string.
 In the past, I needed to configure a plugin with a path to a binary of a
 dependency package. The path to the package in the nix store is not static, as
 the hash is generated based on the content of the current version. Therefore, I
-couldn't hardcode it into the raw lua config, but had to pass it as a nix
+couldn't hard-code it into the raw lua config, but had to pass it as a nix
 variable. This led to the creation of luanix and vimnix. Although I no longer
 use it, I will include it in the tutorial in case you find yourself in need of
 it.
@@ -102,7 +102,7 @@ it.
 {{ curious(text="
 
 I also noticed that some similar changes are recently being included into the
-main Neovim wrapper function. I just had a brief look on it, and if I understand
+main Neovim wrapper function. I just took a brief look on it, and if I understand
 it right then it there will be a mechanism that will pass lua scripts and if
 expand some placeholders with computed full nix store path.
 
@@ -143,7 +143,7 @@ graph LR;
 
 
  Light Neovim is very basic configuration acting as a pure text editor, for example, when you need to
-use it remotely and you don't want to waste time on a big Nix build.
+use it remotely, and you don't want to waste time on a big Nix build.
 
 The base edition inherits configuration from the light edition and also
 provides generic IDE capabilities such as enhanced navigation, basic refactoring
@@ -181,10 +181,10 @@ compatible with different systems, allowing you to run it on systems such as
 Linux or WSL on x86_64, as well as on Mac on aarch64-darwin.
 
 The packages will include the Neovim editions, Vim plugins that we did not find
-in the nixpkgs and had to package ourselves. Additionally, we will have an
+in the Nixpkgs and had to package ourselves. Additionally, we will have an
 adjusted LazyGit package in the other packages.
 
-Afterwards, you will be able to run any edition with a commands like these:
+Afterward, you will be able to run any edition with commands like these:
 
 ```sh
 nix run github:PrimaMateria/blog-neovim-editions#neovim.light
@@ -239,7 +239,7 @@ Go ahead, try it now.
 }
 ```
 
-The inputs are nixpkgs, flake-utils, and Haumea. Nixpkgs is the primary package
+The inputs are Nixpkgs, flake-utils, and Haumea. Nixpkgs is the primary package
 repository for the Nix ecosystem. Flake-utils is a library that simplifies the
 definition of flakes. [Haumea](@/20231022-haumea-cheatsheet/index.md) is a filesystem-based module system for Nix.
 
@@ -247,9 +247,9 @@ And the outputs are build using flake-utils and Haumea. Haumea constructs nix
 set from the filesystem with root in the `./src` folder. The nix files under src
 contain a function. This function is invoked with default Huamea parameters plus
 with parameters specified in the `inputs` - so the system bound `pkgs` and, for
-convenient debugging, `debug` util from nixpkgs library.
+convenient debugging, `debug` util from Nixpkgs library.
 
-Additionally we use Haumea transformer `liftDefault`. This tells Haumea that
+Additionally, we use Haumea transformer `liftDefault`. This tells Haumea that
 `./src/foo/default.nix` will be resolved to `{ foo:  "I am foo" }` instead of `{
     foo: { default: "I am foo" }}`.
 
@@ -258,7 +258,7 @@ Additionally we use Haumea transformer `liftDefault`. This tells Haumea that
 The Neovim nightly overlay offers a Nix package of the Neovim nightly build. By
 using this, you can access the latest updates and features. While this can be
 beneficial, there is also a risk of encountering issues. Alternatively, you can
-continue using Neovim from the nixpkgs repository, either from the unstable
+continue using Neovim from the Nixpkgs repository, either from the unstable
 channel (as shown in this example) or from the stable channel. If so, skip this
 step.
 
@@ -396,7 +396,7 @@ in {
 }
 ```
 
-Create new local lib module. It will initialize the utils' lib. We need to
+Create new local lib module. It will initialize the utils lib. We need to
 provide the Neovim package. 
 
 {{ nerdy(text="
@@ -412,8 +412,9 @@ investigate more in [Haumea Cheatsheet](@/20231022-haumea-cheatsheet/index.md#se
 
 Here start examples of Neovim configuration. I will keep it minimal just enough
 to be able to present different aspects. It's up to how will you decide to
-organize your editions. If you want to have a real life example you can have a
-look on my repo [github:PrimaMateria/neovim-nix](https://github.com/PrimaMateria/neovim-nix).
+organize your editions. If you want to have a real life example you can take a
+look on my repo
+[github:PrimaMateria/neovim-nix](https://github.com/PrimaMateria/neovim-nix).
 
 {{ nerdy(text="
 
@@ -469,7 +470,7 @@ easily. We will add the nvim-tree plugin and enable line numbers.
 {}: {name = "light";}
 ```
 
-Manifest is suppose to list metadata of the edition. In this case we have only
+Manifest is supposed to list metadata of the edition. In this case we have only
 the name.
 
 ```nix
@@ -569,11 +570,11 @@ in
 ```
 
 The package lazygit is a shell application that uses the original lazygit from
-the nixpkgs, but also sets the config file to point to the nix store. The config
-can be written in nix and converted to yaml.
+the Nixpkgs, but also sets the config file to point to the nix store. The config
+can be written in nix and converted to YAML.
 
 By default, lazygit will open a new Neovim instance inside a floating window
-where the nvim plugin runs it inside the terminal. This configuration makes
+where the Neovim plugin runs it inside the terminal. This configuration makes
 lazygit to open selected files in the current Neovim session instead.  This is
 achieved using the environment variable `$NVIM_SELF`, which points to the
 executable of the edition and is automatically set up by the utilities when
@@ -610,7 +611,7 @@ with pkgs.vimPlugins; [
 The process of creating the edition is quite simple. Additionally, in the
 manifest, we set the attribute `basedOn` to establish inheritance from the light
 edition. We also add a new module called `dependencies` and include the wrapped
-`lazygit` that we have prepared. You can add any other dependencies from nixpkgs
+`lazygit` that we have prepared. You can add any other dependencies from Nixpkgs
 by using Haumea's `pkgs` input that we have made available to all Haumea modules
 in our flake.
 
@@ -694,7 +695,7 @@ inherited from the light edition.
 My [real-life base
 edition](https://github.com/PrimaMateria/neovim-nix/tree/main/src/packages/neovim/base),
 has the most extensive configuration. Here, I have set up all aspects of a
-generic IDE, including refactoring, git support, a snippets engine (although
+generic IDE, including refactoring, git support, a snippets' engine (although
 each project edition has its own snippets), AI support, language server
 keybindings, and linting & formatting.
 
