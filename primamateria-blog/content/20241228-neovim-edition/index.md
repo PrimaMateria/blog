@@ -103,7 +103,7 @@ it.
 
 I also noticed that some similar changes are recently being included into the
 nixpkgs Neovim wrapper function. I just took a brief look on it, and if I
-understand it right then there will be a mechanism that will parse hua scripts
+understand it right then there will be a mechanism that will parse lua scripts
 and expand some placeholders with computed full nix store path.
 
 ") }}
