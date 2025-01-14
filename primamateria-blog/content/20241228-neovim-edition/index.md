@@ -102,9 +102,9 @@ it.
 {{ curious(text="
 
 I also noticed that some similar changes are recently being included into the
-main Neovim wrapper function. I just took a brief look on it, and if I understand
-it right then it there will be a mechanism that will pass lua scripts and if
-expand some placeholders with computed full nix store path.
+nixpkgs Neovim wrapper function. I just took a brief look on it, and if I
+understand it right then there will be a mechanism that will parse hua scripts
+and expand some placeholders with computed full nix store path.
 
 ") }}
 
@@ -142,8 +142,9 @@ graph LR;
 <!-- prettier-ignore-end -->
 
 
- Light Neovim is very basic configuration acting as a pure text editor, for example, when you need to
-use it remotely, and you don't want to waste time on a big Nix build.
+ Light Neovim is very basic configuration acting as a pure text editor, for
+ example, when you need to use it remotely, and you don't want to waste time on
+ a big Nix build.
 
 The base edition inherits configuration from the light edition and also
 provides generic IDE capabilities such as enhanced navigation, basic refactoring
@@ -246,8 +247,7 @@ definition of flakes. [Haumea](@/20231022-haumea-cheatsheet/index.md) is a files
 And the outputs are build using flake-utils and Haumea. Haumea constructs nix
 set from the filesystem with root in the `./src` folder. The nix files under src
 contain a function. This function is invoked with default Huamea parameters plus
-with parameters specified in the `inputs` - so the system bound `pkgs` and, for
-convenient debugging, `debug` util from Nixpkgs library.
+with parameters specified in the `inputs` - so the system bound `pkgs`.
 
 Additionally, we use Haumea transformer `liftDefault`. This tells Haumea that
 `./src/foo/default.nix` will be resolved to `{ foo:  "I am foo" }` instead of `{
