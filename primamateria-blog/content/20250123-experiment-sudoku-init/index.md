@@ -1,11 +1,11 @@
 +++
 title = "Experiment Sudoku - init"
-date = "2025-01-23"
+date = "2025-01-24"
 slug = "experiment-sudoku-init"
 
 [extra]
-banner = "banner-ai-generated-images.png"
-bannerAlt = "TODO"
+banner = "banner-sudoku-init.png"
+bannerAlt = "Mobius comic book style.  Gold rush yoman standing in his camp with fire and tent. His pose is straight up with hands on the heap. He is wearing leather clothes. He is looking on snowed mountain in the distance. The area look like High Tatra in Slovakia."
 reddithref = ""
 
 [taxonomies]
