@@ -91,7 +91,7 @@ edition - the `flake.nix` is still being formatted.
 ## Dev toolkit nix
 
 I added a new "c" profile to the `dev-toolkit-nix` that simply adds dependencies
-- `clang`, `clang-tools`, and `cmake`. I also decided to create a
+`clang`, `clang-tools`, and `cmake`. I also decided to create a
 `dev-toolint-nix` flake template. Is it possible to use it with:
 
 ```
