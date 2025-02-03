@@ -6,7 +6,7 @@ slug = "css-subgrids"
 [extra]
 banner = "banner-subgrid.png"
 bannerAlt = "Mobius comic book style. Tensegrity sculpture floating above the calm lake. Oddly the lake is inside the room, in the middle of the modern IT office that is filled with ferns. The sculpture is consist of different blocks being in constant and balanced pull against each other."
-reddithref = ""
+reddithref = "https://www.reddit.com/r/webdev/comments/1ih2jd7/css_subgrids/"
 
 [taxonomies]
 tags = ["webdev", "css"]
