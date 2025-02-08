@@ -5,8 +5,8 @@ slug ="startpages"
 
 [extra]
 banner = "banner-startpages.png"
-bannerAlt = "Mobius comic book style. Neatly organized cyberpunk workshop"
-reddithref = ""
+bannerAlt = "A mac computer showing demo of the startpages. White and light blue fluid pattern on the background."
+reddithref = "https://www.reddit.com/r/startpages/comments/1iknxoe/startpages_your_personalized_browser_launch_pad/"
 
 [taxonomies]
 tags = ["environment", "project", "productivity", "browser"]
