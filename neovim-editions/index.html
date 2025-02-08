@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Neovim Editions</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="Neovim Editions">
+    <meta property="og:url" content="https://primamateria.github.io/blog/neovim-editions">
+    
+    <meta property="og:description" content="Introduction to a Neovim flake for hosting multiple Neovim editions with
+inheritance. Instead of having one large configuration for multiple tasks, we
+can create multiple editions focused on specific tasks. With inheritance, we can
+reuse configurations from one edition in another. In this article, I will
+provide a step-by-step guide with beginner-friendly explanations on how to
+create your own flake.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-neovim-editions.0f32d4ac49558092.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2025-01-13">
+    
+    
+    
+    <meta property="article:tags" content="nixos"><meta property="article:tags" content="neovim">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>Neovim Editions</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Monday 13 January 2025</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 13 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/neovim/">#neovim</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-editions.673ece4cb1fcba0e.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-editions.3f45ece4a282d98e.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-editions.f29971003aefc515.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-editions.f776f9560d81b180.png" alt="3 neovim logos on background alien planet landscape with buildings">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>Introduction to a Neovim flake for hosting multiple Neovim editions with
+inheritance. Instead of having one large configuration for multiple tasks, we
+can create multiple editions focused on specific tasks. With inheritance, we can
+reuse configurations from one edition in another. In this article, I will
+provide a step-by-step guide with beginner-friendly explanations on how to
+create your own flake.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-editions/#personal-story">Personal story</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-editions/#before-we-start">Before we start</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-editions/#what-will-we-create-neovim-edition">What will we create - Neovim edition</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-editions/#what-will-we-create-neovim-editions-hierarchy">What will we create - Neovim editions hierarchy</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-editions/#what-will-we-create-neovim-editions-flake">What will we create - Neovim editions flake</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-editions/#step-1-prepare-the-flake">Step 1: Prepare the flake</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-editions/#step-2-add-neovim-nightly-overlay">Step 2: Add Neovim nightly overlay</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-editions/#step-3-add-neovim-nix-utils">Step 3: Add Neovim nix utils</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-editions/#interlude-about-running-neovim-editions">Interlude - about running Neovim editions</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-editions/#step-4-create-neovim-light-edition">Step 4: Create Neovim light edition</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-editions/#step-5-create-neovim-base-edition">Step 5: Create Neovim base edition</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-editions/#step-6-create-neovim-web-edition">Step 6: Create Neovim web edition</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-editions/#conclusion">Conclusion</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<h2 id="personal-story"><a class="zola-anchor" href="#personal-story" aria-label="Anchor link for: personal-story"
+  >§</a
+>
+Personal story</h2>
+<p>Here on my blog, I wrote a post about creating your own Neovim flake. It wasn't
+anything extraordinary, but it had been working for me for several years. Adding
+plugins and tweaking configurations was easy and problem-free (most of the
+time).</p>
+<p>I use Neovim as daily driver for web development. Apart from that I use it for
+side projects often programmed with different languages. For that are necessary
+different language servers and different plugins. I didn't like that my
+configuration is becoming a mix of everything.</p>
+<p>Therefore, recently I have reworked my Neovim flake. Instead of providing one
+editor for everything the flake provides now multiple editions of Neovim
+configured for a specific task.</p>
+<p>Also, my skills with nix have slightly improved. Especially, getting familiar
+with Haumea granted me access to neatly organized modules.</p>
+<p>After using these editions for a few weeks, I'm sure it was the right choice.</p>
+<h2 id="before-we-start"><a class="zola-anchor" href="#before-we-start" aria-label="Anchor link for: before-we-start"
+  >§</a
+>
+Before we start</h2>
+<p>The previous articles are called <a href="https://primamateria.github.io/blog/neovim-nix/">How to create your own Neovim flake</a>.</p>
+<p>This article stands alone. You do not need to read the previous one. Although I
+may not delve deeply into analyzing every line like before, you may still find
+it useful to read through it.</p>
+<p>All the code you can find in
+<a href="https://github.com/PrimaMateria/blog-neovim-editions">github:PrimaMateria/blog-example-neovim-editions</a>.</p>
+<p>I assume that you are familiar with the basics of Nix and know what a Nix flake is.</p>
+<h2 id="what-will-we-create-neovim-edition"><a class="zola-anchor" href="#what-will-we-create-neovim-edition" aria-label="Anchor link for: what-will-we-create-neovim-edition"
+  >§</a
+>
+What will we create - Neovim edition</h2>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+graph LR;
+    neovim --&gt; dependencies
+    neovim --&gt; dependenciesEnd
+    neovim --&gt; plugins
+    neovim --&gt; config
+    neovim --&gt; treesitterPlugins
+    neovim --&gt; envVars
+    config --&gt; lua
+    config --&gt; vim
+    config --&gt; luanix
+    config --&gt; vimnix
+</pre>
+<!-- prettier-ignore-end -->
+<p>This is how a single edition will look like. In the dependencies we can specify
+packages that will be available during the runtime to the Neovim. For example in
+the web edition there will be typescript language server, eslint_d daemon
+providing engine for linting, or prettier tool allowing us to format the code.</p>
+<p>The plugins will be a list of Vim or Neovim plugins either from the Nixpkgs, or
+from plugins that we packaged ourselves if they are not yet included in Nixpkgs.</p>
+<p>Config will hold 4 types: lua and vim, are raw config files in their respective
+formats. luanix and vimnix are nix files that return the lua or vim script as a
+string.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>In the past, I needed to configure a plugin with a path to a binary of a
+dependency package. The path to the package in the nix store is not static, as
+the hash is generated based on the content of the current version. Therefore, I
+couldn't hard-code it into the raw lua config, but had to pass it as a nix
+variable. This led to the creation of luanix and vimnix. Although I no longer
+use it, I will include it in the tutorial in case you find yourself in need of
+it.</p>
+</div>
+  </div>
+</div>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>I also noticed that some similar changes are recently being included into the
+nixpkgs Neovim wrapper function. I just took a brief look on it, and if I
+understand it right then there will be a mechanism that will parse lua scripts
+and expand some placeholders with computed full nix store path.</p>
+</div>
+  </div>
+</div>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>We should keep eye on it!</p>
+</div>
+  </div>
+</div>
+<h2 id="what-will-we-create-neovim-editions-hierarchy"><a class="zola-anchor" href="#what-will-we-create-neovim-editions-hierarchy" aria-label="Anchor link for: what-will-we-create-neovim-editions-hierarchy"
+  >§</a
+>
+What will we create - Neovim editions hierarchy</h2>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+graph LR;
+    light --&gt; base
+    base --&gt; web
+</pre>
+<!-- prettier-ignore-end -->
+<p>This tutorial will create minimal and not very useful editions, but just enough
+to cover the key aspects of the different types of configurations.</p>
+<p>My real-life editions currently look like this:</p>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+graph LR;
+    light --&gt; base
+    base --&gt; web
+    base --&gt; blog 
+    base --&gt; puml 
+    base --&gt; rust
+    base --&gt; python
+</pre>
+<!-- prettier-ignore-end -->
+<p>Light Neovim is very basic configuration acting as a pure text editor, for
+example, when you need to use it remotely, and you don't want to waste time on
+a big Nix build.</p>
+<p>The base edition inherits configuration from the light edition and also
+provides generic IDE capabilities such as enhanced navigation, basic refactoring
+tools, git support, and AI tools.</p>
+<p>The final layer of task-oriented editions inherits configuration from the base
+IDE. There is a web edition for web development, a blog edition with support for
+writing blog posts, a Puml edition for writing and generating PlantUML diagrams,
+and simple Rust and Python editions for some side projects that I don't use very
+often.</p>
+<h2 id="what-will-we-create-neovim-editions-flake"><a class="zola-anchor" href="#what-will-we-create-neovim-editions-flake" aria-label="Anchor link for: what-will-we-create-neovim-editions-flake"
+  >§</a
+>
+What will we create - Neovim editions flake</h2>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+graph LR;
+
+    systems@{ shape: procs, label: &quot;systems&quot; }
+    editions@{ shape: procs, label: &quot;neovim editions&quot; }
+    vimPlugins@{ shape: procs, label: &quot;vim plugins&quot; }
+    otherPackages@{ shape: procs, label: &quot;other packages&quot; }
+
+    flake --&gt; outputs
+    outputs --&gt; packages
+    packages --&gt; systems
+    systems --&gt; editions
+    systems --&gt; vimPlugins
+    systems --&gt; otherPackages
+</pre>
+<!-- prettier-ignore-end -->
+<p>This is how the flake's outputs will look. It offers packages that are
+compatible with different systems, allowing you to run it on systems such as
+Linux or WSL on x86_64, as well as on Mac on aarch64-darwin.</p>
+<p>The packages will include the Neovim editions, Vim plugins that we did not find
+in the Nixpkgs and had to package ourselves. Additionally, we will have an
+adjusted LazyGit package in the other packages.</p>
+<p>Afterward, you will be able to run any edition with commands like these:</p>
+<pre data-lang="sh" style="background-color:#ffffff;color:#4d4d4c;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#c82829;">nix</span><span style="color:#4271ae;"> run github:PrimaMateria/blog-neovim-editions#neovim.light
+</span><span style="color:#c82829;">nix</span><span style="color:#4271ae;"> run github:PrimaMateria/blog-neovim-editions#neovim.base
+</span><span style="color:#c82829;">nix</span><span style="color:#4271ae;"> run github:PrimaMateria/blog-neovim-editions#neovim.web
+</span></code></pre>
+<p>Go ahead, try it now.</p>
+<h2 id="step-1-prepare-the-flake"><a class="zola-anchor" href="#step-1-prepare-the-flake" aria-label="Anchor link for: step-1-prepare-the-flake"
+  >§</a
+>
+Step 1: Prepare the flake</h2>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>.
+</span><span>└── flake.nix
+</span></code></pre>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#flake.nix
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">description </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;neovim editions - PrimaMateria blog tutorial&quot;</span><span>;
+</span><span>
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#f5871f;">self</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#f5871f;">utils</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#f5871f;">haumea</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#3e999f;">...
+</span><span style="color:#3e999f;">  </span><span>}:
+</span><span>    </span><span style="color:#f5871f;">utils</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">eachDefaultSystem </span><span>(
+</span><span>      </span><span style="color:#f5871f;">system</span><span>: </span><span style="color:#8959a8;">let
+</span><span>        </span><span style="color:#c82829;">pkgs </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#f5871f;">nixpkgs </span><span>{
+</span><span>          </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">system</span><span>;
+</span><span>          </span><span style="color:#c82829;">config </span><span style="color:#3e999f;">= </span><span>{</span><span style="color:#c82829;">allowUnfree </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">true</span><span>;};
+</span><span>        };
+</span><span>      </span><span style="color:#8959a8;">in </span><span>(</span><span style="color:#f5871f;">haumea</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">load </span><span>{
+</span><span>        </span><span style="color:#c82829;">src </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">./src</span><span>;
+</span><span>        </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>          </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>;
+</span><span>        };
+</span><span>        </span><span style="color:#c82829;">transformer </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">haumea</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">transformers</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">liftDefault</span><span>;
+</span><span>      })
+</span><span>    );
+</span><span>
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/master&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">utils</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:numtide/flake-utils&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">haumea </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nix-community/haumea&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>The inputs are Nixpkgs, flake-utils, and Haumea. Nixpkgs is the primary package
+repository for the Nix ecosystem. Flake-utils is a library that simplifies the
+definition of flakes. <a href="https://primamateria.github.io/blog/haumea-cheatsheet/">Haumea</a> is a filesystem-based module system for Nix.</p>
+<p>And the outputs are build using flake-utils and Haumea. Haumea constructs nix
+set from the filesystem with root in the <code>./src</code> folder. The nix files under src
+contain a function. This function is invoked with default Huamea parameters plus
+with parameters specified in the <code>inputs</code> - so the system bound <code>pkgs</code>.</p>
+<p>Additionally, we use Haumea transformer <code>liftDefault</code>. This tells Haumea that
+<code>./src/foo/default.nix</code> will be resolved to <code>{ foo:  "I am foo" }</code> instead of <code>{     foo: { default: "I am foo" }}</code>.</p>
+<h2 id="step-2-add-neovim-nightly-overlay"><a class="zola-anchor" href="#step-2-add-neovim-nightly-overlay" aria-label="Anchor link for: step-2-add-neovim-nightly-overlay"
+  >§</a
+>
+Step 2: Add Neovim nightly overlay</h2>
+<p>The Neovim nightly overlay offers a Nix package of the Neovim nightly build. By
+using this, you can access the latest updates and features. While this can be
+beneficial, there is also a risk of encountering issues. Alternatively, you can
+continue using Neovim from the Nixpkgs repository, either from the unstable
+channel (as shown in this example) or from the stable channel. If so, skip this
+step.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#flake.nix
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">description </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;neovim editions - PrimaMateria blog tutorial&quot;</span><span>;
+</span><span>
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#f5871f;">self</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#f5871f;">utils</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#f5871f;">haumea</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#f5871f;">neovimNightlyOverlay</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#3e999f;">...
+</span><span style="color:#3e999f;">  </span><span>}:
+</span><span>    </span><span style="color:#f5871f;">utils</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">eachDefaultSystem </span><span>(
+</span><span>      </span><span style="color:#f5871f;">system</span><span>: </span><span style="color:#8959a8;">let
+</span><span>        </span><span style="color:#c82829;">pkgs </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#f5871f;">nixpkgs </span><span>{
+</span><span>          </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">system</span><span>;
+</span><span>          </span><span style="color:#c82829;">config </span><span style="color:#3e999f;">= </span><span>{</span><span style="color:#c82829;">allowUnfree </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">true</span><span>;};
+</span><span>          </span><span style="color:#c82829;">overlays </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#f5871f;">neovimNightlyOverlay</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">overlays</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">default</span><span>];
+</span><span>        };
+</span><span>      </span><span style="color:#8959a8;">in </span><span>(</span><span style="color:#f5871f;">haumea</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">load </span><span>{
+</span><span>        </span><span style="color:#c82829;">src </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">./src</span><span>;
+</span><span>        </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>          </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>;
+</span><span>          </span><span style="color:#8959a8;">inherit </span><span>(</span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span>) </span><span style="color:#c82829;">debug</span><span>;
+</span><span>        };
+</span><span>        </span><span style="color:#c82829;">transformer </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">haumea</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">transformers</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">liftDefault</span><span>;
+</span><span>      })
+</span><span>    );
+</span><span>
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/master&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">utils</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:numtide/flake-utils&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">haumea </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nix-community/haumea&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>    </span><span style="color:#c82829;">neovimNightlyOverlay </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nix-community/neovim-nightly-overlay&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>We add the <code>neovim-nightly-overlay</code> flake to the inputs and include the default
+overlay in the list of overlays when configuring nix packages. From now on, the
+package <code>pkgs.neovim</code> will refer to the nightly build.</p>
+<h2 id="step-3-add-neovim-nix-utils"><a class="zola-anchor" href="#step-3-add-neovim-nix-utils" aria-label="Anchor link for: step-3-add-neovim-nix-utils"
+  >§</a
+>
+Step 3: Add Neovim nix utils</h2>
+<p><a href="https://github.com/PrimaMateria/neovim-nix-utils">github:PrimaMateria/neovim-nix-utils</a>
+is a flake that I have written to provide a library with functions that
+assembles Neovim editions.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>.
+</span><span>└── src
+</span><span>    └── _lib.nix
+</span></code></pre>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#flake.nix
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">description </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;neovim editions - PrimaMateria blog tutorial&quot;</span><span>;
+</span><span>
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#f5871f;">self</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#f5871f;">utils</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#f5871f;">haumea</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#f5871f;">neovimNightlyOverlay</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#f5871f;">neovim-nix-utils</span><span style="color:#3e999f;">,
+</span><span>    </span><span style="color:#3e999f;">...
+</span><span style="color:#3e999f;">  </span><span>}:
+</span><span>    </span><span style="color:#f5871f;">utils</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">eachDefaultSystem </span><span>(
+</span><span>      </span><span style="color:#f5871f;">system</span><span>: </span><span style="color:#8959a8;">let
+</span><span>        </span><span style="color:#c82829;">pkgs </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#f5871f;">nixpkgs </span><span>{
+</span><span>          </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">system</span><span>;
+</span><span>          </span><span style="color:#c82829;">config </span><span style="color:#3e999f;">= </span><span>{</span><span style="color:#c82829;">allowUnfree </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">true</span><span>;};
+</span><span>          </span><span style="color:#c82829;">overlays </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#f5871f;">neovimNightlyOverlay</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">overlays</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">default</span><span>];
+</span><span>        };
+</span><span>        </span><span style="color:#c82829;">neovimNixLib </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">neovim-nix-utils</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">${system}</span><span>;
+</span><span>      </span><span style="color:#8959a8;">in </span><span>(</span><span style="color:#f5871f;">haumea</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">load </span><span>{
+</span><span>        </span><span style="color:#c82829;">src </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">./src</span><span>;
+</span><span>        </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>          </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>;
+</span><span>          </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">neovimNixLib</span><span>;
+</span><span>        };
+</span><span>        </span><span style="color:#c82829;">transformer </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">haumea</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">transformers</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">liftDefault</span><span>;
+</span><span>      })
+</span><span>    );
+</span><span>
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nixos/nixpkgs/master&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">utils</span><span>.</span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:numtide/flake-utils&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">haumea </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nix-community/haumea&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>    </span><span style="color:#c82829;">neovimNightlyOverlay </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nix-community/neovim-nightly-overlay&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>    </span><span style="color:#c82829;">neovim-nix-utils </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:PrimaMateria/neovim-nix-utils&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>Add flake to inputs, and list it in the outputs function parameter. In the <code>let</code>
+clause, select the system-specific library and add it to the Haumea`s inputs so
+that we can access it in the file modules.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#src/_lib.nix
+</span><span>{
+</span><span>  </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">,
+</span><span>  </span><span style="color:#f5871f;">root</span><span style="color:#3e999f;">,
+</span><span>  </span><span style="color:#f5871f;">neovimNixLib</span><span style="color:#3e999f;">,
+</span><span>}: </span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#c82829;">initializedNeovimNixLib </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">neovimNixLib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">init </span><span>{
+</span><span>    </span><span style="color:#c82829;">neovimPackage </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">neovim</span><span>;
+</span><span>    </span><span style="color:#c82829;">editionsDir </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">./packages/neovim</span><span>;
+</span><span>    </span><span style="color:#c82829;">editionsSet </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">root</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">packages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">neovim</span><span>;
+</span><span>  };
+</span><span style="color:#8959a8;">in </span><span>{
+</span><span>  </span><span style="color:#c82829;">assembleNeovim </span><span style="color:#3e999f;">= </span><span>{</span><span style="color:#f5871f;">name</span><span>}:
+</span><span>    </span><span style="color:#f5871f;">initializedNeovimNixLib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">assembleNeovim </span><span>{</span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">name</span><span>;};
+</span><span>}
+</span></code></pre>
+<p>Create new local lib module. It will initialize the utils lib. We need to
+provide the Neovim package.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Here you can see that the Haumea file module starts with an underscore. This
+means that the file module will not be included in the attribute set, but it
+will still be accessible through Haumea's <code>root</code> and <code>super</code> parameters. You can
+investigate more in <a href="https://primamateria.github.io/blog/haumea-cheatsheet/#self-super-root">Haumea Cheatsheet</a></p>
+</div>
+  </div>
+</div>
+<h2 id="interlude-about-running-neovim-editions"><a class="zola-anchor" href="#interlude-about-running-neovim-editions" aria-label="Anchor link for: interlude-about-running-neovim-editions"
+  >§</a
+>
+Interlude - about running Neovim editions</h2>
+<p>Here start examples of Neovim configuration. I will keep it minimal just enough
+to be able to present different aspects. It's up to how will you decide to
+organize your editions. If you want to have a real life example you can take a
+look on my repo
+<a href="https://github.com/PrimaMateria/neovim-nix">github:PrimaMateria/neovim-nix</a>.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>By the way, do not attempt to run Neovim editions from that repository because
+it is using <code>git-crypt</code> to encode secrets. Without unlocking it with a secret
+key, the file content will be encrypted gibberish and the nix build will fail.</p>
+</div>
+  </div>
+</div>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>What a boomer. Now we can't use the Neovim editions without first cloning the
+repo and unlocking it locally. It would be nicer just to be able to run <code>nix run github:PrimaMateria/neovim-nix#neovim.web</code>.</p>
+</div>
+  </div>
+</div>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>I have a few well-configured environments that I use regularly. I never SSH to
+some remote servers where I would need to edit configuration files. If I did,
+then it would make sense to deal with the hindrance of <code>git-crypt</code>. By the way,
+running Neovim from a local path like <code>nix run /home/primamateria/dev/neovim-nix#neovim.web</code> has one more advantage: edits are
+applied right after saving, so I don't need to push them to the GitHub
+repository or reload the home manager if I were to use the package there.</p>
+</div>
+  </div>
+</div>
+<h2 id="step-4-create-neovim-light-edition"><a class="zola-anchor" href="#step-4-create-neovim-light-edition" aria-label="Anchor link for: step-4-create-neovim-light-edition"
+  >§</a
+>
+Step 4: Create Neovim light edition</h2>
+<p>In the light edition, I will demonstrate how to add plugins and configure them
+easily. We will add the nvim-tree plugin and enable line numbers.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>.
+</span><span>└── src
+</span><span>    └── packages
+</span><span>        ├── neovim
+</span><span>        │   └── light
+</span><span>        │       ├── __config
+</span><span>        │       │   ├── lua
+</span><span>        │       │   │   └── nvim-tree.lua
+</span><span>        │       │   └── vim
+</span><span>        │       │       └── setters.vim
+</span><span>        │       ├── _manifest.nix
+</span><span>        │       ├── _plugins.nix
+</span><span>        │       └── default.nix
+</span><span>        └── vimPlugins
+</span></code></pre>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#src/packages/neovim/light/_manifest.nix
+</span><span>{}: {</span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;light&quot;</span><span>;}
+</span></code></pre>
+<p>Manifest is supposed to list metadata of the edition. In this case we have only
+the name.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#src/packages/neovim/light/default.nix
+</span><span>{</span><span style="color:#f5871f;">root</span><span>}: </span><span style="color:#f5871f;">root</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">assembleNeovim </span><span>{</span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;light&quot;</span><span>;}
+</span></code></pre>
+<p>This is default file that becomes the edition package in the flake output. We
+call our library to assemble Neovim and pass the name.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>The name is duplicated in both the manifest and the default. I attempted to
+reference it using <code>super.manifest.name</code>, but this resulted in infinite
+recursion errors, so I have accepted this little duplication.</p>
+</div>
+  </div>
+</div>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#src/packages/neovim/light/_plugins.nix
+</span><span>{</span><span style="color:#f5871f;">pkgs</span><span>}: </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">vimPlugins</span><span>; [</span><span style="color:#f5871f;">nvim-tree-lua</span><span>]
+</span></code></pre>
+<p>Plugins module returns list of plugins.</p>
+<pre data-lang="lua" style="background-color:#ffffff;color:#4d4d4c;" class="language-lua "><code class="language-lua" data-lang="lua"><span style="color:#999999;">--src/packages/neovim/light/__config/lua/nvim-tree.lua
+</span><span style="color:#4271ae;">require(</span><span style="color:#718c00;">&quot;nvim-tree&quot;</span><span style="color:#4271ae;">)</span><span>.</span><span style="color:#c82829;">setup</span><span style="color:#4271ae;">({})
+</span></code></pre>
+<pre data-lang="vim" style="background-color:#ffffff;color:#4d4d4c;" class="language-vim "><code class="language-vim" data-lang="vim"><span style="color:#999999;">&quot;src/packages/neovim/light/__config/vim/setters.vim
+</span><span style="color:#4271ae;">set</span><span> number
+</span></code></pre>
+<p>Lua and vim scripts are simply placed in the <code>__config</code> folder. The
+<code>neovim-nix-utils</code> then iterates through the files, stores them in a nix store
+derivation, and adds a source command for each to Neovim RC.</p>
+<div style="margin: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;lightEdition.043a2dcbca5399ea.png" />
+
+</div>
+<p>Test it by running in the root directory where the <code>flake.nix</code> is stored: <code>nix run .#neovim.light</code>.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>For my <a href="https://github.com/PrimaMateria/neovim-nix/tree/main/src/packages/neovim/light">real-life light
+edition</a>,
+I set up basic navigation using nvim-tree and telescope, and also configured the
+editor's appearance with colorscheme, lualine, and noice notifications.</p>
+</div>
+  </div>
+</div>
+<h2 id="step-5-create-neovim-base-edition"><a class="zola-anchor" href="#step-5-create-neovim-base-edition" aria-label="Anchor link for: step-5-create-neovim-base-edition"
+  >§</a
+>
+Step 5: Create Neovim base edition</h2>
+<p>In the basic edition, we will include the lazygit plugin. However, the lazygit
+program will be wrapped with our own configuration. Let's begin with this.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>.
+</span><span>└── src
+</span><span>    └── packages
+</span><span>        ├── lazygit.nix
+</span><span>        ├── neovim
+</span><span>        │   ├── base
+</span><span>        │   │   ├── __config
+</span><span>        │   │   │   └── lua
+</span><span>        │   │   │       └── lazygit-nvim.lua
+</span><span>        │   │   ├── _dependencies.nix
+</span><span>        │   │   ├── _manifest.nix
+</span><span>        │   │   ├── _plugins.nix
+</span><span>        │   │   └── default.nix
+</span><span>        │   └── light
+</span><span>        └── vimPlugins
+</span></code></pre>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#src/packages/lazygit.nix
+</span><span>{</span><span style="color:#f5871f;">pkgs</span><span>}: </span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#c82829;">lazygitConfig </span><span style="color:#3e999f;">= </span><span>(</span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">formats</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">yaml </span><span>{})</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">generate </span><span style="color:#718c00;">&quot;lazygit-config.yaml&quot; </span><span>{
+</span><span>    </span><span style="color:#c82829;">os </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">edit </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;$NVIM_SELF --server &quot;$NVIM&quot; --remote-tab {{filename}}&#39;&#39;</span><span>;
+</span><span>      </span><span style="color:#c82829;">editAtLine </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;$NVIM_SELF --server &quot;$NVIM&quot; --remote-tab {{filename}}; [ -z &quot;$NVIM&quot; ] || $NVIM_SELF --server &quot;$NVIM&quot; --remote-send &quot;:{{line}}&lt;CR&gt;&quot;&#39;&#39;</span><span>;
+</span><span>      </span><span style="color:#c82829;">editAtLineAndWait </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;$NVIM_SELF +{{line}} {{filename}}&#39;&#39;</span><span>;
+</span><span>      </span><span style="color:#c82829;">openDirInEditor </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;$NVIM_SELF --server &quot;$NVIM&quot; --remote-tab {{dir}}&#39;&#39;</span><span>;
+</span><span>      </span><span style="color:#c82829;">suspend </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">false</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span style="color:#8959a8;">in
+</span><span>  </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">writeShellApplication </span><span>{
+</span><span>    </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;lazygit&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">text </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">      </span><span style="color:#f5871f;">${pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lazygit}</span><span style="color:#718c00;">/bin/lazygit --use-config-file </span><span style="color:#f5871f;">${lazygitConfig}</span><span style="color:#718c00;"> &quot;$@&quot;
+</span><span style="color:#718c00;">    &#39;&#39;</span><span>;
+</span><span>  }
+</span></code></pre>
+<p>The package lazygit is a shell application that uses the original lazygit from
+the Nixpkgs, but also sets the config file to point to the nix store. The config
+can be written in nix and converted to YAML.</p>
+<p>By default, lazygit will open a new Neovim instance inside a floating window
+where the Neovim plugin runs it inside the terminal. This configuration makes
+lazygit to open selected files in the current Neovim session instead.  This is
+achieved using the environment variable <code>$NVIM_SELF</code>, which points to the
+executable of the edition and is automatically set up by the utilities when
+calling <code>assembleNeovim</code>.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Opening files in the same session can be clunky - sometimes the floating window
+remains open, which can be quite annoying. However, it does work. I may be
+overlooking something in the configuration.</p>
+</div>
+  </div>
+</div>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#src/packages/neovim/base/default.nix
+</span><span>{</span><span style="color:#f5871f;">root</span><span>}: </span><span style="color:#f5871f;">root</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">assembleNeovim </span><span>{</span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;base&quot;</span><span>;}
+</span><span>
+</span><span style="color:#999999;">#src/packages/neovim/base/_manifest.nix
+</span><span>{}: {
+</span><span>  </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;base&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">basedOn </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;light&quot;</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#999999;">#src/packages/neovim/base/_plugins.nix
+</span><span>{</span><span style="color:#f5871f;">pkgs</span><span>}:
+</span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">vimPlugins</span><span>; [
+</span><span>  </span><span style="color:#f5871f;">lazygit-nvim
+</span><span>]
+</span><span>
+</span><span style="color:#999999;">#src/packages/neovim/base/_dependencies.nix
+</span><span>{</span><span style="color:#f5871f;">root</span><span>}: </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">root</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">packages</span><span>; [</span><span style="color:#f5871f;">lazygit</span><span>]
+</span></code></pre>
+<p>The process of creating the edition is quite simple. Additionally, in the
+manifest, we set the attribute <code>basedOn</code> to establish inheritance from the light
+edition. We also add a new module called <code>dependencies</code> and include the wrapped
+<code>lazygit</code> that we have prepared. You can add any other dependencies from Nixpkgs
+by using Haumea's <code>pkgs</code> input that we have made available to all Haumea modules
+in our flake.</p>
+<pre data-lang="lua" style="background-color:#ffffff;color:#4d4d4c;" class="language-lua "><code class="language-lua" data-lang="lua"><span style="color:#999999;">--src/packages/neovim/base/__config/lua/lazygit-nvim.lua
+</span><span style="color:#c82829;">vim</span><span>.api.</span><span style="color:#c82829;">nvim_set_keymap</span><span style="color:#4271ae;">(</span><span style="color:#718c00;">&quot;n&quot;</span><span style="color:#4271ae;">, </span><span style="color:#718c00;">&quot;&lt;A-g&gt;&quot;</span><span style="color:#4271ae;">, </span><span style="color:#718c00;">&quot;&lt;cmd&gt;LazyGit&lt;cr&gt;&quot;</span><span style="color:#4271ae;">, { </span><span style="color:#718c00;">noremap </span><span style="color:#4271ae;">= </span><span style="color:#f5871f;">true </span><span style="color:#4271ae;">})
+</span></code></pre>
+<p><code>alt+g</code> keymap to open the lazygit.</p>
+<p>Now, we will add a plugin that is not in the Nix store. Just today, I saw on
+Reddit <a href="https://github.com/nullromo/go-up.nvim">go_up.nvim</a>. Let's give it a
+try.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>.
+</span><span>└── src
+</span><span>    └── packages
+</span><span>        ├── neovim
+</span><span>        │   ├── base
+</span><span>        │   │   ├── __config
+</span><span>        │   │   │   └── lua
+</span><span>        │   │   │       └── go-up-nvim.lua
+</span><span>        │   │   ├── _plugins.nix
+</span><span>        │   └── light
+</span><span>        └── vimPlugins
+</span><span>            └── go-up-nvim.nix
+</span></code></pre>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#src/packages/vimPlugins/go-up-nvim.nix
+</span><span>{</span><span style="color:#f5871f;">pkgs</span><span>}:
+</span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">vimUtils</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">buildVimPlugin </span><span>{
+</span><span>  </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;go-up-nvim&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">src </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">fetchFromGitHub </span><span>{
+</span><span>    </span><span style="color:#c82829;">owner </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nullromo&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">repo </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;go-up.nvim&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">rev </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;master&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">hash </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;sha256-+F89qRssyF+73cmWPHfXwg6fijV9EOdtL+uore0BSps=&quot;</span><span>;
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>We are using <code>buildVimPlugin</code> utility from the nixpkgs.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#src/packages/neovim/base/_plugins.nix
+</span><span>{
+</span><span>  </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">,
+</span><span>  </span><span style="color:#f5871f;">root</span><span style="color:#3e999f;">,
+</span><span>}:
+</span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">vimPlugins</span><span>;
+</span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">root</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">packages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">vimPlugins</span><span>; [
+</span><span>  </span><span style="color:#f5871f;">lazygit-nvim
+</span><span>  </span><span style="color:#f5871f;">go-up-nvim
+</span><span>]
+</span></code></pre>
+<pre data-lang="lua" style="background-color:#ffffff;color:#4d4d4c;" class="language-lua "><code class="language-lua" data-lang="lua"><span style="color:#999999;">--src/packages/neovim/base/__config/lua/go-up-nvim.lua
+</span><span style="color:#4271ae;">require(</span><span style="color:#718c00;">&quot;go-up&quot;</span><span style="color:#4271ae;">)</span><span>.</span><span style="color:#c82829;">setup</span><span style="color:#4271ae;">()
+</span><span>
+</span></code></pre>
+<p>Use <code>root</code> to refer to the new vim plugin package in the plugin list and create
+a simple Lua configuration that will load the plugin with default options.</p>
+<div style="margin: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;baseEdition-goUp.cf6cdd9437196ef5.png" />
+
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;baseEdition-lazygit.5cc9514b085d0b02.png" />
+
+</div>
+<p>Run <code>nix run .#neovim.base</code> and try pressing <code>zz</code> on the first line to see it
+jump to the center. This is the go-up plugin. Press <code>alt+g</code> to bring up
+lazygit. If you have a file, try pressing <code>e</code> to see if it opens in the
+underlying Neovim window. Notice that the buffer line numbers and nvim-tree are
+inherited from the light edition.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>My <a href="https://github.com/PrimaMateria/neovim-nix/tree/main/src/packages/neovim/base">real-life base
+edition</a>,
+has the most extensive configuration. Here, I have set up all aspects of a
+generic IDE, including refactoring, git support, a snippets' engine (although
+each project edition has its own snippets), AI support, language server
+keybindings, and linting &amp; formatting.</p>
+</div>
+  </div>
+</div>
+<h2 id="step-6-create-neovim-web-edition"><a class="zola-anchor" href="#step-6-create-neovim-web-edition" aria-label="Anchor link for: step-6-create-neovim-web-edition"
+  >§</a
+>
+Step 6: Create Neovim web edition</h2>
+<p>Web edition is here to showcase the last aspects of assembling. We will add
+quirky node package dependencies, treesitter plugins and provide environment
+variables.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>.
+</span><span>└── src
+</span><span>    └── packages
+</span><span>        ├── neovim
+</span><span>        │   └── web
+</span><span>        │       ├── _dependenciesEnd.nix
+</span><span>        │       ├── _envVars.nix
+</span><span>        │       ├── _manifest.nix
+</span><span>        │       ├── _treesitterPlugins.nix
+</span><span>        │       └── default.nix
+</span><span>        └── vimPlugins
+</span></code></pre>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#src/packages/neovim/web/default.nix
+</span><span>{</span><span style="color:#f5871f;">root</span><span>}: </span><span style="color:#f5871f;">root</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">assembleNeovim </span><span>{</span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;web&quot;</span><span>;}
+</span><span>
+</span><span style="color:#999999;">#src/packages/neovim/web/_manifest.nix
+</span><span>{}: {
+</span><span>  </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;web&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">basedOn </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;base&quot;</span><span>;
+</span><span>}
+</span></code></pre>
+<p>As usual, create <code>default</code> and <code>manifest</code>. The edition is based on "base",
+therefore it will inherit everything from "base" and "light".</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#src/packages/neovim/web/_envVars.nix
+</span><span>{}: {</span><span style="color:#c82829;">MY_ENV_VAR </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;foo&quot;</span><span>;}
+</span></code></pre>
+<p>We can specify environment variables that will be available inside the Neovim
+edition runtime. I am currently using it to specify <code>OPENAI_API_KEY</code>.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#src/packages/neovim/web/_treesitterPlugins.nix
+</span><span>{}: </span><span style="color:#f5871f;">treesitterPlugins</span><span>:
+</span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">treesitterPlugins</span><span>; [</span><span style="color:#f5871f;">javascript typescript html css</span><span>]
+</span></code></pre>
+<p>Treesitter plugins are passed as a list to the Treesitter plugin build function
+<code>nixpkgs.vimPlugins.nvim-treesitter.withPlugins</code>.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;">#src/packages/neovim/web/_dependenciesEnd.nix
+</span><span>{</span><span style="color:#f5871f;">pkgs</span><span>}:
+</span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span>; [
+</span><span>  </span><span style="color:#f5871f;">nodePackages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">typescript
+</span><span>  </span><span style="color:#f5871f;">nodePackages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">typescript-language-server
+</span><span>  </span><span style="color:#f5871f;">nodePackages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">eslint_d
+</span><span>  </span><span style="color:#f5871f;">nodePackages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">prettier
+</span><span>]
+</span></code></pre>
+<p><code>dependenciesEnd</code> are dependencies that, due to a bug I encountered a long time
+ago, need to be placed at the end of the list when creating the <code>symlinkJoin</code>
+Nix derivation. If you are interested, you can find more details at
+<a href="https://ertt.ca/blog/2022/01-12-nix-symlinkJoin-nodePackages/">https://ertt.ca/blog/2022/01-12-nix-symlinkJoin-nodePackages/</a>.  Usually they are node or python packages.</p>
+<div style="margin: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;webEdition-envAndDep.cb8d180d97e16f00.png" />
+
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;webEdition-treesitterPlugins.cde3f31d73413f60.png" />
+
+</div>
+<p>Run <code>nix run .#neovim.web</code>. Inside Neovim's terminal (<code>:term</code>), we can prove
+that the environment variable is set and that dependencies can be found on the
+execution path. Using <code>:TSInstallationInfo</code>, we can check that additional
+languages are supported by Treesitter.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>The
+<a href="https://github.com/PrimaMateria/neovim-nix/tree/main/src/packages/neovim/web">real-life</a>
+web edition is pretty simple, because most of the configuration is present in
+the base edition. There is some additional configuration for typescript and
+React, language specific snippets.</p>
+</div>
+  </div>
+</div>
+<h2 id="conclusion"><a class="zola-anchor" href="#conclusion" aria-label="Anchor link for: conclusion"
+  >§</a
+>
+Conclusion</h2>
+<p>Neovim editions are a nice way to avoid creating a monolithic configuration,
+possibly with undesired interferences, while taking advantage of configuration
+inheritance and, of course, everything in the Nix world with all the benefits.</p>
+<p>I hope you find this article useful, and if you need help or want to discuss
+don't hesitate to leave a comment.</p>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+
+<h2><i class="fa-brands fa-reddit-alien comment-section-icon"></i> Reddit comments</h2>
+
+<a class="reddit-link" href=https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;NixOS&#x2F;comments&#x2F;1i0nw2l&#x2F;neovim_editions&#x2F;>See on Reddit</a>
+<div class="reddit-embed"
+     red-href="https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;NixOS&#x2F;comments&#x2F;1i0nw2l&#x2F;neovim_editions&#x2F;" 
+     red-opts='{"show_loading_animation": false, "show_post": true, "show_post_title": false, "show_post_body": false, "show_comments_section_header": false}'
+>
+</div>
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2025<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

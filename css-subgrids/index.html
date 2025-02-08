@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>CSS Subgrids</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="CSS Subgrids">
+    <meta property="og:url" content="https://primamateria.github.io/blog/css-subgrids">
+    
+    <meta property="og:description" content="
+Here are a few examples of CSS subgrid usage that I find very useful: subgrid with a custom gap, and auto-fitted and auto-filled subgrids set in minmaxed columns and automatically wrapping the rows.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-subgrid.5ca33bc585f66086.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2025-02-03">
+    
+    
+    
+    <meta property="article:tags" content="webdev"><meta property="article:tags" content="css">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>CSS Subgrids</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Monday 03 February 2025</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 4 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/webdev/">#webdev</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/css/">#css</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-subgrid.0a5e47fd18d597e5.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-subgrid.68028a091b4ee590.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-subgrid.7b2e7c20415dfd3d.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-subgrid.592568dd1062d373.png" alt="Mobius comic book style. Tensegrity sculpture floating above the calm lake. Oddly the lake is inside the room, in the middle of the modern IT office that is filled with ferns. The sculpture is consist of different blocks being in constant and balanced pull against each other.">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <script async src="https://public.codepenassets.com/embed/index.js"></script>
+<p>Here are a few examples of CSS subgrid usage that I find very useful: subgrid with a custom gap, and auto-fitted and auto-filled subgrids set in minmaxed columns and automatically wrapping the rows.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/css-subgrids/#simple-example">Simple example</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/css-subgrids/#subgrid-gap">Subgrid gap</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/css-subgrids/#subgrid-auto-fit">Subgrid auto-fit</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/css-subgrids/#subgrid-auto-fill">Subgrid auto-fill</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<h2 id="simple-example"><a class="zola-anchor" href="#simple-example" aria-label="Anchor link for: simple-example"
+  >§</a
+>
+Simple example</h2>
+<p>Subgrids are grids in which cells are placed within the cells of the parent grid. This allows for alignment across separate components.</p>
+<p class="codepen" data-height="500" data-theme-id="light" data-default-tab="css,result" data-slug-hash="jENoWQR" data-pen-title="subgrid-simple-example" data-user="PrimaMateria" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
+  <span>See the Pen <a href="https://codepen.io/PrimaMateria/pen/jENoWQR">
+  subgrid-simple-example</a> by Matus Benko (<a href="https://codepen.io/PrimaMateria">@PrimaMateria</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<p>The parent grid is 3x3. Three items are placed in each column, with each item
+spanning three rows. Subitems, which are the child divs of the items, are placed
+in the cells of the parent grid and are aligned across the boundaries of their
+container items.</p>
+<h2 id="subgrid-gap"><a class="zola-anchor" href="#subgrid-gap" aria-label="Anchor link for: subgrid-gap"
+  >§</a
+>
+Subgrid gap</h2>
+<p>Subgrids can have their own gap.</p>
+<p class="codepen" data-height="500" data-theme-id="light" data-default-tab="css,result" data-slug-hash="RNbmaVe" data-pen-title="subgrid-simple-example" data-user="PrimaMateria" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
+  <span>See the Pen <a href="https://codepen.io/PrimaMateria/pen/RNbmaVe">
+  subgrid-simple-example</a> by Matus Benko (<a href="https://codepen.io/PrimaMateria">@PrimaMateria</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<p>The parent grid has a 16px gap. The item has a reduced gap of 4px. The first and second items were joined to demonstrate that both the parent grid's gaps - between columns and between rows - are overridden.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Each subgrid can have a different gap, although in the end, the cells look oddly
+misaligned.</p>
+</div>
+  </div>
+</div>
+<h2 id="subgrid-auto-fit"><a class="zola-anchor" href="#subgrid-auto-fit" aria-label="Anchor link for: subgrid-auto-fit"
+  >§</a
+>
+Subgrid auto-fit</h2>
+<p>This is very useful for rendering dynamic count of items.</p>
+<p class="codepen" data-height="500" data-theme-id="light" data-default-tab="css,result" data-slug-hash="EaYzymd" data-pen-title="subgrid-autofit" data-user="PrimaMateria" style="height: 500px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
+  <span>See the Pen <a href="https://codepen.io/PrimaMateria/pen/EaYzymd">
+  subgrid-autofit</a> by Matus Benko (<a href="https://codepen.io/PrimaMateria">@PrimaMateria</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<p>The parent grid's column width is calculated to be at least 100px or 1 fraction
+of the available space. When the first item is added, the column expands to 1fr.
+If the number of items increases and would cause the column to resize to less
+than the minimum 100px, the item will instead be placed in the next available
+row - in this case, row 4, as the first 3 rows are already spanned by items.</p>
+<div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>I must confess that before I realized subgrid items can be dynamically wrapped
+to multiple rows and don't always need to be placed in a predefined parent grid
+cell, I used a lot of JavaScript code to measure available space and calculate
+the number of columns, as well as the exact row and column number for each item.
+Whoops.</p>
+</div>
+  </div>
+</div>
+<h2 id="subgrid-auto-fill"><a class="zola-anchor" href="#subgrid-auto-fill" aria-label="Anchor link for: subgrid-auto-fill"
+  >§</a
+>
+Subgrid auto-fill</h2>
+<p>Auto-fill works the same way as auto-fit works. I am including this example just
+for a nice visualization of the difference between these two.</p>
+<p class="codepen" data-height="500" data-theme-id="light" data-default-tab="css,result" data-slug-hash="emOadOx" data-pen-title="subgrid-autofit" data-user="PrimaMateria" style="height: 500px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
+  <span>See the Pen <a href="https://codepen.io/PrimaMateria/pen/emOadOx">
+  subgrid-autofit</a> by Matus Benko (<a href="https://codepen.io/PrimaMateria">@PrimaMateria</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<p>When using auto-fill, the grid will also include empty columns. This ensures
+that the column size remains consistent from the beginning, just like in a fully
+filled row.</p>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+
+<h2><i class="fa-brands fa-reddit-alien comment-section-icon"></i> Reddit comments</h2>
+
+<a class="reddit-link" href=https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;webdev&#x2F;comments&#x2F;1ih2jd7&#x2F;css_subgrids&#x2F;>See on Reddit</a>
+<div class="reddit-embed"
+     red-href="https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;webdev&#x2F;comments&#x2F;1ih2jd7&#x2F;css_subgrids&#x2F;" 
+     red-opts='{"show_loading_animation": false, "show_post": true, "show_post_title": false, "show_post_body": false, "show_comments_section_header": false}'
+>
+</div>
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2025<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

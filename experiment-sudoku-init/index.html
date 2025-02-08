@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Experiment Sudoku - init</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="Experiment Sudoku - init">
+    <meta property="og:url" content="https://primamateria.github.io/blog/experiment-sudoku-init">
+    
+    <meta property="og:description" content="A personal experiment to solve a Sudoku in C language. In this first part I am
+setting up my development environment.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-sudoku-init.f307ad7f8c9905c6.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2025-01-24">
+    
+    
+    
+    <meta property="article:tags" content="nix"><meta property="article:tags" content="neovim"><meta property="article:tags" content="c"><meta property="article:tags" content="experiment">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>Experiment Sudoku - init</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Friday 24 January 2025</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 3 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nix/">#nix</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/neovim/">#neovim</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/c/">#c</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/experiment/">#experiment</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-sudoku-init.ad769ce6954094e3.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-sudoku-init.19174295885aef2d.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-sudoku-init.0631f2aa190ba4d8.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-sudoku-init.035ec545f7435e87.png" alt="Mobius comic book style.  Gold rush yoman standing in his camp with fire and tent. His pose is straight up with hands on the heap. He is wearing leather clothes. He is looking on snowed mountain in the distance. The area look like High Tatra in Slovakia.">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>A personal experiment to solve a Sudoku in C language. In this first part I am
+setting up my development environment.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/experiment-sudoku-init/#introduction">Introduction</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/experiment-sudoku-init/#basics">Basics</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/experiment-sudoku-init/#c-neovim-edition">C Neovim edition</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/experiment-sudoku-init/#dev-toolkit-nix">Dev toolkit nix</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/experiment-sudoku-init/#project-init">Project init</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/experiment-sudoku-init/#conclusion">Conclusion</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<h2 id="introduction"><a class="zola-anchor" href="#introduction" aria-label="Anchor link for: introduction"
+  >§</a
+>
+Introduction</h2>
+<p>During the vacation, I found a small Sudoku book that my father enjoys solving.
+Since there was no pen nearby, I simply kept looking at it. I wondered if I
+could write an algorithm to solve it. To make it more interesting, could I write
+it in C? Besides some tutorials I did as a teenager and some light Arduino
+programming, I am not experienced in C.</p>
+<h2 id="basics"><a class="zola-anchor" href="#basics" aria-label="Anchor link for: basics"
+  >§</a
+>
+Basics</h2>
+<p>In web development, I am used to following the holy trinity: formatter, linter,
+and language server. Let's see what I can find to fill these roles in the world
+of C.</p>
+<ul>
+<li><strong>Language server</strong> - I found either <code>ccls</code> or <code>clangd</code>. They seem to be
+similar, but I chose <code>ccls</code> because it was mentioned in a GitHub thread to
+have some additional C++ support (which I will probably never find myself
+using anyway).</li>
+<li><strong>Linter</strong> - <code>clangtidy</code></li>
+<li><strong>Formatter</strong> - <code>clang-format</code></li>
+</ul>
+<p><code>clangtidy</code> and <code>clang-format</code> come from the same nix package <code>clang-tools</code>.</p>
+<p>In order for <code>ccls</code> to function properly, it needs <code>compile-commands.json</code>,
+which is generated by <code>cmake</code>. <code>cmake</code> is similar to <code>npm install</code>, and
+<code>CMakeLists.txt</code> is similar to <code>package.json</code>.</p>
+<h2 id="c-neovim-edition"><a class="zola-anchor" href="#c-neovim-edition" aria-label="Anchor link for: c-neovim-edition"
+  >§</a
+>
+C Neovim edition</h2>
+<p>I have initialized new <a href="https://github.com/PrimaMateria/neovim-nix/tree/main/src/packages/neovim/c">C Neovim edition</a>. Added <code>ccls</code>, <code>clang</code> and <code>clang-tools</code> dependencies, and extended treesitter with C grammar.</p>
+<pre data-lang="lua" style="background-color:#ffffff;color:#4d4d4c;" class="language-lua "><code class="language-lua" data-lang="lua"><span style="color:#8959a8;">local </span><span style="color:#c82829;">nvim_lsp </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">require(</span><span style="color:#718c00;">&quot;lspconfig&quot;</span><span style="color:#4271ae;">)
+</span><span style="color:#8959a8;">local </span><span style="color:#c82829;">blink </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">require(</span><span style="color:#718c00;">&quot;blink.cmp&quot;</span><span style="color:#4271ae;">)
+</span><span>
+</span><span style="color:#8959a8;">local </span><span style="color:#c82829;">capabilities </span><span style="color:#3e999f;">= </span><span>{}
+</span><span style="color:#c82829;">capabilities </span><span style="color:#3e999f;">= </span><span style="color:#c82829;">vim</span><span>.</span><span style="color:#c82829;">tbl_extend</span><span style="color:#4271ae;">(</span><span style="color:#718c00;">&quot;keep&quot;</span><span style="color:#4271ae;">, </span><span style="color:#c82829;">capabilities</span><span style="color:#4271ae;">, </span><span style="color:#c82829;">blink</span><span style="color:#4271ae;">.</span><span style="color:#c82829;">get_lsp_capabilities</span><span style="color:#4271ae;">())
+</span><span>
+</span><span style="color:#c82829;">nvim_lsp</span><span>[</span><span style="color:#718c00;">&quot;ccls&quot;</span><span>].</span><span style="color:#c82829;">setup</span><span style="color:#4271ae;">({
+</span><span style="color:#4271ae;">    </span><span style="color:#718c00;">capabilities </span><span style="color:#4271ae;">= </span><span style="color:#c82829;">capabilities</span><span style="color:#4271ae;">,
+</span><span style="color:#4271ae;">    </span><span style="color:#718c00;">init_options </span><span style="color:#4271ae;">= {
+</span><span style="color:#4271ae;">        </span><span style="color:#718c00;">compilationDatabaseDirectory </span><span style="color:#4271ae;">= </span><span style="color:#718c00;">&quot;build&quot;</span><span style="color:#4271ae;">,
+</span><span style="color:#4271ae;">        </span><span style="color:#718c00;">index </span><span style="color:#4271ae;">= {
+</span><span style="color:#4271ae;">            </span><span style="color:#718c00;">threads </span><span style="color:#4271ae;">= </span><span style="color:#f5871f;">0</span><span style="color:#4271ae;">,
+</span><span style="color:#4271ae;">        },
+</span><span style="color:#4271ae;">        </span><span style="color:#718c00;">clang </span><span style="color:#4271ae;">= {
+</span><span style="color:#4271ae;">            </span><span style="color:#718c00;">excludeArgs </span><span style="color:#4271ae;">= { </span><span style="color:#718c00;">&quot;-frounding-math&quot; </span><span style="color:#4271ae;">},
+</span><span style="color:#4271ae;">        },
+</span><span style="color:#4271ae;">    },
+</span><span style="color:#4271ae;">})
+</span></code></pre>
+<p>For the LSP setup, I used the example provided by lspconfig. I believe that the
+<code>compilationDatabaseDirectory</code> is crucial for <code>ccls</code> to access the
+<code>compile-commands.json</code> file in the <code>/build</code> directory.</p>
+<pre data-lang="lua" style="background-color:#ffffff;color:#4d4d4c;" class="language-lua "><code class="language-lua" data-lang="lua"><span style="color:#8959a8;">local </span><span style="color:#c82829;">conform </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">require(</span><span style="color:#718c00;">&quot;conform&quot;</span><span style="color:#4271ae;">)
+</span><span style="color:#c82829;">conform</span><span>.formatters_by_ft.c </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#718c00;">&quot;clang-format&quot; </span><span>}
+</span><span>
+</span><span style="color:#8959a8;">local </span><span style="color:#c82829;">lint </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">require(</span><span style="color:#718c00;">&quot;lint&quot;</span><span style="color:#4271ae;">)
+</span><span style="color:#c82829;">lint</span><span>.linters_by_ft.c </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#718c00;">&quot;clangtidy&quot; </span><span>}
+</span></code></pre>
+<p>During the setup of the linter and formatter, I realized that I forgot to
+extract <code>prettier</code> and <code>eslintd</code> to the Web Neovim edition. I have also tested
+that the above configuration does not discard the configuration from the Base
+edition - the <code>flake.nix</code> is still being formatted.</p>
+<h2 id="dev-toolkit-nix"><a class="zola-anchor" href="#dev-toolkit-nix" aria-label="Anchor link for: dev-toolkit-nix"
+  >§</a
+>
+Dev toolkit nix</h2>
+<p>I added a new "c" profile to the <code>dev-toolkit-nix</code> that simply adds dependencies
+<code>clang</code>, <code>clang-tools</code>, and <code>cmake</code>. I also decided to create a
+<code>dev-toolint-nix</code> flake template. Is it possible to use it with:</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>nix flake init github:PrimaMateria/dev-toolkit-nix#default
+</span></code></pre>
+<h2 id="project-init"><a class="zola-anchor" href="#project-init" aria-label="Anchor link for: project-init"
+  >§</a
+>
+Project init</h2>
+<p><a href="https://github.com/PrimaMateria/experiment-sudoku">Github repository</a></p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>.
+</span><span>├── build
+</span><span>├── CMakeLists.txt
+</span><span>├── flake.lock
+</span><span>├── flake.nix
+</span><span>├── README.md
+</span><span>└── src
+</span><span>    └── hello.c
+</span></code></pre>
+<p>Started with "Hello world".</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+</span><span>
+</span><span>cmake_minimum_required(VERSION 3.10)
+</span><span>project(HelloWorld LANGUAGES C VERSION 1.0)
+</span><span>add_executable(hello src/hello.c)
+</span></code></pre>
+<p>Simple <code>CMakeLists.txt</code>. The first line instructs to provide the necessary file
+for <code>ccls</code> to work.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>mkdir build
+</span><span>cd build
+</span><span>cmake ..
+</span></code></pre>
+<p>This will generate the required items.</p>
+<pre style="background-color:#ffffff;color:#4d4d4c;"><code><span>cd build
+</span><span>cmake .
+</span></code></pre>
+<p>This will compile the C file into an executable.</p>
+<p>I ensured that linting and formatting are run automatically when saving.
+Autocompletion and documentation also function properly.</p>
+<h2 id="conclusion"><a class="zola-anchor" href="#conclusion" aria-label="Anchor link for: conclusion"
+  >§</a
+>
+Conclusion</h2>
+<p>Taking a small step out of my comfort zone and testing the flexibility of my
+nix-backed development. Everything is holding up well so far. The next step will
+be to attempt to solve the Sudoku problem.</p>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2025<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

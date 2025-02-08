@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>How to create your own Neovim flake</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="How to create your own Neovim flake">
+    <meta property="og:url" content="https://primamateria.github.io/blog/neovim-nix">
+    
+    <meta property="og:description" content="In this blog post, I will guide you through the process of setting up Neovim as
+a Nix Flake, allowing you to keep your editor configuration in sync across
+multiple machines. We&#x27;ll start by initializing the flake. We&#x27;ll add Vim script
+configuration, organizing Vim scripts in separate files and transforming them
+into config files in the Nix store. I will guide you through adding plugins, Lua
+scripts, and runtime dependencies to Neovim using Nix. By the end of this blog
+post, you will be able to configure your own development environment in a more
+manageable way.
+">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-neovim-flake.4610c29a4c833c86.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2023-03-18">
+    
+    
+    
+    <meta property="article:tags" content="nixos"><meta property="article:tags" content="neovim">
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>How to create your own Neovim flake</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Saturday 18 March 2023</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 20 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/neovim/">#neovim</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake.9b975ff4bbdb7145.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake.5e9c2143d0d78033.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake.1ccef6716857ad8e.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake.b466db7a26854cb4.png" alt="Mobius comic book style. Scenery of planetary scifi city. Plants growing on the walls. Neovim logo embedded">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>In this blog post, I will guide you through the process of setting up Neovim as
+a Nix Flake, allowing you to keep your editor configuration in sync across
+multiple machines. We'll start by initializing the flake. We'll add Vim script
+configuration, organizing Vim scripts in separate files and transforming them
+into config files in the Nix store. I will guide you through adding plugins, Lua
+scripts, and runtime dependencies to Neovim using Nix. By the end of this blog
+post, you will be able to configure your own development environment in a more
+manageable way.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#preface">Preface</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#initialize-the-flake">Initialize the flake</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#custom-neovim-package">Custom Neovim package</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#add-vim-script-config">Add Vim script config</a>
+                
+                    <ul>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/neovim-nix/#vim-scripts">Vim scripts</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/neovim-nix/#default-nix">default.nix</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/neovim-nix/#vim-scripts-to-nix-store">Vim scripts to Nix store</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/neovim-nix/#sourcing-vim-scripts">Sourcing Vim scripts</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/neovim-nix/#custom-rc">Custom RC</a>
+                            </li>
+                        
+                    </ul>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#add-plugin-from-nixpkgs">Add plugin from Nixpkgs</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#add-lua-script-config">Add Lua script config</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#add-plugin-not-found-in-nixpkgs">Add plugin not found in Nixpkgs</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#add-runtime-dependency">Add runtime dependency</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#generate-lua-config-from-nix">Generate Lua config from Nix</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#package-anything-else">Package anything else</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#generate-vim-config-from-nix">Generate Vim config from Nix</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#use-your-neovim">Use your Neovim</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#updating">Updating</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#bonus-secrets">Bonus: Secrets</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/neovim-nix/#support-other-systems">Support other systems</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<div class="update article-info">
+  <div>Update</div>
+  <div class="article-date">
+    Sunday 04 June 2023
+  </div>
+  <div class="content">
+    <div><p>Thanks to the help of <a href="https://github.com/samjwillis97">Sam Willis</a>, the mystery
+of the non-functioning <code>symlinkjoin</code> has been clarified, and a workaround has
+been found. Sam also assisted me in using <code>flake-utils</code>, which enabled me to
+successfully build Neovim on Nix-on-Droid. In order to preserve the integrity of
+the original post, I have described these changes in a follow-up post:
+<a href="https://primamateria.github.io/blog/neovim-nix-update/">Neovim flake Updates</a>.</p>
+</div>
+  </div>
+</div>
+<div class="update article-info">
+  <div>Update</div>
+  <div class="article-date">
+    Thursday 30 November 2023
+  </div>
+  <div class="content">
+    <div><p>There is <a href="https://github.com/nix-community/nixvim">NixVim</a> - a growing Neovim
+repository that contains many plugins that can be easily enabled and configured
+with Nix. Consider choosing this option because everyone can benefit from the
+plugins contribued there. However, if you are looking for your own small
+customized 'nook' configuration and want to continue using vim/lua configs, then
+you are in the right place.</p>
+</div>
+  </div>
+</div>
+<div class="update article-info">
+  <div>Update</div>
+  <div class="article-date">
+    Monday 13 January 2025
+  </div>
+  <div class="content">
+    <div><p>This article is outdated and has been replaced with a newer and improved version
+of Flake that supports multiple versions and has clearer organization. Please
+read <a href="https://primamateria.github.io/blog/neovim-editions/">Neovim Editions</a> instead.</p>
+</div>
+  </div>
+</div>
+<h2 id="preface"><a class="zola-anchor" href="#preface" aria-label="Anchor link for: preface"
+  >§</a
+>
+Preface</h2>
+<p>This guide will provide a step-by-step process for setting up your own Neovim as
+a Nix Flake. I won't delve into the explanation of Nix and Nix Flake, as there
+are already ample resources that do this wonderfully.</p>
+<p>With this setup, you can utilize Git and Nix's capabilities to keep your
+configuration files, list of plugins, and required external dependencies in sync
+across multiple devices. This will not ensure that only your editor
+configuration is consistent, but also your entire development environment.</p>
+<p>Please keep in mind that I am also in the process of learning Nix and may have
+made some errors. Therefore, I kindly request that you provide your feedback in
+the comments' section if you have some.</p>
+<p>It is important to note that this guide does not constitute a comprehensive
+Neovim configuration. Rather, it serves to demonstrate various concepts of Nix
+configuration. After completing this guide, you should be able to supplement
+your plugins and configurations accordingly.</p>
+<p>I prepared a <a href="https://github.com/PrimaMateria/blog-neovim-nix">repository</a> which
+contains all the code examples introduced in this post. The commits' messages
+correspond to the section titles.</p>
+<h2 id="initialize-the-flake"><a class="zola-anchor" href="#initialize-the-flake" aria-label="Anchor link for: initialize-the-flake"
+  >§</a
+>
+Initialize the flake</h2>
+<p>Flake will take inputs, and it will generate two outputs. First a package that
+can be installed using the Nix package manager, and second an app that can be
+executed directly from the flake.</p>
+<p>First we start with flake skeleton:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># flake.nix
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">description </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;My own Neovim flake&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{ };
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#f5871f;">self </span><span>}: { };
+</span><span>}
+</span></code></pre>
+<p>Next, we will add 2 inputs:</p>
+<ol>
+<li><code>nixpkgs</code> - a source for all Nix packages we can later declare</li>
+<li><code>neovim</code> - Neovim itself</li>
+</ol>
+<div class="tip octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Octopus giving a tip
+    or explaining something"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>If you want to use unstable Neovim, simply change the url to
+<code>github:neovim/neovim?dir=contrib</code>. This will use the main branch. Be aware that
+sometimes it can happen that Nix can fail to build it.</p>
+</div>
+  </div>
+</div>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># flake.nix
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">description </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;My own Neovim flake&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:NixOS/nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>    </span><span style="color:#c82829;">neovim </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nix-community/neovim-nightly-overlay&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#f5871f;">self</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">neovim </span><span>}: { };
+</span><span>}
+</span></code></pre>
+<p>As first, we will simply pass Neovim from the input to the output.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># flake.nix
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">description </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;My own Neovim flake&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:NixOS/nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>    </span><span style="color:#c82829;">neovim </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nix-community/neovim-nightly-overlay&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#f5871f;">self</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">neovim </span><span>}: {
+</span><span>      </span><span style="color:#c82829;">packages</span><span>.</span><span style="color:#c82829;">x86_64-linux</span><span>.</span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">neovim</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">packages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">x86_64-linux</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">neovim</span><span>;
+</span><span>      </span><span style="color:#c82829;">apps</span><span>.</span><span style="color:#c82829;">x86_64-linux</span><span>.</span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span>{
+</span><span>        </span><span style="color:#c82829;">type </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;app&quot;</span><span>;
+</span><span>        </span><span style="color:#c82829;">program </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${neovim</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">packages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">x86_64-linux</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">neovim}</span><span style="color:#718c00;">/bin/nvim&quot;</span><span>;
+</span><span>      };
+</span><span>    };
+</span><span>}
+</span></code></pre>
+<p>Our flake provides Neovim as a default package for the <code>x86_64-linux</code> system,
+and a default app executes Neovim's binary.</p>
+<p>Now, let's run the app!</p>
+<pre data-lang="bash" style="background-color:#ffffff;color:#4d4d4c;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82829;">nix</span><span style="color:#4271ae;"> run
+</span></code></pre>
+<div class="tip octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Octopus giving a tip
+    or explaining something"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>If you got error that <code>flake.nix</code> cannot be found, then it is
+because all files belonging to the flake must be tracked in git repository.</p>
+<p><code>git add .</code></p>
+</div>
+  </div>
+</div>
+<p>If all goes well, you should be welcomed with the Neovim welcome message and the
+version should correspond to the current stable version.</p>
+<h2 id="custom-neovim-package"><a class="zola-anchor" href="#custom-neovim-package" aria-label="Anchor link for: custom-neovim-package"
+  >§</a
+>
+Custom Neovim package</h2>
+<p>What you have done so far is that you just grabbed Neovim and provided it on the
+output of your flake. Now, let's prepare it for the customization. First,
+extract Neovim to a separate package.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># packages/myNeovim.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span>    </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">wrapNeovim pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">neovim </span><span>{
+</span><span>      </span><span style="color:#c82829;">configure </span><span style="color:#3e999f;">= </span><span>{
+</span><span>         </span><span style="color:#999999;"># here will come your custom configuration
+</span><span>      };
+</span><span>    }
+</span></code></pre>
+<p>Next, create an overlay over the Nixpkgs which will extend Nixpkgs with your
+Neovim package.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># flake.nix
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">description </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;My own Neovim flake&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:NixOS/nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>    </span><span style="color:#c82829;">neovim </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nix-community/neovim-nightly-overlay&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#f5871f;">self</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">neovim </span><span>}:
+</span><span>    </span><span style="color:#8959a8;">let
+</span><span>      </span><span style="color:#c82829;">overlayFlakeInputs </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">prev</span><span>: </span><span style="color:#f5871f;">final</span><span>: {
+</span><span>        </span><span style="color:#c82829;">neovim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">neovim</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">packages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">x86_64-linux</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">neovim</span><span>;
+</span><span>      };
+</span><span>
+</span><span>      </span><span style="color:#c82829;">overlayMyNeovim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">prev</span><span>: </span><span style="color:#f5871f;">final</span><span>: {
+</span><span>        </span><span style="color:#c82829;">myNeovim </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">./packages/myNeovim.nix </span><span>{
+</span><span>          </span><span style="color:#c82829;">pkgs </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">final</span><span>;
+</span><span>        };
+</span><span>      };
+</span><span>
+</span><span>      </span><span style="color:#c82829;">pkgs </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#f5871f;">nixpkgs </span><span>{
+</span><span>        </span><span style="color:#c82829;">system </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;x86_64-linux&quot;</span><span>;
+</span><span>        </span><span style="color:#c82829;">overlays </span><span style="color:#3e999f;">= </span><span>[ </span><span style="color:#f5871f;">overlayFlakeInputs overlayMyNeovim </span><span>];
+</span><span>      };
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">in </span><span>{
+</span><span>      </span><span style="color:#c82829;">packages</span><span>.</span><span style="color:#c82829;">x86_64-linux</span><span>.</span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">myNeovim</span><span>;
+</span><span>      </span><span style="color:#c82829;">apps</span><span>.</span><span style="color:#c82829;">x86_64-linux</span><span>.</span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span>{
+</span><span>        </span><span style="color:#c82829;">type </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;app&quot;</span><span>;
+</span><span>        </span><span style="color:#c82829;">program </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">myNeovim}</span><span style="color:#718c00;">/bin/nvim&quot;</span><span>;
+</span><span>      };
+</span><span>    };
+</span><span>}
+</span></code></pre>
+<p>An overlay allows you to define new package, or override some attributes of
+already present package. Overlay is a function with 2 arguments: <code>prev</code> and
+<code>final</code>. <code>prev</code> is the original "untouched" <code>nixpkgs</code> and <code>final</code> is the
+modified <code>nixpkgs</code> which contains the modifications.</p>
+<p>In the first overlay <code>overlayFlakeInputs</code> you override <code>neovim</code> with the Neovim
+package that comes from the flake inputs. In the second overlay you define new
+package <code>myNeovim</code> which is defined in <code>packages/myNeovim.nix</code>.</p>
+<p>The function takes an input <code>pkgs</code> which is set to overlay's <code>final</code> argument.
+Therefore, the <code>pkgs.neovim</code> now refers to the <code>neovim</code> declared in
+<code>overlayFlakeInputs</code>. If you passed in the flake <code>prev</code> argument, then the
+<code>neovim</code> would actually refer to package defined in original Nixpkgs on unstable
+channel.</p>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+flowchart TD
+    nixpkgs[&quot;&lt;b&gt;Nixpkgs&lt;&#x2F;b&gt;&lt;br&#x2F;&gt;neovim (stable)&quot;]
+    neovim[&quot;Neovim&quot;]
+    overlay1[&quot;Overlay Flake Inputs&quot;]
+    nixpkgs2[&quot;&lt;b&gt;Nixpkgs&lt;&#x2F;b&gt;&lt;br&#x2F;&gt;neovim (flake)&quot;]
+    overlay2[&quot;Overlay My Neovim&quot;]
+    myneovim[&quot;My Neovim&quot;]
+    nixpkgs3[&quot;&lt;b&gt;Nixpkgs&lt;&#x2F;b&gt;&lt;br&#x2F;&gt;neovim (flake)&lt;br&#x2F;&gt;myNeovim&quot;]
+    
+    nixpkgs --&gt;|prev| overlay1
+    neovim --&gt; overlay1
+    overlay1 --&gt;|final| nixpkgs2
+    
+    nixpkgs2 --&gt;|prev| overlay2
+    myneovim --&gt; overlay2
+    overlay2 --&gt;|final| nixpkgs3
+</pre>
+<!-- prettier-ignore-end -->
+<p>At last, you replaced <code>neovim.packages.x86_64-linux.neovim</code> on the output of
+your flake with your newly defined <code>myNeovim</code>.</p>
+<p>You can test by running <code>nix run</code>. If done right, Neovim should still start as
+before. Don't forget to track new file in git.</p>
+<h2 id="add-vim-script-config"><a class="zola-anchor" href="#add-vim-script-config" aria-label="Anchor link for: add-vim-script-config"
+  >§</a
+>
+Add Vim script config</h2>
+<div class="tip octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Octopus giving a tip
+    or explaining something"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Some of my Neovim configuration is still written in Vim script. I know it should
+be possible to migrate it all to Lua, but this will be a project for later.</p>
+</div>
+  </div>
+</div>
+<h3 id="vim-scripts"><a class="zola-anchor" href="#vim-scripts" aria-label="Anchor link for: vim-scripts"
+  >§</a
+>
+Vim scripts</h3>
+<p>We will organize Vim scripts in separate files in <code>config/vim/</code>.</p>
+<p>At first, we created two Vim scripts: <code>nvim-setters.vim</code> and <code>nvim-0-init.vim</code>.
+The latter one has <code>0</code> in the name to ensure that it is the first, because the
+order of files in directory corresponds also to order of their sourcing in the
+config file.</p>
+<p>For an example, this is important for the leader key. If we called
+<code>nnoremap &lt;leader&gt;x foo&lt;cr&gt;</code> before updating <code>mapleader</code> to desired key, it
+would assume a default <code>\</code> as the leader key for these mappings.</p>
+<pre data-lang="vim" style="background-color:#ffffff;color:#4d4d4c;" class="language-vim "><code class="language-vim" data-lang="vim"><span style="color:#999999;">&quot; config/vim/nvim-0-init.vim
+</span><span style="color:#4271ae;">let</span><span> mapleader = </span><span style="color:#718c00;">&quot; &quot;
+</span></code></pre>
+<pre data-lang="vim" style="background-color:#ffffff;color:#4d4d4c;" class="language-vim "><code class="language-vim" data-lang="vim"><span style="color:#999999;">&quot; config/vim/nvim-setters.vim
+</span><span style="color:#4271ae;">set</span><span> tabstop=</span><span style="color:#f5871f;">2</span><span> softtabstop=</span><span style="color:#f5871f;">2
+</span><span style="color:#4271ae;">set</span><span> shiftwidth=</span><span style="color:#f5871f;">2
+</span><span style="color:#4271ae;">set expandtab
+</span><span style="color:#4271ae;">set</span><span> smartindent
+</span><span style="color:#4271ae;">set</span><span> number
+</span></code></pre>
+<h3 id="default-nix"><a class="zola-anchor" href="#default-nix" aria-label="Anchor link for: default-nix"
+  >§</a
+>
+default.nix</h3>
+<p>Next, create <code>default.nix</code>. Default file acts somehow as <code>index.js</code> in
+JavaScript. If you import path leading to a directory, Nix will automatically
+look for <code>default.nix</code> in it.</p>
+<p><code>default.nix</code> is defined as a function which returns string which represents the
+content of our <code>vimrc</code>.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># config/default.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#c82829;">scripts2ConfigFiles </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">dir</span><span>:
+</span><span>    </span><span style="color:#8959a8;">let
+</span><span>      </span><span style="color:#c82829;">configDir </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">stdenv</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">mkDerivation </span><span>{
+</span><span>        </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nvim-</span><span style="color:#f5871f;">${dir}</span><span style="color:#718c00;">-configs&quot;</span><span>;
+</span><span>        </span><span style="color:#c82829;">src </span><span style="color:#3e999f;">= </span><span style="background-color:#c82829;color:#ffffff;">./</span><span style="color:#f5871f;">${dir}</span><span>;
+</span><span>        </span><span style="color:#c82829;">installPhase </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">          mkdir -p $out/
+</span><span style="color:#718c00;">          cp ./* $out/
+</span><span style="color:#718c00;">        &#39;&#39;</span><span>;
+</span><span>      };
+</span><span>    </span><span style="color:#8959a8;">in </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">map </span><span>(</span><span style="color:#f5871f;">file</span><span>: </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${configDir}</span><span style="color:#718c00;">/</span><span style="color:#f5871f;">${file}</span><span style="color:#718c00;">&quot;</span><span>)
+</span><span>    (</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">attrNames </span><span>(</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">readDir configDir</span><span>));
+</span><span>
+</span><span>  </span><span style="color:#c82829;">sourceConfigFiles </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">files</span><span>:
+</span><span>    </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">concatStringsSep </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">\n</span><span style="color:#718c00;">&quot; </span><span>(</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">map </span><span>(</span><span style="color:#f5871f;">file</span><span>:
+</span><span>      </span><span style="color:#718c00;">&quot;source </span><span style="color:#f5871f;">${file}</span><span style="color:#718c00;">&quot;</span><span>) </span><span style="color:#f5871f;">files</span><span>);
+</span><span>
+</span><span>  </span><span style="color:#c82829;">vim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">scripts2ConfigFiles </span><span style="color:#718c00;">&quot;vim&quot;</span><span>;
+</span><span style="color:#8959a8;">in </span><span style="color:#f5871f;">sourceConfigFiles vim
+</span></code></pre>
+<p>The body of the function consists of a call to <code>sourceConfigFiles</code> with argument
+<code>vim</code>. In the <code>let-in</code> block you can see both defined.</p>
+<h3 id="vim-scripts-to-nix-store"><a class="zola-anchor" href="#vim-scripts-to-nix-store" aria-label="Anchor link for: vim-scripts-to-nix-store"
+  >§</a
+>
+Vim scripts to Nix store</h3>
+<p>Value of the variable <code>vim</code> is a result of <code>script2ConfigFiles</code> call. The
+argument defines the subdirectory name from which we want to read the vim
+scripts.</p>
+<p><code>script2ConfigFiles</code> function first in <code>let-in</code> block prepares <code>configDir</code>
+derivation. This derivation is a directory which contains all Vim files. The
+<code>installPhase</code> creates <code>$out</code> directory (this variable is automatically provided
+during the evaluation) in the <code>/nix/store</code> and copies everything from our source
+directory (<code>src = ./${dir}</code>) to it.</p>
+<p>The body of <code>script2ConfigFiles</code> evaluates as follows:</p>
+<ul>
+<li><code>builtins.readDir configDir</code> returns all files in the path defined by
+<code>configDir</code>. If we pass to a <code>configDir</code> a Nix derivation, Nix will
+automatically evaluate it to a path in <code>/nix/store</code> leading to this
+derivation. Returned set consists of attributes being filenames and values
+being file types.</li>
+<li><code>builtins.attrNames (builtins.readDir configDir)</code> selects attributes
+(filenames) and collects them to a list of strings.</li>
+<li><code>builtins.map (file: "${configDir}/${file}") &lt;list of filenames&gt;</code> will
+translate each filename to an absolute path to this file stored in Nix store.</li>
+</ul>
+<p>To summarize, the <code>vim</code> variable is a list of strings which are absolute paths
+pointing to <code>/nix/store</code> derivation which holds copies of all your Vim configs
+from the <code>config/vim/</code>.ed</p>
+<!-- prettier-ignore-start -->
+<pre class="mermaid">
+flowchart TD
+    vimScripts[&quot;vim configs&lt;br&#x2F;&gt;&lt;pre&gt;config&#x2F;vim&lt;&#x2F;pre&gt;&quot;]
+    nixPackage[&quot;nix package&lt;br&#x2F;&gt;&lt;pre&gt;&#x2F;nix&#x2F;store&#x2F;XYZ-nvim-vim-configs&lt;&#x2F;pre&gt;&quot;] 
+    fileList[&quot;file list&lt;br&#x2F;&gt;&lt;pre&gt;{&lt;br &#x2F;&gt;  nvim-0-init.vim = &#x27;regular&#x27;;&lt;br &#x2F;&gt;  nvim-setters.vim = &#x27;regular&#x27;;&lt;br&#x2F;&gt;}&lt;&#x2F;pre&gt;&quot;] 
+    fileNames[&quot;file names&lt;br&#x2F;&gt;&lt;pre&gt;[&#x27;nvim-0-init.vim&#x27; &#x27;nvim-setters.vim&#x27;]&lt;&#x2F;pre&gt;&quot;]
+    absolutePaths[&quot;absolute paths&lt;br&#x2F;&gt;&lt;code&gt;&lt;pre&#x2F;&gt;[&lt;br&#x2F;&gt;  &#x27;&#x2F;nix&#x2F;store&#x2F;XYZ-nvim-vim-configs&#x2F;nvim-0-init.vim&#x27;&lt;br&#x2F;&gt;  &#x27;&#x2F;nix&#x2F;store&#x2F;XYZ-nvim-vim-configs&#x2F;nvim-setters.vim&#x27;&lt;br&#x2F;&gt;]&lt;&#x2F;pre&gt;&quot;]
+
+    vimScripts --&gt;|make derivation| nixPackage 
+    nixPackage --&gt;|read dir| fileList
+    fileList --&gt;|attribute names| fileNames
+    fileNames --&gt;|map| absolutePaths
+</pre>
+<!-- prettier-ignore-end -->
+<h3 id="sourcing-vim-scripts"><a class="zola-anchor" href="#sourcing-vim-scripts" aria-label="Anchor link for: sourcing-vim-scripts"
+  >§</a
+>
+Sourcing Vim scripts</h3>
+<p>Function <code>sourceConfigFiles</code> takes the list of installed script files, and
+transforms it to a list source calls.</p>
+<pre data-lang="vim" style="background-color:#ffffff;color:#4d4d4c;" class="language-vim "><code class="language-vim" data-lang="vim"><span>source </span><span style="color:#c82829;">/nix/</span><span>store</span><span style="color:#c82829;">/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/</span><span>nvim</span><span style="color:#f5871f;">-0</span><span>-init</span><span style="color:#8959a8;">.</span><span>vim
+</span><span>source </span><span style="color:#c82829;">/nix/</span><span>store</span><span style="color:#c82829;">/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/</span><span>nvim-setters</span><span style="color:#8959a8;">.</span><span>vim
+</span></code></pre>
+<h3 id="custom-rc"><a class="zola-anchor" href="#custom-rc" aria-label="Anchor link for: custom-rc"
+  >§</a
+>
+Custom RC</h3>
+<p>At last, load the configuration string to your custom Neovim package.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># packages/myNeovim.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#c82829;">customRC </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../config </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span style="color:#8959a8;">in </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">wrapNeovim pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">neovim </span><span>{
+</span><span>      </span><span style="color:#c82829;">configure </span><span style="color:#3e999f;">= </span><span>{
+</span><span>        </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">customRC</span><span>;
+</span><span>      };
+</span><span>    }
+</span></code></pre>
+<div class="why octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Octopus asking
+    question"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Why to do it such complicated way?</p>
+</div>
+    <div class="octopus-answer"><p>Initially, I had all configurations stored in one large Nix string, which
+quickly became messy and difficult to navigate. To improve the organization, I
+extracted the configuration for each plugin into a separate Nix file and
+combined them later using import calls.</p>
+<p>However, I still found it unfit to write Vim code within the Nix string. To
+address this issue, I packaged all the files into a derivation and sourced them
+as Vim files.</p>
+<p>With this new setup, adding a new file to the directory is as simple as placing
+it there, and it will be automatically sourced, rather than having to manually
+import it.</p>
+</div>
+  </div>
+</div>
+<p>After starting your Neovim with <code>nix run</code> you should see the column with line
+numbers.</p>
+<h2 id="add-plugin-from-nixpkgs"><a class="zola-anchor" href="#add-plugin-from-nixpkgs" aria-label="Anchor link for: add-plugin-from-nixpkgs"
+  >§</a
+>
+Add plugin from Nixpkgs</h2>
+<p>Usually you will find the most popular plugins in Nixpkgs. Plugins can also list
+their own dependencies to other plugins, and they will be installed together
+automatically.</p>
+<p>As an example we will add the Telescope plugin. First we will create a separate
+nix file which will contain a list of the plugins:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># plugins.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">vimPlugins</span><span>; [
+</span><span>  </span><span style="color:#f5871f;">telescope-nvim
+</span><span>]
+</span></code></pre>
+<div class="tip octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Octopus giving a tip
+    or explaining something"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p><code>with-expression</code> allows you to avoid repeating the selects from
+<code>pkgs.vimPlugins</code> for each listed plugin.</p>
+</div>
+  </div>
+</div>
+<p>Next, extend your Neovim package to include all plugins listed in <code>plugins.nix</code>:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># packages/myNeovim.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#c82829;">customRC </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../config </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span>  </span><span style="color:#c82829;">plugins </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../plugins.nix </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span style="color:#8959a8;">in </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">wrapNeovim pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">neovim </span><span>{
+</span><span>      </span><span style="color:#c82829;">configure </span><span style="color:#3e999f;">= </span><span>{
+</span><span>        </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">customRC</span><span>;
+</span><span>        </span><span style="color:#c82829;">packages</span><span>.</span><span style="color:#c82829;">all</span><span>.</span><span style="color:#c82829;">start </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">plugins</span><span>;
+</span><span>      };
+</span><span>    }
+</span></code></pre>
+<div class="why octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Octopus asking
+    question"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>What exactly is <code>packages.all.start</code>?</p>
+</div>
+    <div class="octopus-answer"><p>Word <code>all</code> doesn't matter and can be anything. <code>start</code> signifies that the
+plugins will be loaded on Neovim's launch. Another possible selector is <code>opt</code>
+which is used for lazy-load of plugins via command <code>:packadd $plugin-name</code>.</p>
+<p>I didn't yet find a reason to use this option. If I needed to define a
+specialized Neovim flavor (e.g. one for web development, another for Arduino), I
+would probably construct different apps in the flake.</p>
+</div>
+  </div>
+</div>
+<p>You can search plugins in Nixpkgs through
+<a href="https://search.nixos.org/packages?channel=unstable&amp;from=0&amp;size=50&amp;sort=relevance&amp;type=packages&amp;query=vimPlugins.telescope">website</a>.
+Notice that the selected channel is unstable. This channel might have some
+additional plugins compared to stable channel, or newer versions.</p>
+<div class="why octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Octopus asking
+    question"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>How about searching from the terminal?</p>
+</div>
+    <div class="octopus-answer"><p>To execute a search in the terminal, use the command
+<code>nix search nixpkgs vimPlugins.telescope</code>. This will search within the <code>nixpkgs</code>
+registry alias. To find out which flake this alias corresponds to, run the
+command <code>nix registry list</code>. In my default configuration, it is set to
+<code>global flake:nixpkgs github:NixOS/nixpkgs/nixpkgs-unstable</code>, which corresponds
+to the unstable channel.</p>
+<p>If you'd like to search within the stable channel, you can use the command
+<code>nix search github:NixOS/nixpkgs/nixos-22.11 vimPlugins.telescope</code>. To make it
+easier to search within this channel in the future, you can add a new registry
+alias using the command <code>nix registry add</code>.</p>
+</div>
+  </div>
+</div>
+<p>At this step Neovim should be still runnable, but before you can verify that
+Telescope works, you still need to write a config for it.</p>
+<h2 id="add-lua-script-config"><a class="zola-anchor" href="#add-lua-script-config" aria-label="Anchor link for: add-lua-script-config"
+  >§</a
+>
+Add Lua script config</h2>
+<p>Add Lua script to <code>config/lua</code> and extend <code>config/default.nix</code> to load it the
+similar way as loading Vim script.</p>
+<pre data-lang="lua" style="background-color:#ffffff;color:#4d4d4c;" class="language-lua "><code class="language-lua" data-lang="lua"><span style="color:#999999;">-- config/lua/nvim-telescope.lua
+</span><span style="color:#8959a8;">local </span><span style="color:#c82829;">opt </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#718c00;">noremap </span><span>= </span><span style="color:#f5871f;">true </span><span>}
+</span><span style="color:#8959a8;">local </span><span style="color:#c82829;">telescope </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">require(</span><span style="color:#718c00;">&quot;telescope&quot;</span><span style="color:#4271ae;">)
+</span><span style="color:#c82829;">telescope</span><span>.</span><span style="color:#c82829;">setup</span><span style="color:#4271ae;">({})
+</span><span style="color:#c82829;">vim</span><span>.api.</span><span style="color:#c82829;">nvim_set_keymap</span><span style="color:#4271ae;">(</span><span style="color:#718c00;">&quot;n&quot;</span><span style="color:#4271ae;">, </span><span style="color:#718c00;">&quot;&lt;leader&gt;&lt;tab&gt;&quot;</span><span style="color:#4271ae;">, </span><span style="color:#718c00;">&quot;:lua require(&#39;telescope.builtin&#39;).find_files()&lt;CR&gt;&quot;</span><span style="color:#4271ae;">, </span><span style="color:#c82829;">opt</span><span style="color:#4271ae;">)
+</span></code></pre>
+<p>Extend <code>sourceConfigFiles</code> to choose between <code>source</code> and <code>luafile</code> call based
+on the file's extension.</p>
+<p>Then prepare <code>lua</code> list using <code>scripts2ConfigFiles</code> with <code>lua</code> subdirectory as
+the argument.</p>
+<p>At last, modify the body of module function to execute <code>sourceConfigFiles</code> on
+both Vim and Lua lists and concatenate the returned strings with new-line
+character into one single string.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># config/default.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#c82829;">scripts2ConfigFiles </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">dir</span><span>:
+</span><span>    </span><span style="color:#8959a8;">let
+</span><span>      </span><span style="color:#c82829;">configDir </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">stdenv</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">mkDerivation </span><span>{
+</span><span>        </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nvim-</span><span style="color:#f5871f;">${dir}</span><span style="color:#718c00;">-configs&quot;</span><span>;
+</span><span>        </span><span style="color:#c82829;">src </span><span style="color:#3e999f;">= </span><span style="background-color:#c82829;color:#ffffff;">./</span><span style="color:#f5871f;">${dir}</span><span>;
+</span><span>        </span><span style="color:#c82829;">installPhase </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">          mkdir -p $out/
+</span><span style="color:#718c00;">          cp ./* $out/
+</span><span style="color:#718c00;">        &#39;&#39;</span><span>;
+</span><span>      };
+</span><span>    </span><span style="color:#8959a8;">in </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">map </span><span>(</span><span style="color:#f5871f;">file</span><span>: </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${configDir}</span><span style="color:#718c00;">/</span><span style="color:#f5871f;">${file}</span><span style="color:#718c00;">&quot;</span><span>)
+</span><span>    (</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">attrNames </span><span>(</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">readDir configDir</span><span>));
+</span><span>
+</span><span>  </span><span style="color:#c82829;">sourceConfigFiles </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">files</span><span>:
+</span><span>    </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">concatStringsSep </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">\n</span><span style="color:#718c00;">&quot; </span><span>(</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">map </span><span>(</span><span style="color:#f5871f;">file</span><span>:
+</span><span>      (</span><span style="color:#8959a8;">if </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">strings</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">hasSuffix </span><span style="color:#718c00;">&quot;lua&quot; </span><span style="color:#f5871f;">file </span><span style="color:#8959a8;">then </span><span style="color:#718c00;">&quot;luafile&quot; </span><span style="color:#8959a8;">else </span><span style="color:#718c00;">&quot;source&quot;</span><span>)
+</span><span>      </span><span style="color:#3e999f;">+ </span><span style="color:#718c00;">&quot; </span><span style="color:#f5871f;">${file}</span><span style="color:#718c00;">&quot;</span><span>) </span><span style="color:#f5871f;">files</span><span>);
+</span><span>
+</span><span>  </span><span style="color:#c82829;">vim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">scripts2ConfigFiles </span><span style="color:#718c00;">&quot;vim&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">lua </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">scripts2ConfigFiles </span><span style="color:#718c00;">&quot;lua&quot;</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">in </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">concatStringsSep </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">\n</span><span style="color:#718c00;">&quot;
+</span><span>(</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">map </span><span>(</span><span style="color:#f5871f;">configs</span><span>: </span><span style="color:#f5871f;">sourceConfigFiles configs</span><span>) [ </span><span style="color:#f5871f;">vim lua </span><span>])
+</span></code></pre>
+<p>The result will look like this:</p>
+<pre data-lang="vim" style="background-color:#ffffff;color:#4d4d4c;" class="language-vim "><code class="language-vim" data-lang="vim"><span>source </span><span style="color:#c82829;">/nix/</span><span>store</span><span style="color:#c82829;">/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/</span><span>nvim</span><span style="color:#f5871f;">-0</span><span>-init</span><span style="color:#8959a8;">.</span><span>vim
+</span><span>source </span><span style="color:#c82829;">/nix/</span><span>store</span><span style="color:#c82829;">/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/</span><span>nvim-setters</span><span style="color:#8959a8;">.</span><span>vim
+</span><span>luafile </span><span style="color:#c82829;">/nix/</span><span>store</span><span style="color:#c82829;">/z1p9n8cdi4wqhskazxsb2vy1gj2h83mx-nvim-lua-configs/</span><span>nvim-telescope</span><span style="color:#8959a8;">.</span><span style="color:#4271ae;">lua
+</span></code></pre>
+<p>Now, if you execute <code>nix run</code> and hit space-tab, you should see telescope window
+pop up.</p>
+<h2 id="add-plugin-not-found-in-nixpkgs"><a class="zola-anchor" href="#add-plugin-not-found-in-nixpkgs" aria-label="Anchor link for: add-plugin-not-found-in-nixpkgs"
+  >§</a
+>
+Add plugin not found in Nixpkgs</h2>
+<p>To demonstrate how to add a plugin which is not found in Nixpkgs, you will add a
+Telescope extension which provides a picker for recent files.</p>
+<p>Add
+<a href="https://github.com/smartpde/telescope-recent-files">smartpde/telescope-recent-files</a>
+to your flake inputs. In the <code>overlayFlakeInputs</code> we extend existing list of
+<code>vimPlugins</code> with a new package.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># flake.nix
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">description </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;My own Neovim flake&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">inputs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>    </span><span style="color:#c82829;">nixpkgs </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:NixOS/nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>    </span><span style="color:#c82829;">neovim </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:nix-community/neovim-nightly-overlay&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">inputs</span><span>.</span><span style="color:#c82829;">nixpkgs</span><span>.</span><span style="color:#c82829;">follows </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nixpkgs&quot;</span><span>;
+</span><span>    };
+</span><span>    </span><span style="color:#c82829;">telescope-recent-files-src </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#c82829;">url </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;github:smartpde/telescope-recent-files&quot;</span><span>;
+</span><span>      </span><span style="color:#c82829;">flake </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">false</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">outputs </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#f5871f;">self</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">nixpkgs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">neovim</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">telescope-recent-files-src </span><span>}:
+</span><span>    </span><span style="color:#8959a8;">let
+</span><span>      </span><span style="color:#c82829;">overlayFlakeInputs </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">prev</span><span>: </span><span style="color:#f5871f;">final</span><span>: {
+</span><span>        </span><span style="color:#c82829;">neovim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">neovim</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">packages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">x86_64-linux</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">neovim</span><span>;
+</span><span>
+</span><span>        </span><span style="color:#c82829;">vimPlugins </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">final</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">vimPlugins </span><span style="color:#3e999f;">// </span><span>{
+</span><span>          </span><span style="color:#c82829;">telescope-recent-files </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">./packages/vimPlugins/telescopeRecentFiles.nix </span><span>{
+</span><span>            </span><span style="color:#c82829;">src </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">telescope-recent-files-src</span><span>;
+</span><span>            </span><span style="color:#c82829;">pkgs </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">prev</span><span>;
+</span><span>          };
+</span><span>        };
+</span><span>      };
+</span><span>
+</span><span>      </span><span style="color:#c82829;">overlayMyNeovim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">prev</span><span>: </span><span style="color:#f5871f;">final</span><span>: {
+</span><span>        </span><span style="color:#c82829;">myNeovim </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">./packages/myNeovim.nix </span><span>{
+</span><span>          </span><span style="color:#c82829;">pkgs </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">final</span><span>;
+</span><span>        };
+</span><span>      };
+</span><span>
+</span><span>      </span><span style="color:#c82829;">pkgs </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#f5871f;">nixpkgs </span><span>{
+</span><span>        </span><span style="color:#c82829;">system </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;x86_64-linux&quot;</span><span>;
+</span><span>        </span><span style="color:#c82829;">overlays </span><span style="color:#3e999f;">= </span><span>[ </span><span style="color:#f5871f;">overlayFlakeInputs overlayMyNeovim </span><span>];
+</span><span>      };
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">in </span><span>{
+</span><span>      </span><span style="color:#c82829;">packages</span><span>.</span><span style="color:#c82829;">x86_64-linux</span><span>.</span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">myNeovim</span><span>;
+</span><span>      </span><span style="color:#c82829;">apps</span><span>.</span><span style="color:#c82829;">x86_64-linux</span><span>.</span><span style="color:#c82829;">default </span><span style="color:#3e999f;">= </span><span>{
+</span><span>        </span><span style="color:#c82829;">type </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;app&quot;</span><span>;
+</span><span>        </span><span style="color:#c82829;">program </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">myNeovim}</span><span style="color:#718c00;">/bin/nvim&quot;</span><span>;
+</span><span>      };
+</span><span>    };
+</span><span>}
+</span></code></pre>
+<p>To create a package you can take advantage of existing utility <code>buildVimPlugin</code>.
+Actually, this is how all plugins in Nixpkgs are defined. As the source pass the
+GitHub repo from the flake inputs.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># packages/vimPlugins/telescopeRecentFiles.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">, </span><span style="color:#f5871f;">src </span><span>}:
+</span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">vimUtils</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">buildVimPlugin </span><span>{
+</span><span>  </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;telescope-recent-files&quot;</span><span>;
+</span><span>  </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">src</span><span>;
+</span><span>}
+</span></code></pre>
+<div class="tip octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Octopus giving a tip
+    or explaining something"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>I have noticed that some plugins have a Makefile. They follow the
+<a href="https://github.com/echasnovski/mini.nvim">mini.nvim</a> template.</p>
+<p>When Nix builds derivation with standard <code>mkDerivation</code> call, and it finds the
+Makefile, it automatically tries to build it. This might fail.</p>
+<p>The make command doesn't need to be executed for the plugin to work. What is in
+the repo is already fully defined plugin that can be loaded to the Neovim as it
+is.</p>
+<p>To skip this automatic build include <code>dontBuild = true</code> into the set that is
+passed to <code>buildVimPlugin</code> function.</p>
+</div>
+  </div>
+</div>
+<p>Now, you can add the plugin to the plugin list as before.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># plugins.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">vimPlugins</span><span>; [
+</span><span>  </span><span style="color:#f5871f;">telescope-nvim
+</span><span>  </span><span style="color:#f5871f;">telescope-recent-files
+</span><span>]
+</span></code></pre>
+<p>Extend existing Telescope config to load the extension, and set up a keymap for
+the new picker.</p>
+<pre data-lang="lua" style="background-color:#ffffff;color:#4d4d4c;" class="language-lua "><code class="language-lua" data-lang="lua"><span style="color:#999999;">-- config/lua/nvim-telescope.lua
+</span><span style="color:#8959a8;">local </span><span style="color:#c82829;">opt </span><span style="color:#3e999f;">= </span><span>{ </span><span style="color:#718c00;">noremap </span><span>= </span><span style="color:#f5871f;">true </span><span>}
+</span><span style="color:#8959a8;">local </span><span style="color:#c82829;">telescope </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">require(</span><span style="color:#718c00;">&quot;telescope&quot;</span><span style="color:#4271ae;">)
+</span><span style="color:#c82829;">telescope</span><span>.</span><span style="color:#c82829;">setup</span><span style="color:#4271ae;">({})
+</span><span style="color:#c82829;">telescope</span><span>.</span><span style="color:#c82829;">load_extension</span><span style="color:#4271ae;">(</span><span style="color:#718c00;">&quot;recent_files&quot;</span><span style="color:#4271ae;">)
+</span><span style="color:#c82829;">vim</span><span>.api.</span><span style="color:#c82829;">nvim_set_keymap</span><span style="color:#4271ae;">(</span><span style="color:#718c00;">&quot;n&quot;</span><span style="color:#4271ae;">, </span><span style="color:#718c00;">&quot;&lt;leader&gt;&lt;tab&gt;&quot;</span><span style="color:#4271ae;">, </span><span style="color:#718c00;">&quot;:lua require(&#39;telescope.builtin&#39;).find_files()&lt;CR&gt;&quot;</span><span style="color:#4271ae;">, </span><span style="color:#c82829;">opt</span><span style="color:#4271ae;">)
+</span><span style="color:#c82829;">vim</span><span>.api.</span><span style="color:#c82829;">nvim_set_keymap</span><span style="color:#4271ae;">(</span><span style="color:#718c00;">&quot;n&quot;</span><span style="color:#4271ae;">, </span><span style="color:#718c00;">&quot;&lt;leader&gt;&lt;leader&gt;&quot;</span><span style="color:#4271ae;">, </span><span style="color:#718c00;">&quot;:lua require(&#39;telescope&#39;).extensions.recent_files.pick()&lt;CR&gt;&quot;</span><span style="color:#4271ae;">, </span><span style="color:#c82829;">opt</span><span style="color:#4271ae;">)
+</span></code></pre>
+<p>In the current state your Neovim should be runnable, and you should be able to
+test the new <code>telescope-recent-files</code> plugin by pressing space-space.</p>
+<h2 id="add-runtime-dependency"><a class="zola-anchor" href="#add-runtime-dependency" aria-label="Anchor link for: add-runtime-dependency"
+  >§</a
+>
+Add runtime dependency</h2>
+<p>Have you heard of <a href="https://github.com/williamboman/mason.nvim">mason.nvim</a>? I
+have discovered it only recently, and it's no surprise that it's gaining a lot
+of popularity.</p>
+<p>Managing external runtime dependencies, such as language servers, used to be
+pain. I briefly examined it, and it appears that it offers limited list of
+dependencies it supports. While it's an honorable effort, the community that
+contributes and maintains Nixpkgs is much larger compared to the community that
+works on Mason. This is why I believe that Nix provides greater freedom for
+declaring and configuring a reusable development environments.</p>
+<p>In this chapter we will add two dependencies to demonstrate a bug I have
+discovered. First thing, define your dependencies in separate file.</p>
+<p>Ideally it would be one list that contains all required Nix packages, but in our
+case we will create two lists.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># runtimeDeps.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">deps1 </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span>; [
+</span><span>    </span><span style="color:#f5871f;">nodePackages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">typescript-language-server
+</span><span>  ];
+</span><span>  </span><span style="color:#c82829;">deps2 </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span>; [ </span><span style="color:#f5871f;">lazygit </span><span>];
+</span><span>}
+</span></code></pre>
+<p>Next, move a package that was previously returned from the module function to
+the <code>let-in</code> block, and assign it to the variable <code>myNeovimUnwrapped</code>. Instead
+of it now the module function will return new package - a simple shell
+application.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># packages/myNeovim.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#c82829;">customRC </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../config </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span>  </span><span style="color:#c82829;">plugins </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../plugins.nix </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span>  </span><span style="color:#c82829;">runtimeDeps </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../runtimeDeps.nix </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span>  </span><span style="color:#c82829;">neovimRuntimeDependencies </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">symlinkJoin </span><span>{
+</span><span>    </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;neovimRuntimeDependencies&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">paths </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">runtimeDeps</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">deps1</span><span>;
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">neovimRuntimeDependencies2 </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">symlinkJoin </span><span>{
+</span><span>    </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;neovimRuntimeDependencies2&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">paths </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">runtimeDeps</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">deps2</span><span>;
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">myNeovimUnwrapped </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">wrapNeovim pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">neovim </span><span>{
+</span><span>    </span><span style="color:#c82829;">configure </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">customRC</span><span>;
+</span><span>      </span><span style="color:#c82829;">packages</span><span>.</span><span style="color:#c82829;">all</span><span>.</span><span style="color:#c82829;">start </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">plugins</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span style="color:#8959a8;">in </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">writeShellApplication </span><span>{
+</span><span>  </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nvim&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">runtimeInputs </span><span style="color:#3e999f;">= </span><span>[ </span><span style="color:#f5871f;">neovimRuntimeDependencies2 neovimRuntimeDependencies </span><span>];
+</span><span>  </span><span style="color:#c82829;">text </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">    </span><span style="color:#f5871f;">${myNeovimUnwrapped}</span><span style="color:#718c00;">/bin/nvim &quot;$@&quot;
+</span><span style="color:#718c00;">  &#39;&#39;</span><span>;
+</span><span>}
+</span></code></pre>
+<p>In the shell application we have defined <code>runtimeInputs</code>, and passed to it a
+list containing two packages that correspond to the dependency lists specified
+in the previous file. These packages are build using <code>symlinkJoin</code>. It takes the
+provided <code>paths</code> and creates symlinks pointing to them, all bundled together in
+one package. So it's one package that aggregates other packages through
+symlinks.</p>
+<div class="tip octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Octopus giving a tip
+    or explaining something"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Here occurs the bug. For some reason, <code>symlinkJoin</code> fails to create
+properly all symlinks if both dependencies - typescript server and lazygit - are
+defined together. Some links will be omitted in the resulted package.</p>
+<p>I don't know exactly what causes thus bug and which packages are incompatible.
+That's also why I have not yet opened a GitHub issue for it. The naive guess is
+that <code>nodePackages.*</code> can't be mixed with packages from 'root'.</p>
+</div>
+  </div>
+</div>
+<p>The shell application we have defined is called a
+<a href="https://nixos.wiki/wiki/Nix_Cookbook#Wrapping_packages">wrapper</a>, and it allows
+us to enrich the original unwrapped application. In our case packages in the
+<code>runtimePaths</code> paths will be added to <code>PATH</code> environment variable, and therefore
+will be available for Neovim's process.</p>
+<div class="why octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Octopus asking
+    question"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Why do we pass <code>"$@"</code> to unwrapped Neovim?</p>
+</div>
+    <div class="octopus-answer"><p>This is shell variable which has value of all parameters passed to the script.
+For example, if you want to edit a specific file with <code>nvim foo.txt</code>, then the
+parameter <code>foo.txt</code> must be forwarded to the original unwrapped <code>nvim</code>.</p>
+</div>
+  </div>
+</div>
+<p>You can test now that in terminal running <code>typescript-language-server --version</code>
+will tell you that the command is not recognized. But running the command inside
+Neovim's terminal (<code>:term</code>) will work. The same should also apply for <code>lazygit</code>.</p>
+<h2 id="generate-lua-config-from-nix"><a class="zola-anchor" href="#generate-lua-config-from-nix" aria-label="Anchor link for: generate-lua-config-from-nix"
+  >§</a
+>
+Generate Lua config from Nix</h2>
+<p>All Nix packages are in <code>/nix/store</code> in a directory which is prefixed with a
+hash generated from the content of the package. If we want to reference some
+package from the configuration scripts, we must resolve the path of the package
+on build time otherwise we would not know exactly which hash is the correct one.
+The traditional Lua script configuration files that we have already set up lack
+this ability.</p>
+<p>In this chapter you will add Typescript runtime dependency, and instruct
+<code>typescript-language-server</code> to use this custom typescript instance.</p>
+<p>First, add <code>nvim-lspconfig</code> plugin:</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># plugins.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">vimPlugins</span><span>; [
+</span><span>  </span><span style="color:#f5871f;">telescope-nvim
+</span><span>  </span><span style="color:#f5871f;">telescope-recent-files
+</span><span>  </span><span style="color:#f5871f;">nvim-lspconfig
+</span><span>]
+</span></code></pre>
+<p>Then, add typescript to runtime dependencies.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># runtimeDeps.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span>{
+</span><span>  </span><span style="color:#c82829;">deps1 </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span>; [
+</span><span>    </span><span style="color:#f5871f;">nodePackages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">typescript
+</span><span>    </span><span style="color:#f5871f;">nodePackages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">typescript-language-server
+</span><span>  ];
+</span><span>  </span><span style="color:#c82829;">deps2 </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span>; [ </span><span style="color:#f5871f;">lazygit </span><span>];
+</span><span>}
+</span></code></pre>
+<p>Next, create new <code>nvim-lspconfig.lua.nix</code> in new directory <code>config/luanix</code>.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># config/luanix/nvim-lspconfig.lua.nix
+</span><span style="color:#999999;"># vim: ft=lua
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">local nvim_lsp = require(&quot;lspconfig&quot;)
+</span><span style="color:#718c00;">nvim_lsp.tsserver.setup({
+</span><span style="color:#718c00;">  init_options = {
+</span><span style="color:#718c00;">    tsserver = {
+</span><span style="color:#718c00;">      path = &quot;</span><span style="color:#f5871f;">${pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">nodePackages</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">typescript}</span><span style="color:#718c00;">/lib/node_modules/typescript/lib&quot;,
+</span><span style="color:#718c00;">    },
+</span><span style="color:#718c00;">  },
+</span><span style="color:#718c00;">})
+</span><span style="color:#718c00;">&#39;&#39;
+</span></code></pre>
+<p>The interesting part is the tsserver's <code>path</code> in the <code>init_options</code>. The value
+contains a Nix variable <code>${pkgs.nodePackages.typescript}</code> which will be resolved
+to the absolute path leading to the typescript package in the Nix store.</p>
+<div class="why octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Octopus asking
+    question"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>What is <code>vim: ft=vim</code> at top of the file?</p>
+</div>
+    <div class="octopus-answer"><p>We have a Nix function which returns multiline string. Since most of the content
+in this file is Lua code, you might want to instruct Vim to use Lua formatting
+with the <a href="https://neovim.io/doc/user/options.html#modeline">modeline</a>.</p>
+</div>
+  </div>
+</div>
+<p>Next, extend the <code>config/default.nix</code> to process and source new configuration.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># config/default.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#c82829;">nixFiles2ConfigFiles </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">dir</span><span>:
+</span><span>    </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">map </span><span>(</span><span style="color:#f5871f;">file</span><span>:
+</span><span>      </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">writeTextFile </span><span>{
+</span><span>        </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">strings</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">removeSuffix </span><span style="color:#718c00;">&quot;.nix&quot; </span><span style="color:#f5871f;">file</span><span>;
+</span><span>        </span><span style="color:#c82829;">text </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#3e999f;">./</span><span style="color:#f5871f;">${dir}</span><span style="color:#3e999f;">/</span><span style="color:#f5871f;">${file} </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span>      }) (</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">attrNames </span><span>(</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">readDir </span><span style="color:#3e999f;">./</span><span style="color:#f5871f;">${dir}</span><span>));
+</span><span>
+</span><span>  </span><span style="color:#c82829;">scripts2ConfigFiles </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">dir</span><span>:
+</span><span>    </span><span style="color:#8959a8;">let
+</span><span>      </span><span style="color:#c82829;">configDir </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">stdenv</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">mkDerivation </span><span>{
+</span><span>        </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nvim-</span><span style="color:#f5871f;">${dir}</span><span style="color:#718c00;">-configs&quot;</span><span>;
+</span><span>        </span><span style="color:#c82829;">src </span><span style="color:#3e999f;">= </span><span style="background-color:#c82829;color:#ffffff;">./</span><span style="color:#f5871f;">${dir}</span><span>;
+</span><span>        </span><span style="color:#c82829;">installPhase </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">          mkdir -p $out/
+</span><span style="color:#718c00;">          cp ./* $out/
+</span><span style="color:#718c00;">        &#39;&#39;</span><span>;
+</span><span>      };
+</span><span>    </span><span style="color:#8959a8;">in </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">map </span><span>(</span><span style="color:#f5871f;">file</span><span>: </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${configDir}</span><span style="color:#718c00;">/</span><span style="color:#f5871f;">${file}</span><span style="color:#718c00;">&quot;</span><span>)
+</span><span>    (</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">attrNames </span><span>(</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">readDir configDir</span><span>));
+</span><span>
+</span><span>  </span><span style="color:#c82829;">sourceConfigFiles </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">files</span><span>:
+</span><span>    </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">concatStringsSep </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">\n</span><span style="color:#718c00;">&quot; </span><span>(</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">map </span><span>(</span><span style="color:#f5871f;">file</span><span>:
+</span><span>      (</span><span style="color:#8959a8;">if </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">strings</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">hasSuffix </span><span style="color:#718c00;">&quot;lua&quot; </span><span style="color:#f5871f;">file </span><span style="color:#8959a8;">then </span><span style="color:#718c00;">&quot;luafile&quot; </span><span style="color:#8959a8;">else </span><span style="color:#718c00;">&quot;source&quot;</span><span>)
+</span><span>      </span><span style="color:#3e999f;">+ </span><span style="color:#718c00;">&quot; </span><span style="color:#f5871f;">${file}</span><span style="color:#718c00;">&quot;</span><span>) </span><span style="color:#f5871f;">files</span><span>);
+</span><span>
+</span><span>  </span><span style="color:#c82829;">vim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">scripts2ConfigFiles </span><span style="color:#718c00;">&quot;vim&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">lua </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">scripts2ConfigFiles </span><span style="color:#718c00;">&quot;lua&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">luanix </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">nixFiles2ConfigFiles </span><span style="color:#718c00;">&quot;luanix&quot;</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">in </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">concatStringsSep </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">\n</span><span style="color:#718c00;">&quot;
+</span><span>(</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">map </span><span>(</span><span style="color:#f5871f;">configs</span><span>: </span><span style="color:#f5871f;">sourceConfigFiles configs</span><span>) [ </span><span style="color:#f5871f;">vim lua luanix</span><span>])
+</span></code></pre>
+<p>New function <code>nixFiles2ConfigFiles</code> takes a <code>dir</code> argument, and returns (similar
+like for <code>scripts2ConfigFiles</code>) a list of full paths to config files located in
+the Nix store.</p>
+<p>The implementation maps every file found in the provided directory to a separate
+package - one single text file in Nix store. The name of the package is obtained
+by removing the <code>.nix</code> suffix, so the <code>nvim-lspconfig.lua.nix</code> will become
+<code>nvim-lspconfig.lua</code>. And the content of the text file package is the string
+returned by the function in the luanix configuration.</p>
+<p>While this content is written, Nix variables are resolved, and therefore
+<code>${pkgs.nodePackages.typescript}</code> will become a full Nix store path of the
+typescript package.</p>
+<p>Lastly, <code>luanix</code> will be processed by <code>sourceConfigFiles</code>, and since the text
+packages end correctly with <code>.lua</code>, in the vimrc they will be sourced with
+<code>luafile</code> call. So the result in the generated config file will look like this:</p>
+<p>The RC now loads also new Lua script which was produced from Nix code.</p>
+<pre data-lang="vim" style="background-color:#ffffff;color:#4d4d4c;" class="language-vim "><code class="language-vim" data-lang="vim"><span>source </span><span style="color:#c82829;">/nix/</span><span>store</span><span style="color:#c82829;">/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/</span><span>nvim</span><span style="color:#f5871f;">-0</span><span>-init</span><span style="color:#8959a8;">.</span><span>vim
+</span><span>source </span><span style="color:#c82829;">/nix/</span><span>store</span><span style="color:#c82829;">/9khyyhiapv1kbwphxk736nxqzl3xcnl9-nvim-vim-configs/</span><span>nvim-setters</span><span style="color:#8959a8;">.</span><span>vim
+</span><span>luafile </span><span style="color:#c82829;">/nix/</span><span>store</span><span style="color:#c82829;">/z1p9n8cdi4wqhskazxsb2vy1gj2h83mx-nvim-lua-configs/</span><span>nvim-telescope</span><span style="color:#8959a8;">.</span><span style="color:#4271ae;">lua
+</span><span>luafile </span><span style="color:#c82829;">/nix/</span><span>store/s</span><span style="color:#f5871f;">8</span><span>ar</span><span style="color:#f5871f;">23</span><span>b</span><span style="color:#f5871f;">2</span><span>x</span><span style="color:#f5871f;">81</span><span>m</span><span style="color:#f5871f;">746</span><span>w</span><span style="color:#f5871f;">0</span><span>gvn</span><span style="color:#f5871f;">2</span><span>mkdlcs</span><span style="color:#f5871f;">4</span><span>p</span><span style="color:#f5871f;">8</span><span>qb-nvim-lspconfig</span><span style="color:#8959a8;">.</span><span style="color:#4271ae;">lua
+</span></code></pre>
+<p>Now to test it we can create typescript with a type error, and see if the
+tsserver will catch it.</p>
+<pre data-lang="json" style="background-color:#ffffff;color:#4d4d4c;" class="language-json "><code class="language-json" data-lang="json"><span># tmp/test/tsconfig.json
+</span><span>{
+</span><span>  </span><span style="color:#718c00;">&quot;include&quot;</span><span>: [</span><span style="color:#718c00;">&quot;test.ts&quot;</span><span>]
+</span><span>}
+</span></code></pre>
+<pre data-lang="typescript" style="background-color:#ffffff;color:#4d4d4c;" class="language-typescript "><code class="language-typescript" data-lang="typescript"><span style="color:#999999;">// tmp/test/test.ts
+</span><span style="color:#8959a8;">const </span><span style="color:#c82829;">foo</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">number </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;bar&quot;</span><span>;
+</span></code></pre>
+<p>You should see an error <code>Type 'string' is not assignable to type 'number'.</code></p>
+<h2 id="package-anything-else"><a class="zola-anchor" href="#package-anything-else" aria-label="Anchor link for: package-anything-else"
+  >§</a
+>
+Package anything else</h2>
+<p>In this chapter you won't do anything new. You will use already introduced
+mechanics to package additional files. Hopefully, this will highlight the
+pattern used for enriching your development environment. To be more specific,
+you will add a snippet file for the typescript.</p>
+<pre data-lang="snippets" style="background-color:#ffffff;color:#4d4d4c;" class="language-snippets "><code class="language-snippets" data-lang="snippets"><span># ultisnips/typescript.snippets
+</span><span>snippet af &quot;arrow function&quot;
+</span><span>($1) =&gt; {
+</span><span>    $2
+</span><span>}
+</span><span>endsnippet
+</span></code></pre>
+<p>Similar as before, we will take everything from <code>ultisnips</code> directory, and
+package it together.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># packages/ultisnipsSnippets.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">stdenv</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">mkDerivation </span><span>{
+</span><span>  </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;ultisnipsSnippets&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">src </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">../ultisnips</span><span>;
+</span><span>  </span><span style="color:#c82829;">installPhase </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">    mkdir -p $out/
+</span><span style="color:#718c00;">    cp ./*.snippets $out/
+</span><span style="color:#718c00;">  &#39;&#39;</span><span>;
+</span><span>}
+</span></code></pre>
+<p>The package with snippets is prepared, and we will use in the next chapter.</p>
+<h2 id="generate-vim-config-from-nix"><a class="zola-anchor" href="#generate-vim-config-from-nix" aria-label="Anchor link for: generate-vim-config-from-nix"
+  >§</a
+>
+Generate Vim config from Nix</h2>
+<p>To come the full circle, introduce <code>vimnix</code> script with configuration for the
+Ultisnips plugin where you will set the path pointing to snippets package in Nix
+store.</p>
+<p>First, let's add the plugin.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># plugins.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">vimPlugins</span><span>; [
+</span><span>  </span><span style="color:#f5871f;">telescope-nvim
+</span><span>  </span><span style="color:#f5871f;">telescope-recent-files
+</span><span>  </span><span style="color:#f5871f;">nvim-lspconfig
+</span><span>  </span><span style="color:#f5871f;">ultisnips
+</span><span>]
+</span></code></pre>
+<p>Then, in new directory <code>vimnix</code> create configuration for Ultisnipps.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># config/vimnix/nvim-ultisnips.vim.nix
+</span><span style="color:#999999;"># vim: ft=vim
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>} : </span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#c82829;">ultisnipsSnippets </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../../packages/ultisnipsSnippets.nix </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span style="color:#8959a8;">in </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">  let g:UltiSnipsSnippetDirectories=[&quot;</span><span style="color:#f5871f;">${ultisnipsSnippets}</span><span style="color:#718c00;">&quot;]
+</span><span style="color:#718c00;">&#39;&#39;
+</span></code></pre>
+<p>Again, this is a Nix function returning multiline string containing Vim script.
+And we use Nix variable <code>${ultisnipsSnippets}</code> which is defined in <code>let-in</code>
+block and references the package created in the previous chapter.</p>
+<div class="why octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Octopus asking
+    question"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Why we didn't put the <code>ultisnipsSinppets</code> package to the overlay, similar as
+<code>neovim</code> or <code>telescope-recent-files</code> packages?</p>
+</div>
+    <div class="octopus-answer"><p>You totally could do that. Let's call this decision a personal preference. The
+reasoning behind is that I feel like the cohesion is better with Ultisnips
+fingerprinting in less modules. But feel free to do it anyway you find the
+best.</p>
+</div>
+  </div>
+</div>
+<p>In the <code>config/default.nix</code> we have everything prepared. Just load <code>vimnix</code>, and
+add it to the list of configs that are sourced.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># config/default.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#c82829;">nixFiles2ConfigFiles </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">dir</span><span>:
+</span><span>    </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">map </span><span>(</span><span style="color:#f5871f;">file</span><span>:
+</span><span>      </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">writeTextFile </span><span>{
+</span><span>        </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">strings</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">removeSuffix </span><span style="color:#718c00;">&quot;.nix&quot; </span><span style="color:#f5871f;">file</span><span>;
+</span><span>        </span><span style="color:#c82829;">text </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#3e999f;">./</span><span style="color:#f5871f;">${dir}</span><span style="color:#3e999f;">/</span><span style="color:#f5871f;">${file} </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span>      }) (</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">attrNames </span><span>(</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">readDir </span><span style="color:#3e999f;">./</span><span style="color:#f5871f;">${dir}</span><span>));
+</span><span>
+</span><span>  </span><span style="color:#c82829;">scripts2ConfigFiles </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">dir</span><span>:
+</span><span>    </span><span style="color:#8959a8;">let
+</span><span>      </span><span style="color:#c82829;">configDir </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">stdenv</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">mkDerivation </span><span>{
+</span><span>        </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nvim-</span><span style="color:#f5871f;">${dir}</span><span style="color:#718c00;">-configs&quot;</span><span>;
+</span><span>        </span><span style="color:#c82829;">src </span><span style="color:#3e999f;">= </span><span style="background-color:#c82829;color:#ffffff;">./</span><span style="color:#f5871f;">${dir}</span><span>;
+</span><span>        </span><span style="color:#c82829;">installPhase </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">          mkdir -p $out/
+</span><span style="color:#718c00;">          cp ./* $out/
+</span><span style="color:#718c00;">        &#39;&#39;</span><span>;
+</span><span>      };
+</span><span>    </span><span style="color:#8959a8;">in </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">map </span><span>(</span><span style="color:#f5871f;">file</span><span>: </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">${configDir}</span><span style="color:#718c00;">/</span><span style="color:#f5871f;">${file}</span><span style="color:#718c00;">&quot;</span><span>)
+</span><span>    (</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">attrNames </span><span>(</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">readDir configDir</span><span>));
+</span><span>
+</span><span>  </span><span style="color:#c82829;">sourceConfigFiles </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">files</span><span>:
+</span><span>    </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">concatStringsSep </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">\n</span><span style="color:#718c00;">&quot; </span><span>(</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">map </span><span>(</span><span style="color:#f5871f;">file</span><span>:
+</span><span>      (</span><span style="color:#8959a8;">if </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">lib</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">strings</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">hasSuffix </span><span style="color:#718c00;">&quot;lua&quot; </span><span style="color:#f5871f;">file </span><span style="color:#8959a8;">then </span><span style="color:#718c00;">&quot;luafile&quot; </span><span style="color:#8959a8;">else </span><span style="color:#718c00;">&quot;source&quot;</span><span>)
+</span><span>      </span><span style="color:#3e999f;">+ </span><span style="color:#718c00;">&quot; </span><span style="color:#f5871f;">${file}</span><span style="color:#718c00;">&quot;</span><span>) </span><span style="color:#f5871f;">files</span><span>);
+</span><span>
+</span><span>  </span><span style="color:#c82829;">vim </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">scripts2ConfigFiles </span><span style="color:#718c00;">&quot;vim&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">vimnix </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">nixFiles2ConfigFiles </span><span style="color:#718c00;">&quot;vimnix&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">lua </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">scripts2ConfigFiles </span><span style="color:#718c00;">&quot;lua&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">luanix </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">nixFiles2ConfigFiles </span><span style="color:#718c00;">&quot;luanix&quot;</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">in </span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">concatStringsSep </span><span style="color:#718c00;">&quot;</span><span style="color:#f5871f;">\n</span><span style="color:#718c00;">&quot;
+</span><span>(</span><span style="color:#f5871f;">builtins</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">map </span><span>(</span><span style="color:#f5871f;">configs</span><span>: </span><span style="color:#f5871f;">sourceConfigFiles configs</span><span>) [ </span><span style="color:#f5871f;">vim vimnix lua luanix</span><span>])
+</span></code></pre>
+<p>You would need to configure also completion plugin to make proper use of the
+snippets. For the demonstration purposes this is enough.</p>
+<p>To test, since we don't have completion set up, we can just open our <code>test.ts</code>
+and run <code>:UltisnipsEdit</code>. It should open the snippet file in the Nix store
+(<code>&lt;c-g&gt;</code> to see the current file path). Originally, you could edit the file like
+that, but files in Nix store are read-only, so you need to modify the snippet
+file you created in Ultisnips directory.</p>
+<h2 id="use-your-neovim"><a class="zola-anchor" href="#use-your-neovim" aria-label="Anchor link for: use-your-neovim"
+  >§</a
+>
+Use your Neovim</h2>
+<p>Create an alias for <code>nix run</code> or add your Neovim as a package to your Home
+Manager. I prefer to create an alias.</p>
+<pre data-lang="bash" style="background-color:#ffffff;color:#4d4d4c;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82829;">nvim</span><span style="color:#4271ae;"> = </span><span style="color:#718c00;">&quot;nix run ~/dev/neovim-nix --&quot;</span><span style="color:#3e999f;">;
+</span></code></pre>
+<div class="why octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Octopus asking
+    question"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>What are the <code>--</code> at the end?</p>
+</div>
+    <div class="octopus-answer"><p>A <code>--</code> signals the end of options and disables further option processing. Any
+arguments after the -- are treated as filenames and arguments. Basically, stuff
+after the double-dash will apply to <code>nvim</code> command and not to <code>nix run</code>.</p>
+</div>
+  </div>
+</div>
+<p>I like to provide local path to the flake, so when I want to apply new changes I
+don't need always push to remote. It's good for testing. But you can also run
+the app directly from remote address.</p>
+<pre data-lang="bash" style="background-color:#ffffff;color:#4d4d4c;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82829;">nvim</span><span style="color:#4271ae;"> = </span><span style="color:#718c00;">&quot;nix run github:PrimaMateria/neovim-nix --&quot;</span><span style="color:#3e999f;">;
+</span></code></pre>
+<h2 id="updating"><a class="zola-anchor" href="#updating" aria-label="Anchor link for: updating"
+  >§</a
+>
+Updating</h2>
+<p>Building flake creates <code>flake.lock</code> where the inputs are frozen to specific
+version. Updating is as simple as <code>nix flake update</code>.</p>
+<div class="tip octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Octopus giving a tip
+    or explaining something"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>The best thing is that if something goes wrong, and you don't have time to
+investigate, just revert the changes in <code>flake.lock</code>, run again, and you are
+back in your previous working version.</p>
+</div>
+  </div>
+</div>
+<h2 id="bonus-secrets"><a class="zola-anchor" href="#bonus-secrets" aria-label="Anchor link for: bonus-secrets"
+  >§</a
+>
+Bonus: Secrets</h2>
+<p>This is a bonus chapter. Storing secrets in a git repository may not be
+necessary for you. I have only used it to store an OpenAI API key which is
+needed for the <a href="https://github.com/jackMort/ChatGPT.nvim">ChatGPT.nvim</a> plugin.</p>
+<p>You can use <a href="https://github.com/AGWA/git-crypt">git-crypt</a> to encrypt the
+desired files when they are sent to the remote repository and decrypt them when
+they are returned to the local.</p>
+<p>I choose to declare <code>git</code> and <code>git-crypt</code> outside the Neovim flake. If you are
+using Nix configuration just add it to the <code>environment.systemPackages</code>, or if
+you are using home manager add it to <code>home.packages</code>.</p>
+<pre data-lang="bash" style="background-color:#ffffff;color:#4d4d4c;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82829;">mkdir</span><span style="color:#4271ae;"> .secrets
+</span><span style="color:#c82829;">git-crypt</span><span style="color:#4271ae;"> init
+</span><span style="color:#c82829;">git-crypt</span><span style="color:#4271ae;"> export-key </span><span style="color:#3e999f;">&lt;</span><span style="color:#4271ae;">PATH</span><span style="color:#3e999f;">&gt;
+</span><span style="color:#4271ae;">echo </span><span style="color:#718c00;">&quot;.secrets/** filter=git-crypt diff=git-crypt&quot; </span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;"> .gitattributes
+</span><span style="color:#4271ae;">echo </span><span style="color:#718c00;">&#39;{ openai-api-key = &quot;secretkey&quot;; }&#39; </span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;"> .secrets/secrets.nix
+</span></code></pre>
+<p>All the files in the <code>.secrets</code> directory will have content on remote encrypted.
+Locally the <code>git-crypt</code> automatically decrypts the files.</p>
+<div class="tip octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Octopus giving a tip
+    or explaining something"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Be aware that adding encrypted secrets to remote repo will make running app from
+the remote flake not available anymore. Also installing it as package will
+require referencing the local unencrypted flake.</p>
+</div>
+  </div>
+</div>
+<p>Now, let's add the plugin, and its configuration.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># plugins.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">with </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">vimPlugins</span><span>; [
+</span><span>  </span><span style="color:#f5871f;">telescope-nvim
+</span><span>  </span><span style="color:#f5871f;">telescope-recent-files
+</span><span>  </span><span style="color:#f5871f;">nvim-lspconfig
+</span><span>  </span><span style="color:#f5871f;">ultisnips
+</span><span>  </span><span style="color:#f5871f;">ChatGPT-nvim
+</span><span>]
+</span></code></pre>
+<pre data-lang="lua" style="background-color:#ffffff;color:#4d4d4c;" class="language-lua "><code class="language-lua" data-lang="lua"><span style="color:#999999;">-- config/lua/nvim-chatgpt.lua
+</span><span style="color:#4271ae;">require(</span><span style="color:#718c00;">&quot;chatgpt&quot;</span><span style="color:#4271ae;">)</span><span>.</span><span style="color:#c82829;">setup</span><span style="color:#4271ae;">({ })
+</span><span style="color:#c82829;">vim</span><span>.api.</span><span style="color:#c82829;">nvim_set_keymap</span><span style="color:#4271ae;">(</span><span style="color:#718c00;">&quot;n&quot;</span><span style="color:#4271ae;">, </span><span style="color:#718c00;">&quot;&lt;leader&gt;aa&quot;</span><span style="color:#4271ae;">, </span><span style="color:#718c00;">&quot;&lt;cmd&gt;ChatGPT&lt;cr&gt;&quot;</span><span style="color:#4271ae;">, { </span><span style="color:#718c00;">noremap </span><span style="color:#4271ae;">= </span><span style="color:#f5871f;">true </span><span style="color:#4271ae;">})
+</span></code></pre>
+<p>The last piece is to make our secret API key available. For that just extend the
+wrapper shell application.</p>
+<p>Imported <code>secrets</code> in the <code>let-in</code> block are used to set an environment variable
+<code>OPENAI_API_KEY</code> in the shell application's text.</p>
+<pre data-lang="nix" style="background-color:#ffffff;color:#4d4d4c;" class="language-nix "><code class="language-nix" data-lang="nix"><span style="color:#999999;"># packages/myNeovim.nix
+</span><span>{ </span><span style="color:#f5871f;">pkgs </span><span>}:
+</span><span style="color:#8959a8;">let
+</span><span>  </span><span style="color:#c82829;">customRC </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../config </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span>  </span><span style="color:#c82829;">secrets </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../.secrets/secrets.nix</span><span>;
+</span><span>  </span><span style="color:#c82829;">plugins </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../plugins.nix </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span>  </span><span style="color:#c82829;">runtimeDeps </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">import </span><span style="color:#718c00;">../runtimeDeps.nix </span><span>{ </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">pkgs</span><span>; };
+</span><span>  </span><span style="color:#c82829;">neovimRuntimeDependencies </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">symlinkJoin </span><span>{
+</span><span>    </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;neovimRuntimeDependencies&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">paths </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">runtimeDeps</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">deps1</span><span>;
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">neovimRuntimeDependencies2 </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">symlinkJoin </span><span>{
+</span><span>    </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;neovimRuntimeDependencies2&quot;</span><span>;
+</span><span>    </span><span style="color:#c82829;">paths </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">runtimeDeps</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">deps2</span><span>;
+</span><span>  };
+</span><span>  </span><span style="color:#c82829;">myNeovimUnwrapped </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">wrapNeovim pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">neovim </span><span>{
+</span><span>    </span><span style="color:#c82829;">configure </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      </span><span style="color:#8959a8;">inherit </span><span style="color:#c82829;">customRC</span><span>;
+</span><span>      </span><span style="color:#c82829;">packages</span><span>.</span><span style="color:#c82829;">all</span><span>.</span><span style="color:#c82829;">start </span><span style="color:#3e999f;">= </span><span style="color:#f5871f;">plugins</span><span>;
+</span><span>    };
+</span><span>  };
+</span><span style="color:#8959a8;">in </span><span style="color:#f5871f;">pkgs</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">writeShellApplication </span><span>{
+</span><span>  </span><span style="color:#c82829;">name </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&quot;nvim&quot;</span><span>;
+</span><span>  </span><span style="color:#c82829;">runtimeInputs </span><span style="color:#3e999f;">= </span><span>[ </span><span style="color:#f5871f;">neovimRuntimeDependencies2 neovimRuntimeDependencies </span><span>];
+</span><span>  </span><span style="color:#c82829;">text </span><span style="color:#3e999f;">= </span><span style="color:#718c00;">&#39;&#39;
+</span><span style="color:#718c00;">    OPENAI_API_KEY=</span><span style="color:#f5871f;">${secrets</span><span style="color:#3e999f;">.</span><span style="color:#f5871f;">openai-api-key} ${myNeovimUnwrapped}</span><span style="color:#718c00;">/bin/nvim &quot;$@&quot;
+</span><span style="color:#718c00;">  &#39;&#39;</span><span>;
+</span><span>}
+</span></code></pre>
+<p>Now space-a-a should open window with openai prompt.</p>
+<h2 id="support-other-systems"><a class="zola-anchor" href="#support-other-systems" aria-label="Anchor link for: support-other-systems"
+  >§</a
+>
+Support other systems</h2>
+<p>Maybe you are already aware of
+<a href="https://github.com/numtide/flake-utils">numtide/flake-utlis</a>, and the popular
+helper function that allows you to prepare package for multiple architectures.
+For now your config has everywhere hard-coded <code>x86_64-linux</code>.</p>
+<p>I was already experimenting with it, and I was trying to use the flake in
+<a href="https://f-droid.org/en/packages/com.termux.nix/">Nix-on-Droid</a>, but I got some
+errors. If I find working solutions later, I will write a blog post about it as
+well.</p>
+<p>It would be cool to have your lightweight development environment on the phone.
+Maybe just grab some small keyboard, and you could stay crafty on the road. Even
+if not hardcore programming, then just working on your ideas.</p>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+
+<h2><i class="fa-brands fa-reddit-alien comment-section-icon"></i> Reddit comments</h2>
+
+<a class="reddit-link" href=https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;NixOS&#x2F;comments&#x2F;120yk3a&#x2F;how_to_create_your_own_neovim_flake&#x2F;>See on Reddit</a>
+<div class="reddit-embed"
+     red-href="https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;NixOS&#x2F;comments&#x2F;120yk3a&#x2F;how_to_create_your_own_neovim_flake&#x2F;" 
+     red-opts='{"show_loading_animation": false, "show_post": true, "show_post_title": false, "show_post_body": false, "show_comments_section_header": false}'
+>
+</div>
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2025<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
