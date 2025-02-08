@@ -39,20 +39,39 @@ See an example setup with Home and Development start pages.
 
 ## Color Schemes
 
-Personalize your browsing experience with various color schemes. Here's an
-example using the Gruvbox Dark Hard theme:
-
-<div style="margin-top: 24px">
-{{ resize_image_w(path="20241003-startpages/base16-gruvbox-dark-hard.png", width=748) }}
-</div>
-
 [Browse all available color schemes](https://github.com/PrimaMateria/startpages-template/blob/main/_docs/colorschemes.md)
 to find your perfect match. For the CSS-savvy, full customization is at your
 fingertips!
 
+Dark color schemes
+
+<div style="margin-top: 9px">
+{{ resize_image_w(path="20241003-startpages/montage-dark-a.png", width=748) }}
+</div>
+
+More dark color schemes
+
+<div style="margin-top: 9px">
+{{ resize_image_w(path="20241003-startpages/montage-dark-b.png", width=748) }}
+</div>
+
+And some light color schemes
+
+<div style="margin-top: 9px">
+{{ resize_image_w(path="20241003-startpages/montage-light.png", width=748) }}
+</div>
+
+
 ## Content Structure
 
-Organize your digital world with this intuitive layout:
+Essentially, it is a single YAML file that you can edit directly using the
+GitHub web editor.
+
+<div style="margin-top: 9px">
+{{ resize_image_w(path="20241003-startpages/startpages-content-edit.png", width=748) }}
+</div>
+
+The structure goes like this
 
 <div style="margin-top: 24px">
 {{ resize_image_w(path="20241003-startpages/content-schema.png", width=748) }}
@@ -75,8 +94,7 @@ Get started with this template repository.
    updates.
 3. **Customize**: Edit the YAML file to add your links and categories.
 
-Not tech-savvy? Don't worry! Leave a comment, and I'll guide you through the
-process.
+Need help? Leave a comment.
 
 ## Browser Integration
 
@@ -101,11 +119,3 @@ This project is powered by:
 Startpages offer a unique way to tailor your browsing experience to your needs.
 Whether you're a productivity enthusiast or just someone who likes things
 organized, this project might be just what you're looking for.
-
-Have you tried creating a Startpage before? What features would you like to see
-added? Let's discuss in the comments below!
-
----
-
-_Remember, your browser is your gateway to the internet – why not make it work
-for you?_
