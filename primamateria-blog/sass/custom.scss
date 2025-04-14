@@ -266,3 +266,22 @@ footer {
   margin-right: 4px;
   font-size: small;
 } 
+
+.katex-display {
+  max-width: calc( #{$containerWidth} - 16px );
+  overflow: auto;
+  padding: 4px 16px;
+  margin: 16px 0;
+  text-align: left;
+  .katex {
+    text-align: left;
+    .eqn-num {
+      color: grey;
+      font-size: small;
+      @media (max-width: 570px) {
+        display: none;
+      }
+    }
+  }
+}
+
