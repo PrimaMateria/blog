@@ -1,5 +1,5 @@
 +++
-title = "Saturated NPN transistor"
+title = "NPN transistor"
 date = "2025-04-12"
 slug = "saturated-npn-transistor"
 
@@ -42,12 +42,13 @@ w 944 320 944 480 0
 w 944 480 848 480 0
 ```
 
+## Study 1: Saturated transistor
 
 <div style="margin-top: 24px">
 {{ resize_image_w(path="20250412-transistor/transistor-saturated.drawio.png", width=450) }}
 </div>
 
-## Calculations
+### Calculations
 
 Transistor common-emitter current gain
 $$ \beta = 200 - 450 \\ $$
@@ -152,7 +153,6 @@ and for \\(I_{C} \\approx 15mA\\) it is to be around \\(100mV = 0.1V\\).
 
 ") }}
 
-
 At last according to Kirchoff's current law
 
 <div>
@@ -161,9 +161,49 @@ I_{E} = I_{B} + I_{C} = 0.21mA + 16.06mA = 16.27mA
 \end{equation}
 </div>
 
+### Measurements
+
+| Parameter         | Expected | Measurement 1 | Δ (%) | Measurement 2 | Δ (%) |
+|-------------------|----------|---------------|-------|---------------|-------|
+| \\(V_{0}\\)       | 5.40V    | 5.25V         | todo  | 5.38V         | todo  |
+| \\(V_{R_{X}}\\)   | 4.70V    | 4.58V         | todo  | 4.65V         | todo  |
+| \\(V_{R_{1}}\\)   | 5.30V    | 5.20V         | todo  | 5.26V         | todo  |
+| \\(V_{CE}\\)      | 0.1V     | 0.11V         | todo  | 0.11V         | todo  |
+| \\(V_{BE}\\)      | 0.7V     | 0.73V         | todo  | 0.73V         | todo  |
+| \\(I_{B}\\)       | 0.21mA   | 0.20mA        | todo  | 0.21mA        | todo  |
+| \\(I_{C}\\)       | 16.06mA  | 14.85mA       | todo  | 15.48mA       | todo  |
+| \\(I_{E}\\)       | 16.27mA  | 15.56mA       | todo  | 15.66mA       | todo  |
+| \\(\beta_{sat}\\) | (see note 1) | 74.25         | todo  | 73.71         | todo  |
+
+
+{{ curious(text="
+
+Note 1: According to the datasheet it seems that for the \\(I_{C} = 16mA\\) the
+\\(\beta\\) should be 110. But this is for \\(V_{CE} = 5V\\) and in our case
+the \\(V_{CE}\\) was only 0.1V. Is it because of the \\(330\Omega\\) resistor?
+If we won't put it there, would we get full 5V (5.4V) between the transistor's
+collector and emitter. I guess yes - based on the Kirchoff's voltage law, the
+output circuit must be in balance. Can we calculate the value 
+
+") }}
+
+{{ nerdy(text="
+
+puff, some poetry about moment of chaos and destruction
+
+") }}
+
+
+
+
+
 ## Study 2: active transistor
 
 <div style="margin-top: 24px">
 {{ resize_image_w(path="20250412-transistor/transistor-active.drawio.png", width=450) }}
 </div>
 
+
+## Conclusions
+
+The transistor’s h<sub>FE</sub> in saturation is lower than in active mode but not zero.
