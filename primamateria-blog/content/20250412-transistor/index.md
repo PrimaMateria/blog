@@ -4,8 +4,8 @@ date = "2025-04-12"
 slug = "saturated-npn-transistor"
 
 [extra]
-banner = "banner-ai-generated-images.png"
-bannerAlt = "TODO"
+banner = "banner-npn-transistor.png"
+bannerAlt = "A lone swimmer struggling through a vast surreal ocean densely filled with floating electronic components — resistors, capacitors, diodes, transistors, integrated circuits, broken circuit boards, tangled copper wires, glowing LEDs beneath the water, biomechanical debris drifting like seaweed. The swimmer is actively swimming forward, arms pulling through the water, legs kicking, bubbles and turbulence trailing behind, tangled wires resisting movement. The ocean feels calm, beautiful, immense, and difficult to cross. Moebius-inspired French sci-fi comic art, Jean Giraud style illustration, elegant European graphic novel aesthetic, delicate ink linework, airy negative space, surreal retro-futurism, contemplative atmosphere, sparse composition, muted pastel turquoise and sandy colors, hand-drawn textures, philosophical sci-fi mood, cinematic wide shot, highly detailed environment, clean visual storytelling."
 reddithref = ""
 
 [taxonomies]
@@ -16,13 +16,6 @@ Trying to understand how the transistor works and verify it with an experiment.
 
 <!-- more -->
 <!-- TOC -->
-
-TODO: what is transistor and how it works in own words
-
-Please don't use this for anything serious. I am simple hobbyist with no
-real-life experience, and I am not sure if my claims are correct or not. That's
-why I am doing it, trying to understand. But I am lazy to study deeply and
-regularly. Just having fun.
 
 ## Study 1: Saturated transistor
 
@@ -36,7 +29,7 @@ Transistor common-emitter current gain
 $$ \beta = 200 - 450 \\ $$
 
 Fix forward voltage drop on base
-$$ V_{BE} = 0.7V $$
+$$ V_{BE,sat} = 0.7V $$
 
 Calculate following values
 
@@ -145,17 +138,17 @@ I_{E} = I_{B} + I_{C} = 0.21mA + 16.06mA = 16.27mA
 
 ### Measurements
 
- Parameter           | Expected   | Measurement 1   | Δ (%)          | Measurement 2   | Δ (%)           |
- ------------------- | ---------- | --------------- | -------        | --------------- | -------         |
- \\(V_{0}\\)         | 5.40V      | 5.25V           | 0.15V (2.78%)  | 5.38V           | 0.02V (0.37%)   |
- \\(V_{R_{X}}\\)     | 4.70V      | 4.58V           | 0.12V (2.55%)  | 4.65V           | 0.05V (1.06%)   |
- \\(V_{R_{1}}\\)     | 5.30V      | 5.20V           | 0.10V (1.89%)  | 5.26V           | 0.04V (0.75%)   |
- \\(V_{CE}\\)        | 0.1V       | 0.11V           | 0.01V (10%)    | 0.11V           | 0.01V (10%)     |
- \\(V_{BE}\\)        | 0.7V       | 0.73V           | 0.03V (4.29%)  | 0.73V           | 0.03V (4.29%)   |
- \\(I_{B}\\)         | 0.21mA     | 0.20mA          | 0.01mA (4.76%) | 0.21mA          | 0mA (0%)        |
- \\(I_{C}\\)         | 16.06mA    | 14.85mA         | 1.24mA (7.53%) | 15.48mA         | 0.58mA  (3.61%) |
- \\(I_{E}\\)         | 16.27mA    | 15.56mA         | 0.71mA (4.36%) | 15.66mA         | 0.61mA (3.75%)  |
- \\(\beta_{sat}\\)   | 55         | 74.25           | 19.25 (35%)    | 73.71           | 18.74 (35.02%)  |
+ Parameter           | Expected      | Measurement 1   | Δ (%)                  | Measurement 2   | Δ (%)                  |
+ ------------------- | ----------    | --------------- | -------                | --------------- | -------                |
+ \\(V_{0}\\)         | \\(5.40V\\)   | \\(5.25V\\)     | \\(0.15V~(2.78\\%) \\) | \\(5.38V\\)     | \\(0.02V~(0.37\\%)\\)  |
+ \\(V_{R_{X}}\\)     | \\(4.70V\\)   | \\(4.58V\\)     | \\(0.12V~(2.55\\%)\\)  | \\(4.65V\\)     | \\(0.05V~(1.06\\%)\\)  |
+ \\(V_{R_{1}}\\)     | \\(5.30V\\)   | \\(5.20V\\)     | \\(0.10V~(1.89\\%)\\)  | \\(5.26V\\)     | \\(0.04V~(0.75\\%)\\)  |
+ \\(V_{CE}\\)        | \\(0.1V\\)    | \\(0.11V\\)     | \\(0.01V~(10\\%)\\)    | \\(0.11V\\)     | \\(0.01V~(10\\%)\\)    |
+ \\(V_{BE}\\)        | \\(0.7V\\)    | \\(0.73V\\)     | \\(0.03V~(4.29\\%)\\)  | \\(0.73V\\)     | \\(0.03V~(4.29\\%)\\)  |
+ \\(I_{B}\\)         | \\(0.21mA\\)  | \\(0.20mA\\)    | \\(0.01mA~(4.76\\%)\\) | \\(0.21mA\\)    | \\(0mA~(0\\%)\\)       |
+ \\(I_{C}\\)         | \\(16.06mA\\) | \\(14.85mA\\)   | \\(1.24mA~(7.53\\%)\\) | \\(15.48mA\\)   | \\(0.58mA~(3.61\\%)\\) |
+ \\(I_{E}\\)         | \\(16.27mA\\) | \\(15.56mA\\)   | \\(0.71mA~(4.36\\%)\\) | \\(15.66mA\\)   | \\(0.61mA~(3.75\\%)\\) |
+ \\(\beta_{sat}\\)   | \\(55\\)      | \\(74.25\\)     | \\(19.25~(35\\%)\\)    | \\(73.71\\)     | \\(18.74~(35.02\\%)\\) |
 
 
 {{ nerdy(text="
@@ -179,6 +172,8 @@ only in the active mode. I find this exercise succesful.
 TODO: go again about it. Focus more about how I learned about the reality check,
 and how I unerstood how hFE is not reliable for calculations.
 
+The transistor’s h<sub>FE</sub> in saturation is lower than in active mode but not zero.
+
 ## Study 2: active transistor
 
 <div style="margin-top: 24px">
@@ -191,7 +186,7 @@ Transistor common-emitter current gain
 $$ \beta = 200 - 450 \\ $$
 
 Fix forward voltage drop on base
-$$ V_{BE} = 0.7V $$
+$$ V_{BE,on} = 0.66V $$
 
 Calculate following values
 
@@ -203,8 +198,8 @@ Let's start again with the input circuit.
 \begin{align}   
 -V_{I} + V_{R_{BX}} + V_{BE} &= 0\\
 V_{R_{BX}} &= V_{I} - V_{BE}\\
-V_{R_{BX}} &= 3.3V - 0.7V\\
-V_{R_{BX}} &= 2.6V
+V_{R_{BX}} &= 3.3V - 0.66V\\
+V_{R_{BX}} &= 2.64V
 \end{align}
 </div>
 
@@ -217,19 +212,157 @@ resistance \\(0\Omega\\), and maximum resistance \\(200k\Omega\\).
 V_{R_{BX}} &= I_{B} \cdot R_{BX}\\
 I_{B} &= V_{R_{BX}} / R_{BX}\\
 I_{B} &= \begin{cases}
-   \text{min: } 2.6V / 82k\Omega = 31.71\mu A \\
-   \text{max: } 2.6V / 282k\Omega = 9.22\mu A \\
+   \text{min: } 2.64V / 82k\Omega = 32.2\mu A \\
+   \text{max: } 2.64V / 282k\Omega = 9.36\mu A \\
 \end{cases}
 \end{align}
 </div>
 
-Now I don't want to again rely on \\(\beta\\) even if we are aiming for an
-active mode. Let's try see what we can calculate on the output circuit.
+Now I didn't want to again rely on \\(\beta\\) even if we are aiming for an
+active mode. But I don't know any other way how to find anything without
+employing some wild assumpted values that LLM suggest, even I didn't find or
+extrapolate them myself from the datasheet. 
 
-BOOKMARK: I got stuck on what to calculate next. I asked chatgpt and also
-provided diagram. It did something, but just by scanning it seemed bit off. Got
-tired after. 
+Anyway here is what I have tried: I found in LED datasheet that \\(V_{L}\\) will
+be around \\(2.1V\\). The using Kirchoff's volate law on the output circuit.
 
+<div>
+\begin{align}
+-V_{0} + V_{R_{1}} + V_{L} + V_{CE} &= 0 \\
+-5.4V + I_{C} \cdot 33O\Omega + 2.1V + V_{CE} &= 0
+\end{align}
+</div>
+
+There are two unknowns - \\(I_{C}\\) and \\(V_{CE}\\).
+
+Let's imagine \\(V_{CE}\\) is would be not there. Then
+
+<div>
+\begin{align}
+-5.4V + I_{C} \cdot 33O\Omega + 2.1V &= 0 \\
+I_{C} \cdot 330\Omega &= 5.4V - 2.1V \\
+I_{C} &= 3.3V / 330\Omega \\
+I_{C} &= 10mA
+\end{align}
+</div>
+
+If \\(V_{CE}>0V\\), then \\(I_{C}<10mA\\).
+
+Next imagine \\(V_{CE}\\) is there, but the transistor is saturated. Then
+
+<div>
+\begin{align}
+-5.4V + I_{C} \cdot 33O\Omega + 2.1V + 0.1V &= 0 \\
+I_{C} \cdot 330\Omega &= 5.4V - 2.1V - 0.1V \\
+I_{C} &= 3.2V / 330\Omega \\
+I_{C} &= 9.6mA
+\end{align}
+</div>
+
+Saturated transistor's \\(V_{CE}\\) should be less that active transistor's
+\\(V_{CE}\\). So the \\(I_{C} < 9.6mA\\). That din't help a lot.
+
+So I am giving up. Let's use \\(\beta\\). Now, in the active mode, it should be
+in the range of the values stated in the datasheet: \\(200\text{ -- }450\\).
+
+
+<div>
+\begin{equation}
+I_{C} = \beta \cdot I_{B} = \begin{cases}
+ \text{min: } \begin{cases}
+   \beta = 200: 200 \cdot 32.2\mu A = 6.44mA \\ 
+   \beta = 450: 450 \cdot 32.2\mu A = 14.49mA 
+ \end{cases} \\
+ \text{max: } \begin{cases}
+   \beta = 200: 200 \cdot 9.36\mu A = 1.87mA \\
+   \beta = 450: 450 \cdot 9.36\mu A = 4.21mA 
+ \end{cases}
+\end{cases}
+\end{equation}
+</div> 
+
+And then
+
+<div>
+\begin{equation}
+\begin{split}
+6.44mA \leq I_{C, min} \leq 14.49mA\\  
+1.87mA \leq I_{C, max} \leq 4.21mA
+\end{split}
+\end{equation}
+</div>
+
+It seems that \\(I_{C,min}\\) overshot the previous established condition
+\\(I_{C}<9.6mA\\). 
+
+{{ nerdy(text="
+
+So it means that even with \\(R_{B}=82k\Omega\\) that I though of already very
+high, we might saturate the transistor or at least get close to it.  
+
+") }}
+
+Let's use this correction and assume:
+
+<div>
+\begin{equation}
+\begin{split}
+6.44mA \leq I_{C, min} \leq 9.6mA\\  
+1.87mA \leq I_{C, max} \leq 4.21mA
+\end{split}
+\end{equation}
+</div>
+
+Now I need to calculate \\(V_{R_{1}}\\).
+
+<div>
+\begin{equation}
+V_{R_{1}} = I_{C} \cdot R_{1} = \begin{cases}
+ \text{min: } \begin{cases}
+   \beta = 200: 6.44mA \cdot 330\Omega = 2.13V \\ 
+   \beta = 450: 9.6mA \cdot 330\Omega = 3.17V
+ \end{cases} \\
+ \text{max: } \begin{cases}
+   \beta = 200: 1.87mA \cdot 330\Omega = 0.62V \\
+   \beta = 450: 4.21mA \cdot 330\Omega = 1.39V 
+ \end{cases}
+\end{cases}
+\end{equation}
+</div> 
+
+<div>
+\begin{equation}
+\begin{split}
+2.13V \leq V_{R_{1}, min} \leq 3.17V\\  
+0.62V \leq V_{R_{1}, max} \leq 1.39V
+\end{split}
+\end{equation}
+</div>
+
+And now \\(V_{CE}\\).
+
+<div>
+\begin{align}
+0 &= -V_{0} + V_{R_{1}} + V_{L} + V_{CE} \\
+V_{CE} &= V_{0} - V_{L} - V_{R_{1}} \\
+V_{CE} &= 5.4V - 2.1V - V_{R_{1}} \\
+V_{CE} &= 3.3V - V_{R_{1}} \\
+V_{CE} &= \begin{cases}
+ \text{min: } \begin{cases}
+   \beta = 200: 3.3V - 2.13V = 1.17V \\ 
+   \beta = 450: 3.3V - 3.17V = 0.13V
+ \end{cases} \\
+ \text{max: } \begin{cases}
+   \beta = 200: 3.3V - 0.62V = 2.68V \\
+   \beta = 450: 3.3V - 1.39V = 1.91V 
+ \end{cases}
+\end{cases}
+\end{align}
+</div>
+
+
+
+I keep on assuming that \\(V_{L}=2.1V\\) is constant. Probably that is not entirely correct. 
 
 ### Measurements
 
@@ -240,6 +373,20 @@ potentiometer resistance I just connected \\(R_{B}\\) directly to the base, and
 for the case of maximum resistance I have used normal \\(200k\Omega\\) resistor.
 
 
+{{ nerdy(text="
+
+I started to write this blog post, but just before finish we entered a live phase
+in which blog writing didn't come under the consideration. After some time I
+wanted to finish, but when now I look on the measurements write by hand in my
+notice book ... well, I guess I need to practice my recording skill. I can't
+decode it anymore.
+
+") }}
+
+
+
 ### Conclusions
 
-The transistor’s h<sub>FE</sub> in saturation is lower than in active mode but not zero.
+For the min resistance on base, where potentiometer was supposed to be giving
+\\(0\Omega\\) I assumed the the transistor to be still in active mode, but I
+think I have already entered saturation. (not sure)

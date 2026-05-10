@@ -268,9 +268,8 @@ footer {
 } 
 
 .katex-display {
-  max-width: calc( #{$containerWidth} - 16px );
   overflow: auto;
-  padding: 4px 16px;
+  padding: 8px 16px;
   margin: 16px 0;
   text-align: left;
   .katex {
@@ -283,5 +282,10 @@ footer {
       }
     }
   }
+}
+
+.katex {
+  font-size: 20px;
+  color: #0000A5;
 }
 
