@@ -120,7 +120,20 @@ article {
 
 a, article header h1 a {
   border-bottom: 1px dotted rgb(51, 51, 51);
+  color: #000;
+  &:hover {
+    color: #a31d1d;
+  }
 }
+
+body:not(.dark-mode) a, body:not(.dark-mode) a:link, body:not(.dark-mode)
+a:visited {
+  color: #000;
+  &:hover {
+    color: #a31d1d;
+  }
+}
+
 
 
 h1 {
