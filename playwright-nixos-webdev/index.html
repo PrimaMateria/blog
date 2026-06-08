@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Playwright on NixOS for webdev</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="Playwright on NixOS for webdev">
+    <meta property="og:url" content="https://primamateria.github.io/blog/playwright-nixos-webdev">
+    
+    <meta property="og:description" content="In this post, I will explain how to run Playwright tests on NixOS. Playwright is
+a framework for running automated tests on web pages in real browsers. However,
+the recommended method of installing browsers doesn&#x27;t work on NixOS due to its
+unique nature. This post will demonstrate how to set up a flake for a Vite
+project to run the Playwright version of your choice.">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-playwright-nixos-webdev.97ca4e16715f21ff.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2024-08-21">
+    
+    
+    
+    <meta property="article:tags" content="nixos"><meta property="article:tags" content="webdev">
+    
+    
+
+    
+
+    
+    
+
+    <!-- Katex (math typesetting) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" integrity="sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc+T1b2N+teh/OJfpU0jr6" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>Playwright on NixOS for webdev</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Wednesday 21 August 2024</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 5 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/webdev/">#webdev</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-playwright-nixos-webdev.da0efad4183fb505.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-playwright-nixos-webdev.9cf2f446e6364cdc.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-playwright-nixos-webdev.7badd7b0e07a6379.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-playwright-nixos-webdev.fd307b3278bed1d4.png" alt="Mobius comic book style. Playwright walking in the futuristic sci-fi city looking around on tall high-tech buildings.">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>In this post, I will explain how to run Playwright tests on NixOS. Playwright is
+a framework for running automated tests on web pages in real browsers. However,
+the recommended method of installing browsers doesn't work on NixOS due to its
+unique nature. This post will demonstrate how to set up a flake for a Vite
+project to run the Playwright version of your choice.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/playwright-nixos-webdev/#introduction">Introduction</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/playwright-nixos-webdev/#init-flake-and-direnv">Init flake and direnv</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/playwright-nixos-webdev/#generate-vite-project">Generate vite project</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/playwright-nixos-webdev/#install-playwright">Install Playwright</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/playwright-nixos-webdev/#installing-chromium-browser">Installing chromium browser</a>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/playwright-nixos-webdev/#links">Links</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<h2 id="introduction"><a class="zola-anchor" href="#introduction" aria-label="Anchor link for: introduction"
+  >§</a
+>
+Introduction</h2>
+<p>Nixpkgs also provides the
+<a rel="external" href="https://search.nixos.org/packages?channel=24.05&amp;from=0&amp;size=50&amp;sort=relevance&amp;type=packages&amp;query=playwright-driver">playwright-driver</a>
+package. This package builds and installs the Playwright executable. However, in
+my case, I don't need it because I install and run Playwright via npm. The only
+thing I need is a Playwright browser since the recommended
+<code>npx playwright install</code> fails on NixOS.</p>
+<p>Playwright releases new versions frequently, and often by the time a pull
+request to update the version in Nixpkgs is merged, a newer Playwright version
+has already been released. Sometimes, I also need specific older versions for
+certain projects.</p>
+<p>I needed a solution that allows me the flexibility to choose any Playwright
+version. However, I couldn't figure out how to override the Nixpkgs package to
+install the specific version I wanted.</p>
+<p>What Playwright essentially needs is a Chromium browser in a specific directory
+with a versioned name. Here’s how the Playwright driver provides the browser:</p>
+<p>First, it downloads <code>browser.json</code> from the Playwright repository for the
+specified version, which records the required browser versions. It then parses
+the browser version, creates a derivation with a structure that matches
+Playwright's expectations, and places Nixpkgs Chromium into it. Finally, the
+<code>PLAYWRIGHT_BROWSERS_PATH</code> environment variable is set so that Playwright looks
+in the Nix store instead of the default directory in the home folder.</p>
+<p>This approach is a bit of a workaround because the Chromium version isn't
+exactly the one specified by Playwright. But it usually works, which is better
+than nothing.</p>
+<p>What I did was copy the relevant code from Nixpkgs that handles only the browser
+for Linux, and I created a local package that allows me to change the version as
+needed.</p>
+<p>The usage is demonstrated in the following tutorial. The sources can also be
+found on
+<a rel="external" href="https://github.com/PrimaMateria/blog-playwright-nixos-webdev">GitHub: PrimaMateria/blog-playwright-nixos-webdev</a>.</p>
+<h2 id="init-flake-and-direnv"><a class="zola-anchor" href="#init-flake-and-direnv" aria-label="Anchor link for: init-flake-and-direnv"
+  >§</a
+>
+Init flake and direnv</h2>
+<p>I use Playwright in web development for functional tests in TypeScript projects.
+To simulate these conditions, let's generate a new Vite project.</p>
+<p>Start with project's <code>flake.nix</code>.</p>
+<pre class="giallo" style="color: #383A42; background-color: #FAFAFA;"><code data-lang="nix"><span class="giallo-l"><span style="color: #A0A1A7;font-style: italic;">#flake.nix</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span style="color: #986801;">  description</span><span> =</span><span style="color: #50A14F;"> &quot;Blog Playwright NixOS webdev&quot;</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #986801;">  outputs</span><span> = inputs @ {</span></span>
+<span class="giallo-l"><span>    self,</span></span>
+<span class="giallo-l"><span>    nixpkgs,</span></span>
+<span class="giallo-l"><span>    utils,</span></span>
+<span class="giallo-l"><span>    devToolkit,</span></span>
+<span class="giallo-l"><span>    haumea,</span></span>
+<span class="giallo-l"><span>    ...</span></span>
+<span class="giallo-l"><span>  }:</span></span>
+<span class="giallo-l"><span>    utils.lib.eachDefaultSystem (</span></span>
+<span class="giallo-l"><span>      system:</span><span style="color: #A626A4;"> let</span></span>
+<span class="giallo-l"><span style="color: #986801;">        pkgs</span><span> =</span><span style="color: #0184BC;"> import</span><span> nixpkgs {</span></span>
+<span class="giallo-l"><span style="color: #A626A4;">          inherit</span><span style="color: #986801;"> system</span><span>;</span></span>
+<span class="giallo-l"><span>        };</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #A0A1A7;font-style: italic;">        # not used yet</span></span>
+<span class="giallo-l"><span style="color: #986801;">        src</span><span> = haumea.lib.load {</span></span>
+<span class="giallo-l"><span style="color: #986801;">          src</span><span> =</span><span style="color: #50A14F;"> ./.nix</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">          inputs</span><span> = {</span><span style="color: #A626A4;">inherit</span><span style="color: #986801;"> pkgs</span><span>;};</span></span>
+<span class="giallo-l"><span>        };</span></span>
+<span class="giallo-l"><span style="color: #A626A4;">      in</span><span> {</span></span>
+<span class="giallo-l"><span style="color: #986801;">        devShell</span><span> = devToolkit.lib.</span><span style="color: #CA1243;">${</span><span>system</span><span style="color: #CA1243;">}</span><span>.buildDevShell {</span></span>
+<span class="giallo-l"><span style="color: #986801;">          name</span><span> =</span><span style="color: #50A14F;"> &quot;blog.playwright-nixos-webdev&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">          profiles</span><span> = [</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">            &quot;node&quot;</span></span>
+<span class="giallo-l"><span>          ];</span></span>
+<span class="giallo-l"><span>        };</span></span>
+<span class="giallo-l"><span>      }</span></span>
+<span class="giallo-l"><span>    );</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #986801;">  inputs</span><span> = {</span></span>
+<span class="giallo-l"><span style="color: #986801;">    nixpkgs</span><span>.</span><span style="color: #986801;">url</span><span> =</span><span style="color: #50A14F;"> &quot;github:nixos/nixpkgs/nixos-unstable&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">    utils</span><span>.</span><span style="color: #986801;">url</span><span> =</span><span style="color: #50A14F;"> &quot;github:numtide/flake-utils&quot;</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #986801;">    devToolkit</span><span> = {</span></span>
+<span class="giallo-l"><span style="color: #986801;">      url</span><span> =</span><span style="color: #50A14F;"> &quot;github:primamateria/dev-toolkit-nix&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">      inputs</span><span>.</span><span style="color: #986801;">nixpkgs</span><span>.</span><span style="color: #986801;">follows</span><span> =</span><span style="color: #50A14F;"> &quot;nixpkgs&quot;</span><span>;</span></span>
+<span class="giallo-l"><span>    };</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #986801;">    haumea</span><span> = {</span></span>
+<span class="giallo-l"><span style="color: #986801;">      url</span><span> =</span><span style="color: #50A14F;"> &quot;github:nix-community/haumea/v0.2.2&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">      inputs</span><span>.</span><span style="color: #986801;">nixpkgs</span><span>.</span><span style="color: #986801;">follows</span><span> =</span><span style="color: #50A14F;"> &quot;nixpkgs&quot;</span><span>;</span></span>
+<span class="giallo-l"><span>    };</span></span>
+<span class="giallo-l"><span>  };</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>I'll be using my own development toolkit to set up Node and npm. I've prepared
+<a href="https://primamateria.github.io/blog/haumea-cheatsheet/">Hamuea</a> and flake-utils for best
+practices.</p>
+<pre class="giallo" style="color: #383A42; background-color: #FAFAFA;"><code data-lang="plain"><span class="giallo-l"><span>#.envrc</span></span>
+<span class="giallo-l"><span>use flake</span></span></code></pre>
+<p>Create direnv's config and enable it with <code>direnv allow</code>. Add <code>.direnv</code> to
+<code>.gitignore</code>. Try if node is ready.</p>
+<pre class="giallo" style="color: #383A42; background-color: #FAFAFA;"><code data-lang="plain"><span class="giallo-l"><span>~/dev/blog-playwright-nixos-webdev$ node --version</span></span>
+<span class="giallo-l"><span>v18.20.4</span></span></code></pre><h2 id="generate-vite-project"><a class="zola-anchor" href="#generate-vite-project" aria-label="Anchor link for: generate-vite-project"
+  >§</a
+>
+Generate vite project</h2>
+<p>Create typescript react <a rel="external" href="https://vitejs.dev/guide/">vite</a> project.</p>
+<pre class="giallo" style="color: #383A42; background-color: #FAFAFA;"><code data-lang="plain"><span class="giallo-l"><span>~/dev/blog-playwright-nixos-webdev$ npm create vite@latest</span></span>
+<span class="giallo-l"><span>Need to install the following packages:</span></span>
+<span class="giallo-l"><span>create-vite@5.5.2</span></span>
+<span class="giallo-l"><span>Ok to proceed? (y) y</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&gt; npx</span></span>
+<span class="giallo-l"><span>&gt; create-vite</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>✔ Project name: … foo</span></span>
+<span class="giallo-l"><span>✔ Select a framework: › React</span></span>
+<span class="giallo-l"><span>✔ Select a variant: › TypeScript</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Scaffolding project in /home/primamateria/dev/blog-playwright-nixos-webdev/foo...</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Done. Now run:</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>  cd foo</span></span>
+<span class="giallo-l"><span>  npm install</span></span>
+<span class="giallo-l"><span>  npm run dev</span></span></code></pre>
+<p>Merge <code>foo/.gitignore</code> with root <code>.gitignore</code> and move all content from <code>/foo</code>
+to root. Current file tree looks like this:</p>
+<pre class="giallo" style="color: #383A42; background-color: #FAFAFA;"><code data-lang="plain"><span class="giallo-l"><span>.</span></span>
+<span class="giallo-l"><span>├── .direnv</span></span>
+<span class="giallo-l"><span>├── .envrc</span></span>
+<span class="giallo-l"><span>├── .git</span></span>
+<span class="giallo-l"><span>├── .gitignore</span></span>
+<span class="giallo-l"><span>├── .nix</span></span>
+<span class="giallo-l"><span>├── eslint.config.js</span></span>
+<span class="giallo-l"><span>├── flake.lock</span></span>
+<span class="giallo-l"><span>├── flake.nix</span></span>
+<span class="giallo-l"><span>├── index.html</span></span>
+<span class="giallo-l"><span>├── package.json</span></span>
+<span class="giallo-l"><span>├── public</span></span>
+<span class="giallo-l"><span>├── README.md</span></span>
+<span class="giallo-l"><span>├── src</span></span>
+<span class="giallo-l"><span>├── tsconfig.app.json</span></span>
+<span class="giallo-l"><span>├── tsconfig.json</span></span>
+<span class="giallo-l"><span>├── tsconfig.node.json</span></span>
+<span class="giallo-l"><span>└── vite.config.ts</span></span></code></pre>
+<p>Now run <code>npm install</code> and <code>npm run dev</code> and verify that vite dev server is
+running.</p>
+<h2 id="install-playwright"><a class="zola-anchor" href="#install-playwright" aria-label="Anchor link for: install-playwright"
+  >§</a
+>
+Install Playwright</h2>
+<p>Initialize <a rel="external" href="https://playwright.dev/docs/intro">Playwright</a> without browsers and
+without system dependencies.</p>
+<pre class="giallo" style="color: #383A42; background-color: #FAFAFA;"><code data-lang="plain"><span class="giallo-l"><span>~/dev/blog-playwright-nixos-webdev$ npm init playwright@latest</span></span>
+<span class="giallo-l"><span>Need to install the following packages:</span></span>
+<span class="giallo-l"><span>create-playwright@1.17.133</span></span>
+<span class="giallo-l"><span>Ok to proceed? (y) y</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>&gt; foo@0.0.0 npx</span></span>
+<span class="giallo-l"><span>&gt; create-playwright</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Getting started with writing end-to-end tests with Playwright:</span></span>
+<span class="giallo-l"><span>Initializing project in &#39;.&#39;</span></span>
+<span class="giallo-l"><span>✔ Where to put your end-to-end tests? · tests</span></span>
+<span class="giallo-l"><span>✔ Add a GitHub Actions workflow? (y/N) · false</span></span>
+<span class="giallo-l"><span>✔ Install Playwright browsers (can be done manually via &#39;npx playwright install&#39;)? (Y/n) · false</span></span>
+<span class="giallo-l"><span>✔ Install Playwright operating system dependencies (requires sudo / root - can be done manually via &#39;sudo npx playwright install-deps&#39;)? (y/N) · false</span></span>
+<span class="giallo-l"><span>Installing Playwright Test (npm install --save-dev @playwright/test)…</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>...</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Happy hacking! 🎭</span></span></code></pre><div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>If you would try install browsers and system deps it would fail with following
+error:</p>
+<pre class="giallo" style="color: #383A42; background-color: #FAFAFA;"><code data-lang="plain"><span class="giallo-l"><span>Downloading browsers (npx playwright install --with-deps)…</span></span>
+<span class="giallo-l"><span>BEWARE: your OS is not officially supported by Playwright; installing dependencies for ubuntu20.04-x64 as a fallback.</span></span>
+<span class="giallo-l"><span>Installing dependencies...</span></span>
+<span class="giallo-l"><span>Switching to root user to install dependencies...</span></span>
+<span class="giallo-l"><span>sh: line 1: apt-get: command not found</span></span>
+<span class="giallo-l"><span>Failed to install browsers</span></span>
+<span class="giallo-l"><span>Error: Installation process exited with code: 127</span></span>
+<span class="giallo-l"><span>Error: Command failed: npx playwright install --with-deps</span></span>
+<span class="giallo-l"><span>    at genericNodeError (node:internal/errors:984:15)</span></span>
+<span class="giallo-l"><span>    at wrappedFn (node:internal/errors:538:14)</span></span>
+<span class="giallo-l"><span>    at checkExecSyncError (node:child_process:890:11)</span></span>
+<span class="giallo-l"><span>    at execSync (node:child_process:962:15)</span></span>
+<span class="giallo-l"><span>    at executeCommands (/home/primamateria/.npm/_npx/d352e76cc6b4974c/node_modules/create-playwright/lib/index.js:4730:39)</span></span>
+<span class="giallo-l"><span>    at Generator.run (/home/primamateria/.npm/_npx/d352e76cc6b4974c/node_modules/create-playwright/lib/index.js:4910:5)</span></span>
+<span class="giallo-l"><span>    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)</span></span>
+<span class="giallo-l"><span>    at async /home/primamateria/.npm/_npx/d352e76cc6b4974c/node_modules/create-playwright/lib/index.js:5205:3 {</span></span>
+<span class="giallo-l"><span>  status: 1,</span></span>
+<span class="giallo-l"><span>  signal: null,</span></span>
+<span class="giallo-l"><span>  output: [ null, null, null ],</span></span>
+<span class="giallo-l"><span>  pid: 124425,</span></span>
+<span class="giallo-l"><span>  stdout: null,</span></span>
+<span class="giallo-l"><span>  stderr: null</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre></div>
+  </div>
+</div>
+<h2 id="installing-chromium-browser"><a class="zola-anchor" href="#installing-chromium-browser" aria-label="Anchor link for: installing-chromium-browser"
+  >§</a
+>
+Installing chromium browser</h2>
+<p>Create paramterized base package:</p>
+<pre class="giallo" style="color: #383A42; background-color: #FAFAFA;"><code data-lang="nix"><span class="giallo-l"><span style="color: #A0A1A7;font-style: italic;">#.nix/_playwright-browsers-base.nix</span></span>
+<span class="giallo-l"><span>{pkgs}: {</span></span>
+<span class="giallo-l"><span>  version,</span></span>
+<span class="giallo-l"><span>  sha256,</span></span>
+<span class="giallo-l"><span>}:</span><span style="color: #A626A4;"> let</span></span>
+<span class="giallo-l"><span style="color: #986801;">  fontconfig</span><span> = pkgs.makeFontsConf {</span><span style="color: #986801;">fontDirectories</span><span> = [];};</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #986801;">  playwright-browsers-json</span><span> = pkgs.stdenv.mkDerivation</span><span style="color: #A626A4;"> rec</span><span> {</span></span>
+<span class="giallo-l"><span style="color: #986801;">    name</span><span> =</span><span style="color: #50A14F;"> &quot;playwright-</span><span style="color: #CA1243;">${</span><span>version</span><span style="color: #CA1243;">}</span><span style="color: #50A14F;">-browsers&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">    src</span><span> = pkgs.fetchFromGitHub {</span></span>
+<span class="giallo-l"><span style="color: #986801;">      owner</span><span> =</span><span style="color: #50A14F;"> &quot;Microsoft&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">      repo</span><span> =</span><span style="color: #50A14F;"> &quot;playwright&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">      rev</span><span> =</span><span style="color: #50A14F;"> &quot;v</span><span style="color: #CA1243;">${</span><span>version</span><span style="color: #CA1243;">}</span><span style="color: #50A14F;">&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">      sha256</span><span> = sha256;</span></span>
+<span class="giallo-l"><span>    };</span></span>
+<span class="giallo-l"><span style="color: #986801;">    installPhase</span><span> =</span><span style="color: #50A14F;"> &#39;&#39;</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">      mkdir -p $out</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">      cp packages/playwright-core/browsers.json $out/browsers.json</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">    &#39;&#39;</span><span>;</span></span>
+<span class="giallo-l"><span>  };</span></span>
+<span class="giallo-l"><span style="color: #A626A4;">in</span></span>
+<span class="giallo-l"><span>  pkgs.runCommand</span><span style="color: #50A14F;"> &quot;playwright-browsers-chromium&quot;</span></span>
+<span class="giallo-l"><span>  {</span></span>
+<span class="giallo-l"><span style="color: #986801;">    nativeBuildInputs</span><span> = [</span></span>
+<span class="giallo-l"><span>      pkgs.makeWrapper</span></span>
+<span class="giallo-l"><span>      pkgs.jq</span></span>
+<span class="giallo-l"><span>    ];</span></span>
+<span class="giallo-l"><span>  }</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">  &#39;&#39;</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">    BROWSERS_JSON=</span><span style="color: #CA1243;">${</span><span>playwright-browsers-json</span><span style="color: #CA1243;">}</span><span style="color: #50A14F;">/browsers.json</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">    CHROMIUM_REVISION=$(jq -r &#39;.browsers[] | select(.name == &quot;chromium&quot;).revision&#39; $BROWSERS_JSON)</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">    mkdir -p $out/chromium-$CHROMIUM_REVISION/chrome-linux</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #50A14F;">    # See here for the Chrome options:</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">    # https://github.com/NixOS/nixpkgs/issues/136207#issuecomment-908637738</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">    makeWrapper </span><span style="color: #CA1243;">${</span><span>pkgs.chromium</span><span style="color: #CA1243;">}</span><span style="color: #50A14F;">/bin/chromium $out/chromium-$CHROMIUM_REVISION/chrome-linux/chrome \</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">      --set SSL_CERT_FILE /etc/ssl/certs/ca-bundle.crt \</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">      --set FONTCONFIG_FILE </span><span style="color: #CA1243;">${</span><span>fontconfig</span><span style="color: #CA1243;">}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #50A14F;">    FFMPEG_REVISION=$(jq -r &#39;.browsers[] | select(.name == &quot;ffmpeg&quot;).revision&#39; $BROWSERS_JSON)</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">    mkdir -p $out/ffmpeg-$FFMPEG_REVISION</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">    ln -s </span><span style="color: #CA1243;">${</span><span>pkgs.ffmpeg</span><span style="color: #CA1243;">}</span><span style="color: #50A14F;">/bin/ffmpeg $out/ffmpeg-$FFMPEG_REVISION/ffmpeg-linux</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">  &#39;&#39;</span></span></code></pre>
+<p>This part I have extracted from
+<a rel="external" href="https://github.com/NixOS/nixpkgs/pull/302759">github:kalekseev's PR</a>. I used
+only the linux browsers, but the mac browsers should be possible to extract in
+similar way.</p>
+<p>Create version specific package:</p>
+<pre class="giallo" style="color: #383A42; background-color: #FAFAFA;"><code data-lang="nix"><span class="giallo-l"><span style="color: #A0A1A7;font-style: italic;">#.nix/playwright-browsers-1_46_1.nix</span></span>
+<span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span>  pkgs,</span></span>
+<span class="giallo-l"><span>  super,</span></span>
+<span class="giallo-l"><span>}: (super.playwright-browsers-base {</span></span>
+<span class="giallo-l"><span style="color: #986801;">  version</span><span> =</span><span style="color: #50A14F;"> &quot;1.46.1&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">  sha256</span><span> =</span><span style="color: #50A14F;"> &quot;sha256-HEDBaUqszemnWseKHjPJqivPlYq7jSuhQL1MQa47264=&quot;</span><span>;</span></span>
+<span class="giallo-l"><span>})</span></span></code></pre><div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-tip.png" title="Small nerdy octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>If you need a different version, simply change the version to match a tag in the
+Playwright repository and set sha256 to an empty string. When you run it for the
+first time, an error will occur due to the mismatched hashes. Copy the expected
+hash from the error message and replace the empty string with it.</p>
+</div>
+  </div>
+</div>
+<p>Extend the dev shell with an extra package and an additional shell hook. Use
+Haumea to include the newly created package.</p>
+<pre class="giallo" style="color: #383A42; background-color: #FAFAFA;"><code data-lang="nix"><span class="giallo-l"><span style="color: #A0A1A7;font-style: italic;">#flake.nix</span></span>
+<span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span style="color: #986801;">  description</span><span> =</span><span style="color: #50A14F;"> &quot;Blog Playwright NixOS webdev&quot;</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #986801;">  outputs</span><span> = inputs @ {</span></span>
+<span class="giallo-l"><span>    self,</span></span>
+<span class="giallo-l"><span>    nixpkgs,</span></span>
+<span class="giallo-l"><span>    utils,</span></span>
+<span class="giallo-l"><span>    devToolkit,</span></span>
+<span class="giallo-l"><span>    haumea,</span></span>
+<span class="giallo-l"><span>    ...</span></span>
+<span class="giallo-l"><span>  }:</span></span>
+<span class="giallo-l"><span>    utils.lib.eachDefaultSystem (</span></span>
+<span class="giallo-l"><span>      system:</span><span style="color: #A626A4;"> let</span></span>
+<span class="giallo-l"><span style="color: #986801;">        pkgs</span><span> =</span><span style="color: #0184BC;"> import</span><span> nixpkgs {</span></span>
+<span class="giallo-l"><span style="color: #A626A4;">          inherit</span><span style="color: #986801;"> system</span><span>;</span></span>
+<span class="giallo-l"><span>        };</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #986801;">        src</span><span> = haumea.lib.load {</span></span>
+<span class="giallo-l"><span style="color: #986801;">          src</span><span> =</span><span style="color: #50A14F;"> ./.nix</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">          inputs</span><span> = {</span><span style="color: #A626A4;">inherit</span><span style="color: #986801;"> pkgs</span><span>;};</span></span>
+<span class="giallo-l"><span>        };</span></span>
+<span class="giallo-l"><span style="color: #A626A4;">      in</span><span> {</span></span>
+<span class="giallo-l"><span style="color: #986801;">        devShell</span><span> = devToolkit.lib.</span><span style="color: #CA1243;">${</span><span>system</span><span style="color: #CA1243;">}</span><span>.buildDevShell {</span></span>
+<span class="giallo-l"><span style="color: #986801;">          name</span><span> =</span><span style="color: #50A14F;"> &quot;blog.playwright-nixos-webdev&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">          profiles</span><span> = [</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">            &quot;node&quot;</span></span>
+<span class="giallo-l"><span>          ];</span></span>
+<span class="giallo-l"><span style="color: #986801;">          extraPackages</span><span> = [</span></span>
+<span class="giallo-l"><span>            src.playwright-browsers-1_46_1</span></span>
+<span class="giallo-l"><span>          ];</span></span>
+<span class="giallo-l"><span style="color: #986801;">          extraShellHook</span><span> =</span><span style="color: #50A14F;"> &#39;&#39;</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">            # Prepare playwright</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">            export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">            export PLAYWRIGHT_BROWSERS_PATH=</span><span style="color: #CA1243;">${</span><span>src.playwright-browsers-1_46_1</span><span style="color: #CA1243;">}</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">            export PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true</span></span>
+<span class="giallo-l"><span style="color: #50A14F;">          &#39;&#39;</span><span>;</span></span>
+<span class="giallo-l"><span>        };</span></span>
+<span class="giallo-l"><span>      }</span></span>
+<span class="giallo-l"><span>    );</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #986801;">  inputs</span><span> = {</span></span>
+<span class="giallo-l"><span style="color: #986801;">    nixpkgs</span><span>.</span><span style="color: #986801;">url</span><span> =</span><span style="color: #50A14F;"> &quot;github:nixos/nixpkgs/nixos-unstable&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">    utils</span><span>.</span><span style="color: #986801;">url</span><span> =</span><span style="color: #50A14F;"> &quot;github:numtide/flake-utils&quot;</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #986801;">    devToolkit</span><span> = {</span></span>
+<span class="giallo-l"><span style="color: #986801;">      url</span><span> =</span><span style="color: #50A14F;"> &quot;github:primamateria/dev-toolkit-nix&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">      inputs</span><span>.</span><span style="color: #986801;">nixpkgs</span><span>.</span><span style="color: #986801;">follows</span><span> =</span><span style="color: #50A14F;"> &quot;nixpkgs&quot;</span><span>;</span></span>
+<span class="giallo-l"><span>    };</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #986801;">    haumea</span><span> = {</span></span>
+<span class="giallo-l"><span style="color: #986801;">      url</span><span> =</span><span style="color: #50A14F;"> &quot;github:nix-community/haumea/v0.2.2&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #986801;">      inputs</span><span>.</span><span style="color: #986801;">nixpkgs</span><span>.</span><span style="color: #986801;">follows</span><span> =</span><span style="color: #50A14F;"> &quot;nixpkgs&quot;</span><span>;</span></span>
+<span class="giallo-l"><span>    };</span></span>
+<span class="giallo-l"><span>  };</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>Disable Firefox and WebKit, which are enabled by default after running
+Playwright init. Keep only Chromium in the projects list.</p>
+<pre class="giallo" style="color: #383A42; background-color: #FAFAFA;"><code data-lang="typescript"><span class="giallo-l"><span style="color: #A0A1A7;font-style: italic;">//playwright.config.ts</span></span>
+<span class="giallo-l"><span style="color: #A626A4;">import</span><span> {</span><span style="color: #E45649;"> defineConfig</span><span>,</span><span style="color: #E45649;"> devices</span><span> }</span><span style="color: #A626A4;"> from</span><span style="color: #50A14F;"> &quot;@playwright/test&quot;</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #A626A4;">export</span><span style="color: #E45649;"> default</span><span style="color: #4078F2;"> defineConfig</span><span>({</span></span>
+<span class="giallo-l"><span style="color: #A0A1A7;font-style: italic;">  // ...</span></span>
+<span class="giallo-l"><span style="color: #E45649;">  projects</span><span style="color: #0184BC;">:</span><span> [</span></span>
+<span class="giallo-l"><span>    {</span></span>
+<span class="giallo-l"><span style="color: #E45649;">      name</span><span style="color: #0184BC;">:</span><span style="color: #50A14F;"> &quot;chromium&quot;</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #E45649;">      use</span><span style="color: #0184BC;">:</span><span> {</span><span style="color: #0184BC;"> ...</span><span style="color: #E45649;">devices</span><span>[</span><span style="color: #50A14F;">&quot;Desktop Chrome&quot;</span><span>] },</span></span>
+<span class="giallo-l"><span>    },</span></span>
+<span class="giallo-l"><span>  ],</span></span>
+<span class="giallo-l"><span style="color: #A0A1A7;font-style: italic;">  // ...</span></span>
+<span class="giallo-l"><span>});</span></span></code></pre>
+<p>Verify that tests are running:</p>
+<pre class="giallo" style="color: #383A42; background-color: #FAFAFA;"><code data-lang="plain"><span class="giallo-l"><span>~/dev/blog-playwright-nixos-webdev$ npx playwright test</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Running 2 tests using 2 workers</span></span>
+<span class="giallo-l"><span>[chromium] › example.spec.ts:10:1 › get started link</span></span>
+<span class="giallo-l"><span>Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.</span></span>
+<span class="giallo-l"><span>[chromium] › example.spec.ts:3:1 › has title</span></span>
+<span class="giallo-l"><span>Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.</span></span>
+<span class="giallo-l"><span>  2 passed (2.1s)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>To open last HTML report run:</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>  npx playwright show-report</span></span></code></pre><div class="octopus">
+  <div class="octopus-icon">
+    <img src="https://primamateria.github.io/blog/octopus-why.png" title="Small curious octopus"/>
+  </div>
+  <div class="octopus-content">
+    <div class="octopus-talk"><p>Playwright is defined in my development toolkit under the profile
+<code>'playwright'</code>. In hindsight, it might have been better not to include the dev
+toolkit here, as it's a personal tool that I often modify without considering
+others who might use it. However, I realized this late and didn't want to redo
+the tutorial. I'm confident you can replace it with your own packages and shell
+hook for Node installation. The Node profile
+<a rel="external" href="https://github.com/PrimaMateria/dev-toolkit-nix/blob/main/src/profileDefinitions/node.nix">definition</a>
+is straightforward.</p>
+</div>
+  </div>
+</div>
+<h2 id="links"><a class="zola-anchor" href="#links" aria-label="Anchor link for: links"
+  >§</a
+>
+Links</h2>
+<ul>
+<li><a rel="external" href="https://playwright.dev/docs/intro">Playwright docs</a></li>
+<li><a rel="external" href="https://vitejs.dev/guide/">Vite docs</a></li>
+<li><a rel="external" href="https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/web/playwright/driver.nix">Nixpkgs Playwright driver</a></li>
+<li><a rel="external" href="https://github.com/NixOS/nixpkgs/pull/302759">Nixpkgs PR to build playwright with buildNpmPackage</a></li>
+</ul>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+
+<h2><i class="fa-brands fa-reddit-alien comment-section-icon"></i> Reddit comments</h2>
+
+<a class="reddit-link" href=https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;NixOS&#x2F;comments&#x2F;1eyenzf&#x2F;playwright_on_nixos_for_webdev&#x2F;>See on Reddit</a>
+<div class="reddit-embed"
+     red-href="https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;NixOS&#x2F;comments&#x2F;1eyenzf&#x2F;playwright_on_nixos_for_webdev&#x2F;" 
+     red-opts='{"show_loading_animation": false, "show_post": true, "show_post_title": false, "show_post_body": false, "show_comments_section_header": false}'
+>
+</div>
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2026<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

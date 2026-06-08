@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>nixos</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+
+    
+
+    
+    
+
+    <!-- Katex (math typesetting) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" integrity="sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc+T1b2N+teh/OJfpU0jr6" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+<h1>Tag: #nixos</h1>
+<div class="article-info">
+    <a href="https://primamateria.github.io/blog/tags">To all tags</a>
+</div>
+
+
+
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;neovim-editions&#x2F;">Neovim Editions</a>
+            </h1>
+        </header>
+
+        
+    <div class="article-info">
+        
+        <div class="article-date">Monday 13 January 2025</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 13 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/neovim/">#neovim</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+        
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-editions.29cf4e5836b35051.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-editions.b450434a75ab01c2.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-editions.0252b7355f68020f.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-editions.6c5534274f49ec8c.png" alt="3 neovim logos on background alien planet landscape with buildings">
+    
+  </picture> 
+</div>
+
+
+
+        
+        <div class="content post-summary">
+            <p>Introduction to a Neovim flake for hosting multiple Neovim editions with
+inheritance. Instead of having one large configuration for multiple tasks, we
+can create multiple editions focused on specific tasks. With inheritance, we can
+reuse configurations from one edition in another. In this article, I will
+provide a step-by-step guide with beginner-friendly explanations on how to
+create your own flake.</p>
+        </div>
+        
+        
+    </article>
+
+
+
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;playwright-nixos-webdev&#x2F;">Playwright on NixOS for webdev</a>
+            </h1>
+        </header>
+
+        
+    <div class="article-info">
+        
+        <div class="article-date">Wednesday 21 August 2024</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 5 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/webdev/">#webdev</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+        
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-playwright-nixos-webdev.da0efad4183fb505.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-playwright-nixos-webdev.9cf2f446e6364cdc.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-playwright-nixos-webdev.7badd7b0e07a6379.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-playwright-nixos-webdev.fd307b3278bed1d4.png" alt="Mobius comic book style. Playwright walking in the futuristic sci-fi city looking around on tall high-tech buildings.">
+    
+  </picture> 
+</div>
+
+
+
+        
+        <div class="content post-summary">
+            <p>In this post, I will explain how to run Playwright tests on NixOS. Playwright is
+a framework for running automated tests on web pages in real browsers. However,
+the recommended method of installing browsers doesn't work on NixOS due to its
+unique nature. This post will demonstrate how to set up a flake for a Vite
+project to run the Playwright version of your choice.</p>
+        </div>
+        
+        
+    </article>
+
+
+
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;sdxl-banners-replaced-with-fluxd-banners&#x2F;">Stable Diffusion XL banners replaced with Flux Dev banners</a>
+            </h1>
+        </header>
+
+        
+    <div class="article-info">
+        
+        <div class="article-date">Sunday 18 August 2024</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 5 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nix-flakes/">#nix-flakes</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+        
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-sd-flux.310f65225dcb3ecc.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-sd-flux.f7d8780d72f42d34.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-sd-flux.4d69975dd7354f3f.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-sd-flux.89859143fe474e18.png" alt="Mœbius comics style. Post-apocalyptic frozen river with abandoned military ships, smoking ruins in the background. Dominated with white snow blizzard. Flakes visible.">
+    
+  </picture> 
+</div>
+
+
+
+        
+        <div class="content post-summary">
+            <p>Comparison of my posts' previous banners generated with Stable Diffusion XL with
+new ones generated with Flux Dev.</p>
+        </div>
+        
+        
+    </article>
+
+
+
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;worklogs&#x2F;home-server&#x2F;">Home Server</a>
+            </h1>
+        </header>
+
+        
+    <div class="article-info">
+        
+        <div class="article-date">Thursday 30 May 2024</div>
+        
+
+        
+        <div class="article-date">Last updated on Thursday 04 July 2024</div>
+        
+
+        
+        <div class="article-reading-time">Reading time: 19 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nix/">#nix</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/raspberry-pi/">#raspberry pi</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/hive/">#hive</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+        
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-homeserver.12b841b8144c79c4.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-homeserver.6148681fb852e3a6.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-homeserver.8a08748403b9579f.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-homeserver.8fea12e547a882e9.png" alt="Mobius comics style. Cabin in the woods inside the deep forest. Lot of trees around. Window radiate yellow light. Satellite dish on the roof. Night sky full of stars and Milky Way. Science fiction">
+    
+  </picture> 
+</div>
+
+
+
+        
+        <div class="content post-summary">
+            <p>Setting up headless server that will be publicly accessible.</p>
+        </div>
+        
+        
+    </article>
+
+
+
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;nix-shell-with-custom-channels&#x2F;">nix-shell with custom nix channel</a>
+            </h1>
+        </header>
+
+        
+    <div class="article-info">
+        
+        <div class="article-date">Wednesday 17 April 2024</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 2 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nix-flakes/">#nix-flakes</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+        
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-nix-shell-custom-channel.94ab65dbd498a27a.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-nix-shell-custom-channel.8b18b37e5c2f2007.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-nix-shell-custom-channel.c551d7cf313c598a.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-nix-shell-custom-channel.642987576b2171ef.png" alt="Mobius comics style. Post-apocalyptic frozen river with abandoned military ships, smoking ruins in the background. Dominated with white snow blizzard. Flakes visible.">
+    
+  </picture> 
+</div>
+
+
+
+        
+        <div class="content post-summary">
+            <p>In NixOS, there is an old world of Nix channels, environments, and paths, and a
+new world of Nix flakes, inputs, and outputs. Today, after a long time, I needed
+to run <code>nix-shell -p foo</code> again, but it kept failing with an error stating that
+the package could not be found, even though I could find it while searching the
+stable and unstable channels.</p>
+        </div>
+        
+        
+    </article>
+
+
+
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;hive&#x2F;">Hive</a>
+            </h1>
+        </header>
+
+        
+    <div class="article-info">
+        
+        <div class="article-date">Sunday 11 February 2024</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 18 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/hive/">#hive</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/paisano/">#paisano</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/haumea/">#haumea</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+        
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-hive.89e67987aa9b2fe2.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-hive.0eb522d159053a16.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-hive.2ff7b0f1aca2657a.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-hive.8866e1c53f28c4dd.png" alt="Mobius comic book style. Cosmic nebula landscape bee hive cells. Honeycomb. Pastel honey color.">
+    
+  </picture> 
+</div>
+
+
+
+        
+        <div class="content post-summary">
+            <p>Hive is a framework that aims to help with organizing personal Nix
+configurations. This post explains why I have decided to switch to it and
+provides a step-by-step tutorial for trying it out yourself. It is intended for
+Nix users who are curious and feel that their current configuration is
+disorganized, and are looking for a new way to restructure their code.</p>
+        </div>
+        
+        
+    </article>
+
+
+
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;paisano-cheatsheet&#x2F;">Paisano Cheatsheet</a>
+            </h1>
+        </header>
+
+        
+    <div class="article-info">
+        
+        <div class="article-date">Thursday 02 November 2023</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 2 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/paisano/">#paisano</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/hive/">#hive</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+        
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-paisano-cheatsheet.da4652bbf43187f2.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-paisano-cheatsheet.98d54fb86f075d00.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-paisano-cheatsheet.d7b2d2cdfa016729.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-paisano-cheatsheet.e13814e9fc048fc4.png" alt="Mobius comic book style. Paisano riding donkey through the desert.">
+    
+  </picture> 
+</div>
+
+
+
+        
+        <div class="content post-summary">
+            <p>Paisano is not only a filesystem-based module system, but also a framework that
+specifies roles such as cell, block, target, or soil.</p>
+        </div>
+        
+        
+    </article>
+
+
+
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;haumea-cheatsheet&#x2F;">Haumea Cheatsheet</a>
+            </h1>
+        </header>
+
+        
+    <div class="article-info">
+        
+        <div class="article-date">Sunday 22 October 2023</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 2 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/haumea/">#haumea</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/hive/">#hive</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+        
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-haumea-cheatsheet.76e218627303676e.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-haumea-cheatsheet.8baa3d339416ebd3.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-haumea-cheatsheet.87f84f1c71522f5c.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-haumea-cheatsheet.ff6db7129e160d07.png" alt="Mobius comic book style. Hawain goddess Haumea. Magically transforming to youth. Big island scenery.">
+    
+  </picture> 
+</div>
+
+
+
+        
+        <div class="content post-summary">
+            <p>Haumea is a filesystem-based module system for Nix that sets itself apart from
+NixOS modules by embracing a structure more akin to traditional programming
+languages. It incorporates a file hierarchy and visibility, aligning with the
+principles of organized directory layouts and extensibility. Haumea simplifies
+the process of importing files by automatically incorporating them into an
+attribute set, eliminating the need for manual imports.</p>
+        </div>
+        
+        
+    </article>
+
+
+
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;neovim-nix-update&#x2F;">Neovim flake Updates</a>
+            </h1>
+        </header>
+
+        
+    <div class="article-info">
+        
+        <div class="article-date">Sunday 04 June 2023</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 5 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/neovim/">#neovim</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+        
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake-update.735f60872ad6617d.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake-update.935e58e6adbd082c.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake-update.8a12b6486b973e10.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake-update.c5b895b6f4676886.png" alt="Mobius comic book style. Jungle treetops scenery flyover. Dark green pastel. Neovim logo embedded.">
+    
+  </picture> 
+</div>
+
+
+
+        
+        <div class="content post-summary">
+            <p>This is a follow-up post to
+<a href="https://primamateria.github.io/blog/neovim-nix/">How to create your own Neovim flake</a>. Thanks to
+the help of <a rel="external" href="https://github.com/samjwillis97">Sam Willis</a>, the mystery of the
+non-functioning <code>symlinkjoin</code> has been clarified, and a workaround has been
+found. Sam also assisted me in using <code>flake-utils</code>, which enabled me to
+successfully build Neovim on Nix-on-Droid.</p>
+        </div>
+        
+        
+    </article>
+
+
+
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;neovim-nix&#x2F;">How to create your own Neovim flake</a>
+            </h1>
+        </header>
+
+        
+    <div class="article-info">
+        
+        <div class="article-date">Saturday 18 March 2023</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 20 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/neovim/">#neovim</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+        
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake.f7ecef40cc00acfc.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake.073a70095b2681d3.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake.c8e5d458658c5727.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-neovim-flake.f2286406b8cdfb00.png" alt="Mobius comic book style. Scenery of planetary scifi city. Plants growing on the walls. Neovim logo embedded">
+    
+  </picture> 
+</div>
+
+
+
+        
+        <div class="content post-summary">
+            <p>In this blog post, I will guide you through the process of setting up Neovim as
+a Nix Flake, allowing you to keep your editor configuration in sync across
+multiple machines. We'll start by initializing the flake. We'll add Vim script
+configuration, organizing Vim scripts in separate files and transforming them
+into config files in the Nix store. I will guide you through adding plugins, Lua
+scripts, and runtime dependencies to Neovim using Nix. By the end of this blog
+post, you will be able to configure your own development environment in a more
+manageable way.</p>
+        </div>
+        
+        
+    </article>
+
+
+
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;solar-workspaces&#x2F;">Solar i3 Workspaces</a>
+            </h1>
+        </header>
+
+        
+    <div class="article-info">
+        
+        <div class="article-date">Tuesday 07 March 2023</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 6 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/i3/">#i3</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+        
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-i3-solar-workspaces.ee6e7c1171e1415a.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-i3-solar-workspaces.2009349a193675a6.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-i3-solar-workspaces.30cc554429037c15.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-i3-solar-workspaces.b37b8d0bc7762d7f.png" alt="Mobius comic book style. Galaxy">
+    
+  </picture> 
+</div>
+
+
+
+        
+        <div class="content post-summary">
+            <p>In this blog post, I'll be sharing my experience with customizing the workspaces
+in i3wm. Naming my workspaces based on the Solar System, and using corresponding
+wallpapers for each workspace. In this post, I'll explain how I declared the
+wallpapers in Home Manager and updated the i3 config.</p>
+        </div>
+        
+        
+    </article>
+
+
+
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;nixos-steam-project-zomboid&#x2F;">Running Steam and Project Zomboid on NixOS</a>
+            </h1>
+        </header>
+
+        
+    <div class="article-info">
+        
+        <div class="article-date">Saturday 29 October 2022</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 5 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/games/">#games</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+        
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-pz-nixos.932025933f38ac97.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-pz-nixos.d421aab83dd1adb8.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-pz-nixos.01673fc980fdbf87.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-pz-nixos.164703e90653c82d.png" alt="Mobius comic book style. Zombie apocalypse. Scenic view.">
+    
+  </picture> 
+</div>
+
+
+
+        
+        <div class="content post-summary">
+            <p>In recent years, Linux gaming has come a long way. Thanks to projects like
+Proton and the work of the Linux gaming community, more and more games are now
+available to play on Linux. In this blog post, I'll walk you through my
+experience of setting up Steam on NixOS and playing the game Project Zomboid.
+I'll cover how to install Steam, how to install games, and how to get mouse
+support and run Steam games from dmenu. While I still believe that Windows is a
+superior gaming platform, the recent announcement of Valve's Steam Deck has made
+me excited to try gaming on Linux once again.</p>
+        </div>
+        
+        
+    </article>
+
+
+
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;nixos-stable-diffusion&#x2F;">AI generated images - Stable Diffusion on NixOS</a>
+            </h1>
+        </header>
+
+        
+    <div class="article-info">
+        
+        <div class="article-date">Saturday 08 October 2022</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 5 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/nixos/">#nixos</a></li>
+                    
+                    <li><a href="https://primamateria.github.io/blog/tags/ai/">#ai</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+
+        
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-ai-generated-images.7ad62cf2f2567c31.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-ai-generated-images.5c644c452adf72ca.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-ai-generated-images.8be1348921b565ca.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-ai-generated-images.f61319e714844239.png" alt="Mobius comic book style. Stories of Carlos Castaneda. Indian old man in had walking in the desert land. The sky is full of big dark red clouds.">
+    
+  </picture> 
+</div>
+
+
+
+        
+        <div class="content post-summary">
+            <p>In this blog post, I share my journey of discovering AI-generated images,
+starting with generating an image for my blog using Craiyon and moving on to
+using DALL·E 2 and Stable Diffusion. While the former required credits for each
+run, the latter was an open-sourced and more affordable option that I could run
+locally. I also share the steps that I followed to run Stable Diffusion on
+NixOS.</p>
+        </div>
+        
+        
+    </article>
+
+
+
+
+        </main>
+
+        
+        
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2026<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

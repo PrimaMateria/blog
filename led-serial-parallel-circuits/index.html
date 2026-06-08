@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>LED serial and parallel circuits</title>
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="dOSLnEoyUWfrY0k5Py-zj5pGxlMomeRll4XjFZInIwo" />
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://primamateria.github.io/blog/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://primamateria.github.io/blog/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://primamateria.github.io/blog/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_io/site.webmanifest">
+
+    <link
+     rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+     integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+     crossorigin="anonymous"
+     referrerpolicy="no-referrer"
+    />
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        theme: 'neutral',
+      });
+    </script>
+
+    <!-- Reddit embed -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/red.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2/css/light-theme.css"/>
+    <script src ="https://cdn.jsdelivr.net/npm/reddit-embed@1.1.2"></script>
+    <script>
+      window.onload = red.embedAll
+    </script>
+
+    <!-- Open Graph Tags -->
+    <meta property="og:site_name" content="Prima​Materia&#x27;s">
+    
+    <meta property="og:title" content="LED serial and parallel circuits">
+    <meta property="og:url" content="https://primamateria.github.io/blog/led-serial-parallel-circuits">
+    
+    <meta property="og:description" content="Trying to understand voltage distribution in serial and parallel LED circuits,
+and verify Kirchhoff&#x27;s voltage law experimentally.">
+    
+    
+    <meta property='og:image' content="https://primamateria.github.io/blog/processed_images/banner-led-circuits.fc1dd302f25621c4.png"/>
+    <meta property='og:image:width' content="1200"/>
+    <meta property='og:image:height' content="630"/>
+    
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2026-05-11">
+    
+    
+    
+    
+
+    
+
+    
+    
+
+    <!-- Katex (math typesetting) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" integrity="sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc+T1b2N+teh/OJfpU0jr6" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+
+    <link rel="stylesheet" href="https://primamateria.github.io/blog/custom.css">
+    <script src="https://primamateria.github.io/blog/main.js"></script>
+
+
+
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-80JJKE60KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-80JJKE60KC');
+</script>
+
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog">Prima​Materia&#x27;s</a>
+            </h1>
+        </header>
+
+         
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+
+    <header>
+        <h1>LED serial and parallel circuits</h1>
+    </header>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">Monday 11 May 2026</div>
+        
+
+        
+
+        
+        <div class="article-reading-time">Reading time: 3 min</div>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+
+    
+
+    
+    
+<div class="banner">
+  
+  
+  
+  
+  
+  <picture>
+    <source media="(min-width: 0px) and (max-width:300px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-led-circuits.f4626ca9e12898be.png">
+    <source media="(min-width: 300px) and (max-width:450px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-led-circuits.80960acc50428c80.png">
+    <source media="(min-width: 450px) and (max-width:600px)" srcset="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-led-circuits.f3e48975e903d09f.png">
+    
+    <img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;banner-led-circuits.464f3155a15ec2fb.png" alt="A surreal retro-futuristic laboratory filled with glowing LEDs wired in strange serial and parallel constellations across floating circuit boards. Tiny red diodes emit soft light through tangled copper traces suspended in an endless teal void. Hand-drawn Moebius-inspired sci-fi comic style, delicate ink linework, sparse composition, atmospheric engineering notebook aesthetic, muted pastel colors, contemplative mood.">
+    
+  </picture> 
+</div>
+
+
+
+    
+    
+    <p>Trying to understand voltage distribution in serial and parallel LED circuits,
+and verify Kirchhoff's voltage law experimentally.</p>
+<span id="continue-reading"></span>
+    
+
+    
+    <div>
+        <ul>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#study-1-serial-connection-of-4-leds">Study 1: serial connection of 4 LEDs</a>
+                
+                    <ul>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#setup">Setup</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#measurements">Measurements</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#verification-using-kirchhoff-s-voltage-law">Verification using Kirchhoff&#x27;s voltage law</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#observations">Observations</a>
+                            </li>
+                        
+                    </ul>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#study-2-serial-connection-of-3-leds">Study 2: serial connection of 3 LEDs</a>
+                
+                    <ul>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#setup-1">Setup</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#measurements-1">Measurements</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#verification-using-kirchhoff-s-voltage-law-1">Verification using Kirchhoff&#x27;s voltage law</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#observations-1">Observations</a>
+                            </li>
+                        
+                    </ul>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#study-3-parallel-connection-of-4-leds">Study 3: parallel connection of 4 LEDs</a>
+                
+                    <ul>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#setup-2">Setup</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#measurements-2">Measurements</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#verification-using-kirchhoff-s-voltage-law-2">Verification using Kirchhoff&#x27;s voltage law</a>
+                            </li>
+                        
+                            <li>
+                                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#observations-2">Observations</a>
+                            </li>
+                        
+                    </ul>
+                
+            </li>
+        
+            <li>
+                <a href="https://primamateria.github.io/blog/led-serial-parallel-circuits/#conclusions">Conclusions</a>
+                
+            </li>
+        
+        </ul>
+    </div>
+    
+
+    
+    
+<div style="margin-top: 24px">
+
+<img src="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog&#x2F;processed_images&#x2F;led-circuits.6b8cb440c84f6bb1.png" />
+
+</div>
+<h2 id="study-1-serial-connection-of-4-leds"><a class="zola-anchor" href="#study-1-serial-connection-of-4-leds" aria-label="Anchor link for: study-1-serial-connection-of-4-leds"
+  >§</a
+>
+Study 1: serial connection of 4 LEDs</h2>
+<h3 id="setup"><a class="zola-anchor" href="#setup" aria-label="Anchor link for: setup"
+  >§</a
+>
+Setup</h3>
+<ul>
+<li>
+<p>Source voltage:
+$$ V_{0} = 5.36V $$</p>
+</li>
+<li>
+<p>Resistor:
+$$ R = 1k\Omega $$</p>
+</li>
+<li>
+<p>Four LEDs connected in series.</p>
+</li>
+</ul>
+<h3 id="measurements"><a class="zola-anchor" href="#measurements" aria-label="Anchor link for: measurements"
+  >§</a
+>
+Measurements</h3>
+<p>Measured voltages:</p>
+<div>
+\begin{align}
+V_{R} &= 0.02V\\
+V_{1} &= 1.22V\\
+V_{2} &= 1.38V\\
+V_{3} &= 1.37V\\
+V_{4} &= 1.26V
+\end{align}
+</div>
+<h3 id="verification-using-kirchhoff-s-voltage-law"><a class="zola-anchor" href="#verification-using-kirchhoff-s-voltage-law" aria-label="Anchor link for: verification-using-kirchhoff-s-voltage-law"
+  >§</a
+>
+Verification using Kirchhoff's voltage law</h3>
+<div>
+\begin{align}
+V_{0} &= V_{R} + V_{1} + V_{2} + V_{3} + V_{4} + x\\
+5.36V &= 0.02V + 1.22V + 1.38V + 1.37V + 1.26V + x\\
+5.36V &= 5.25V + x\\
+x &= 0.11V
+\end{align}
+</div>
+<p>The remaining \(0.11V\) is likely caused by measurement error, internal
+resistance, or rounding.</p>
+<h3 id="observations"><a class="zola-anchor" href="#observations" aria-label="Anchor link for: observations"
+  >§</a
+>
+Observations</h3>
+<p>The LEDs not illuminated.</p>
+<p>This makes sense because four LEDs in series consume almost the entire source
+voltage:</p>
+<div>
+\begin{equation}
+1.22V + 1.38V + 1.37V + 1.26V \approx 5.23V
+\end{equation}
+</div>
+<p>That leaves almost no voltage across the resistor, therefore the current in the
+circuit becomes extremely small.</p>
+<hr />
+<h2 id="study-2-serial-connection-of-3-leds"><a class="zola-anchor" href="#study-2-serial-connection-of-3-leds" aria-label="Anchor link for: study-2-serial-connection-of-3-leds"
+  >§</a
+>
+Study 2: serial connection of 3 LEDs</h2>
+<h3 id="setup-1"><a class="zola-anchor" href="#setup-1" aria-label="Anchor link for: setup-1"
+  >§</a
+>
+Setup</h3>
+<ul>
+<li>
+<p>Source voltage:
+$$ V_{0} = 5.36V $$</p>
+</li>
+<li>
+<p>Resistor:
+$$ R = 1k\Omega $$</p>
+</li>
+<li>
+<p>Three LEDs connected in series.</p>
+</li>
+</ul>
+<h3 id="measurements-1"><a class="zola-anchor" href="#measurements-1" aria-label="Anchor link for: measurements-1"
+  >§</a
+>
+Measurements</h3>
+<div>
+\begin{align}
+V_{R} &= 0.24V\\
+V_{1} &= 1.69V\\
+V_{2} &= 1.70V\\
+V_{3} &= 1.70V
+\end{align}
+</div>
+<h3 id="verification-using-kirchhoff-s-voltage-law-1"><a class="zola-anchor" href="#verification-using-kirchhoff-s-voltage-law-1" aria-label="Anchor link for: verification-using-kirchhoff-s-voltage-law-1"
+  >§</a
+>
+Verification using Kirchhoff's voltage law</h3>
+<div>
+\begin{align}
+V_{0} &= V_{R} + V_{1} + V_{2} + V_{3} + x\\
+5.36V &= 0.24V + 1.69V + 1.70V + 1.70V + x\\
+5.36V &= 5.33V + x\\
+x &= 0.03V
+\end{align}
+</div>
+<h3 id="observations-1"><a class="zola-anchor" href="#observations-1" aria-label="Anchor link for: observations-1"
+  >§</a
+>
+Observations</h3>
+<p>The LEDs illuminated, but noticeably weaker than expected.</p>
+<p>Compared to the previous experiment, removing one LED increased the voltage
+available on the resistor:</p>
+<div>
+\begin{equation}
+V_{R} = 0.24V
+\end{equation}
+</div>
+<p>This means more current could flow through the circuit.</p>
+<hr />
+<h2 id="study-3-parallel-connection-of-4-leds"><a class="zola-anchor" href="#study-3-parallel-connection-of-4-leds" aria-label="Anchor link for: study-3-parallel-connection-of-4-leds"
+  >§</a
+>
+Study 3: parallel connection of 4 LEDs</h2>
+<h3 id="setup-2"><a class="zola-anchor" href="#setup-2" aria-label="Anchor link for: setup-2"
+  >§</a
+>
+Setup</h3>
+<ul>
+<li>
+<p>Source voltage:
+$$ V_{0} = 5.36V $$</p>
+</li>
+<li>
+<p>Resistor:
+$$ R = 1k\Omega $$</p>
+</li>
+<li>
+<p>Four LEDs connected in parallel.</p>
+</li>
+</ul>
+<h3 id="measurements-2"><a class="zola-anchor" href="#measurements-2" aria-label="Anchor link for: measurements-2"
+  >§</a
+>
+Measurements</h3>
+<div>
+\begin{align}
+V_{R} &= 3.59V\\
+V_{L} &= 1.76V
+\end{align}
+</div>
+<h3 id="verification-using-kirchhoff-s-voltage-law-2"><a class="zola-anchor" href="#verification-using-kirchhoff-s-voltage-law-2" aria-label="Anchor link for: verification-using-kirchhoff-s-voltage-law-2"
+  >§</a
+>
+Verification using Kirchhoff's voltage law</h3>
+<div>
+\begin{align}
+V_{0} &= V_{R} + V_{L} + x\\
+5.36V &= 3.59V + 1.76V + x\\
+5.36V &= 5.35V + x\\
+x &= 0.01V
+\end{align}
+</div>
+<h3 id="observations-2"><a class="zola-anchor" href="#observations-2" aria-label="Anchor link for: observations-2"
+  >§</a
+>
+Observations</h3>
+<p>The LEDs illuminated brightly.</p>
+<p>Unlike the serial circuits, each LED branch received approximately the same
+forward voltage:</p>
+<div>
+\begin{equation}
+V_{L} \approx 1.76V
+\end{equation}
+</div>
+<p>A much larger voltage remained on the resistor, therefore the circuit current
+was significantly higher.</p>
+<hr />
+<h2 id="conclusions"><a class="zola-anchor" href="#conclusions" aria-label="Anchor link for: conclusions"
+  >§</a
+>
+Conclusions</h2>
+<p>This experiment demonstrates very clearly how voltage distributes differently in
+serial and parallel LED circuits.</p>
+<p>In the serial configuration, the forward voltages of LEDs add together:</p>
+<div>
+\begin{equation}
+V_{LED,total} = V_{1} + V_{2} + \dots
+\end{equation}
+</div>
+<p>With four LEDs connected in series, their combined forward voltage nearly
+reached the supply voltage. Almost no voltage remained for the resistor, so the
+current became extremely small and the LEDs barely illuminated.</p>
+<p>Reducing the number of serial LEDs improved the situation slightly because more
+voltage became available on the resistor.</p>
+<p>In the parallel configuration, every LED branch experienced approximately the
+same forward voltage independently. The resistor therefore carried a much larger
+voltage drop, which allowed higher current and much brighter illumination.</p>
+<p>The measured sums of voltages matched Kirchhoff's voltage law with relatively
+small errors:</p>
+<div>
+\begin{equation}
+\sum V \approx V_{0}
+\end{equation}
+</div>
+<p>The errors remained within roughly \(0.01V\text{ -- }0.11V\), which is
+reasonable for manual measurements using a multimeter.</p>
+
+    
+     
+</article>
+
+
+        </main>
+
+        
+<div class="comments">
+
+
+
+<h2><i class="fa-brands fa-github-alt comment-section-icon"></i>GitHub comments</h2>
+<script src="https://utteranc.es/client.js"
+        repo="PrimaMateria/blog"
+        issue-term="title"
+        label="comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</div>
+
+
+        <nav class="quick-nav">
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/about/">
+              <i class="fa-solid fa-user-tie"></i> About
+            </a>
+            <a href="https://github.com/PrimaMateria">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+            <a href="https:&#x2F;&#x2F;primamateria.github.io&#x2F;blog/worklogs/">
+              <i class="fa-solid fa-feather-pointed"></i> Worklogs
+            </a>
+        </nav>
+
+        <footer class="article-info">
+            <p>
+                © Matus Benko 2026<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
