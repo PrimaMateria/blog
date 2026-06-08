@@ -97,6 +97,14 @@ article {
   }
 }
 
+.octopus.claude {
+  .octopus-talk {
+    padding-left: 10px;
+    border-left: 2px solid;
+    border-image: linear-gradient(180deg, #d97757, #78dceb) 1;
+  }
+}
+
 .end {
   color: rgb(51, 51, 51);
   margin-top: -8px;
