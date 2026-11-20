@@ -30,28 +30,26 @@
     </div>
 {% endmacro page_info %}
 
-{% macro banner(page) %}
+{% macro banner(page, eager=true) %}
+{% if page.extra.banner %}
 <div class="banner">
-  {% if page.extra.banner %}
-  {% set image748 = resize_image(path=page.extra.banner, width=748, op='fit_width') %}
-  {% set image600 = resize_image(path=page.extra.banner, width=600, op='fit_width') %}
-  {% set image450 = resize_image(path=page.extra.banner, width=450, op='fit_width') %}
-  {% set image300 = resize_image(path=page.extra.banner, width=300, op='fit_width') %}
+  {% set image748 = resize_image(path=page.extra.banner, width=748, op='fit_width', format='webp', quality=75) %}
+  {% set image600 = resize_image(path=page.extra.banner, width=600, op='fit_width', format='webp', quality=75) %}
+  {% set image450 = resize_image(path=page.extra.banner, width=450, op='fit_width', format='webp', quality=75) %}
+  {% set image300 = resize_image(path=page.extra.banner, width=300, op='fit_width', format='webp', quality=75) %}
   <picture>
     <source media="(min-width: 0px) and (max-width:300px)" srcset="{{image300.url}}">
     <source media="(min-width: 300px) and (max-width:450px)" srcset="{{image450.url}}">
     <source media="(min-width: 450px) and (max-width:600px)" srcset="{{image600.url}}">
-    {% if page.extra.bannerAlt %}
-    <img src="{{image748.url}}" alt="{{page.extra.bannerAlt}}">
-    {% else %}
-    <img src="{{image748.url}}">
-    {% endif %}
-  </picture> 
+    <img src="{{image748.url}}" width="{{image748.width}}" height="{{image748.height}}"
+      {%- if page.extra.bannerAlt %} alt="{{page.extra.bannerAlt}}"{% endif %}
+      {%- if eager %} fetchpriority="high"{% else %} loading="lazy" decoding="async"{% endif %}>
+  </picture>
 </div>
 {% endif %}
-{% endmacro page_listing %}
+{% endmacro banner %}
 
-{% macro page_listing(page) %}
+{% macro page_listing(page, eager=false) %}
     <article class="post-list">
         <header> 
             <h1>
@@ -61,7 +59,7 @@
 
         {{ self::page_info(page=page) }}
 
-        {{ self::banner(page=page) }}
+        {{ self::banner(page=page, eager=eager) }}
 
         {% if page.summary %}
         <div class="content post-summary">
