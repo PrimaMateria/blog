@@ -29,8 +29,6 @@ style = "inline"
 theme = "one-light"
 
 # 2. If you want light/dark themes, use the 2 fields below instead. See the syntax highlighting page for the possible choices.
-light_theme = ""
-dark_theme = ""
 
 # A list of files for additional JSON TextMate grammars
 extra_grammars = []
